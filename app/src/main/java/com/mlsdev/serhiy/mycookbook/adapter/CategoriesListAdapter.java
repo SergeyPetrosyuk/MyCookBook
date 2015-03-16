@@ -1,0 +1,109 @@
+package com.mlsdev.serhiy.mycookbook.adapter;
+
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.mlsdev.serhiy.mycookbook.R;
+import com.mlsdev.serhiy.mycookbook.model.RecipeCategory;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnListChangedListener;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.ICategoriesView;
+import com.mlsdev.serhiy.mycookbook.utils.Constants;
+import com.mlsdev.serhiy.mycookbook.utils.PrefManager;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+/**
+ * Created by android on 10.03.15.
+ */
+public class CategoriesListAdapter extends BaseAdapter implements OnListChangedListener {
+
+    private List<RecipeCategory> mCategoryList;
+    private ICategoriesView mView;
+    private int mItemLayoutId;
+
+    public CategoriesListAdapter(List<RecipeCategory> mCategoryList, ICategoriesView mView) {
+        this.mCategoryList = mCategoryList;
+        this.mView = mView;
+        mItemLayoutId = R.layout.category_grid_item;
+    }
+
+    public void setupItemLayoutId() {
+        if (PrefManager.categoriesDisplayType(mView.getContext()) == Constants.PREF_CATS_LIST_DISPLAY_TYPE){
+            mItemLayoutId = R.layout.category_list_item;
+        } else {
+            mItemLayoutId = R.layout.category_grid_item;
+        }
+    }
+
+    @Override
+    public int getCount() {
+        return mCategoryList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        int reversePosition = getCount() - 1 - position;
+        return mCategoryList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        int reversePosition = getCount() - 1 - position;
+
+        if (convertView == null){
+            convertView = LayoutInflater.from(mView.getContext()).inflate(mItemLayoutId, parent, false);
+            TextView nameTextView = (TextView) convertView.findViewById(R.id.tv_category_item);
+            ImageView categoryImageView = (ImageView) convertView.findViewById(R.id.iv_category_image);
+            ViewHolder viewHolder = new ViewHolder(nameTextView, categoryImageView);
+            convertView.setTag(viewHolder);
+        }
+
+        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+        viewHolder.nameTextView.setText(mCategoryList.get(position).getName());
+        viewHolder.categoryId = mCategoryList.get(position).getId();
+        viewHolder.imageUriStr = mCategoryList.get(position).getImageUriStr();
+
+        Uri uri = null;
+
+        if (!viewHolder.imageUriStr.equals("")){
+            uri = Uri.parse("content://media" + viewHolder.imageUriStr);
+        } else {
+            viewHolder.categoryImage.setImageResource(R.mipmap.no_image);
+        }
+
+        if (uri != null) {
+            Picasso.with(mView.getContext()).load(uri).resize(300, 175).centerCrop().into(viewHolder.categoryImage);
+        }
+
+        return convertView;
+    }
+
+    @Override
+    public void listChanged() {
+        notifyDataSetChanged();
+    }
+
+    private class ViewHolder{
+        TextView nameTextView;
+        ImageView categoryImage;
+        String imageUriStr;
+        int categoryId;
+
+        private ViewHolder(TextView nameTextView, ImageView categoryImage) {
+            this.nameTextView = nameTextView;
+            this.categoryImage = categoryImage;
+        }
+    }
+}

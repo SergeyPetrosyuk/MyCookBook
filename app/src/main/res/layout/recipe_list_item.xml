@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="2dp">
+
+    <ImageView
+        android:id="@+id/iv_recipe_icon"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/no_image"/>
+
+    <TextView
+        android:id="@+id/tv_recipe_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/hello_world"
+        android:textColor="@android:color/white"
+        android:background="@color/recipe_or_category_title"
+        android:gravity="center_vertical"
+        android:textSize="20sp"
+        android:paddingRight="5dp"
+        android:paddingLeft="15dp"
+        android:singleLine="true"
+        android:layout_below="@id/iv_recipe_icon"/>
+
+    <ProgressBar
+        android:id="@+id/pb_recipe_list_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+    <View
+        android:id="@+id/recipe_item_foreground"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:background="@drawable/recipe_list_item_bg"/>
+
+</RelativeLayout>

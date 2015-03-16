@@ -1,0 +1,38 @@
+<resources>
+    <!--Activities' titles-->
+    <string name="app_name">My CookBook</string>
+    <string name="add_note_screen">Додати рецепт</string>
+    <string name="add_category_screen">Додати категорію</string>
+
+    <string name="add_note_btn">Додати</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Налаштування</string>
+    <string name="title_activity_second">SecondActivity</string>
+    <string name="start_second_activity">Start 2nd Activity</string>
+    <string name="drawer_menu">Меню</string>
+    <string name="main">Головна</string>
+    <string name="settings">Налаштування</string>
+    <string name="favorites">Улюблені</string>
+    <string name="categories">Категорії</string>
+    <string name="rate_us">Оцінити додаток</string>
+    <string name="fount_problem">Знайшли помилку?</string>
+    <string name="make_photo">Зробити фото</string>
+    <string name="choose_in_gallery">Вибрати в галереї</string>
+
+    <!--Hint texts-->
+    <string name="note_title_hint">назва</string>
+    <string name="note_category_hint">категорія</string>
+    <string name="note_ingredients_hint">інградієнти</string>
+    <string name="note_instructions_hint">інструкції</string>
+
+    <!--Errors-->
+    <string name="add_category_error">Помилка! Спробуйде ще раз</string>
+    <string name="add_category_empty_title_error">Помилка! Поле назви неможе бути пустим</string>
+    <string name="add_recipe_empty_error">Помилка! Поле категорія неможе бути пустим</string>
+
+    <!-- Recipe labels -->
+    <string name="ingredients_label">Інградієнти</string>
+    <string name="instructions_label">Інструкціїї</string>
+    <string name="category_label">Категорія</string>
+</resources>

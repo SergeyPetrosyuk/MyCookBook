@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <include
+        android:id="@+id/app_toolbar"
+        layout="@layout/action_bar"/>
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@id/app_toolbar">
+
+        <FrameLayout
+            android:id="@+id/fragment_holder_main_activity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <fragment
+            android:id="@+id/left_drawer"
+            android:layout_width="250dp"
+            android:layout_gravity="start"
+            android:layout_height="match_parent"
+            class="com.mlsdev.serhiy.mycookbook.ui.fragment.LeftDrawerFragment"
+            tools:layout="@layout/fragment_left_drawer" />
+
+    </android.support.v4.widget.DrawerLayout>
+
+</RelativeLayout>

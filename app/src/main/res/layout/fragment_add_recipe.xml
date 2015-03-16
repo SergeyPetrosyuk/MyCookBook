@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/iv_add_recipe_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@mipmap/no_image"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:id="@+id/button_and_pb_holder"
+                android:layout_width="match_parent"
+                android:layout_height="225dp"
+                android:orientation="vertical"
+                android:gravity="center">
+                <ProgressBar
+                    android:id="@+id/pb_add_recipe_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+                </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_add_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignBottom="@+id/button_and_pb_holder"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="25dp"
+                android:background="@drawable/add_img_btn_bg"/>
+
+            <EditText
+                android:id="@+id/et_recipe_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/button_and_pb_holder"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:hint="@string/note_title_hint" />
+
+            <EditText
+                android:id="@+id/et_recipe_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/et_recipe_title"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:focusable="false"
+                android:hint="@string/note_category_hint" />
+
+            <EditText
+                android:id="@+id/et_recipe_ingredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/et_recipe_category"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:hint="@string/note_ingredients_hint" />
+
+            <EditText
+                android:id="@+id/et_recipe_instructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/et_recipe_ingredients"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:hint="@string/note_instructions_hint" />
+
+            <Button
+                android:id="@+id/btn_add_recipe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/et_recipe_instructions"
+                android:text="@string/add_note_btn"
+                android:textColor="@color/action_bar_primary"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="20sp"
+                android:background="@drawable/add_note_btn_bg"/>
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>

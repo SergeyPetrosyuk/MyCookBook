@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mlsdev.serhiy.mycookbook.ui.activity.RecipeActivity">
+
+    <item android:id="@+id/edit_recipe_action"
+        android:title=""
+        app:showAsAction="always"
+        android:icon="@mipmap/icon_edit_action"/>
+
+</menu>

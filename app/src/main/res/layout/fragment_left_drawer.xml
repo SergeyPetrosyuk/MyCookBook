@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+    <LinearLayout 
+        android:orientation="vertical" 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        
+        <Button
+            android:id="@+id/btn_main"
+            style="@style/drawer_menu_btn"
+            android:drawableLeft="@mipmap/icon_home"
+            android:background="@drawable/drawer_btn_bg"
+            android:layout_marginTop="10dp"
+            android:text="@string/main"/>
+    
+        <Button
+            android:id="@+id/btn_settings"
+            style="@style/drawer_menu_btn"
+            android:drawableLeft="@mipmap/icon_settings"
+            android:background="@drawable/drawer_btn_bg"
+            android:text="@string/settings"/>
+    
+        <Button
+            android:id="@+id/btn_favorite"
+            style="@style/drawer_menu_btn"
+            android:drawableLeft="@mipmap/icon_favorite"
+            android:background="@drawable/drawer_btn_bg"
+            android:text="@string/favorites"/>
+
+        <!--<Button-->
+            <!--android:id="@+id/btn_categories"-->
+            <!--style="@style/drawer_menu_btn"-->
+            <!--android:drawableLeft="@mipmap/icon_categories"-->
+            <!--android:background="@drawable/drawer_btn_bg"-->
+            <!--android:text="@string/categories"/>-->
+
+        <View style="@style/divider"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"/>
+    
+        <Button
+            android:id="@+id/btn_rate_us"
+            style="@style/drawer_menu_btn"
+            android:background="@drawable/drawer_btn_bg"
+            android:text="@string/rate_us"
+            android:paddingLeft="54dp"/>
+    
+        <Button
+            android:id="@+id/btn_fount_problem"
+            style="@style/drawer_menu_btn"
+            android:background="@drawable/drawer_btn_bg"
+            android:text="@string/fount_problem"
+            android:paddingLeft="54dp"/>
+        
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_view_recipe_image"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/no_image"/>
+
+        <TextView
+            android:id="@+id/tv_view_recipe_title"
+            android:layout_alignBottom="@id/iv_view_recipe_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hello_world"
+            android:paddingLeft="16dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="15dp"
+            android:textStyle="bold"
+            android:textSize="40sp"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_recipe_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="290dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:padding="1dp"
+            android:background="#ffd4d4d4">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:padding="16dp">
+
+                <!-- Category -->
+                <TextView
+                    android:id="@+id/tv_stub_label_category"
+                    style="@style/label_style"
+                    android:text="@string/category_label"/>
+
+                <View
+                    style="@style/divider"
+                    android:layout_below="@id/tv_stub_label_category" />
+
+                <TextView
+                    android:id="@+id/tv_label_category"
+                    android:layout_below="@id/tv_stub_label_category"
+                    style="@style/content_style"
+                    android:text="@string/hello_world"/>
+                <!-- End Category -->
+
+                <!-- Ingredients -->
+                <TextView
+                    android:id="@+id/tv_stub_label_ingredients"
+                    android:layout_below="@id/tv_label_category"
+                    style="@style/label_style"
+                    android:text="@string/ingredients_label"/>
+
+                <View
+                    style="@style/divider"
+                    android:layout_below="@id/tv_stub_label_ingredients" />
+
+                <TextView
+                    android:id="@+id/tv_label_ingredients"
+                    android:layout_below="@id/tv_stub_label_ingredients"
+                    style="@style/content_style"
+                    android:text="@string/hello_world"/>
+                <!-- End Ingredients -->
+
+
+                <TextView
+                    android:id="@+id/tv_stub_label_instructions"
+                    android:layout_below="@id/tv_label_ingredients"
+                    style="@style/label_style"
+                    android:text="@string/instructions_label"/>
+
+                <View
+                    style="@style/divider"
+                    android:layout_below="@id/tv_stub_label_instructions" />
+
+                <TextView
+                    android:id="@+id/tv_label_instructions"
+                    android:layout_below="@id/tv_stub_label_instructions"
+                    style="@style/content_style"
+                    android:text="@string/hello_world"/>
+
+                </RelativeLayout>
+
+        </RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

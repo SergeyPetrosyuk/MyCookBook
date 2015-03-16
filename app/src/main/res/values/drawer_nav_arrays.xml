@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <array name="left_drawer_item_icons">
+        <item>@mipmap/icon_home</item>
+        <item>@mipmap/icon_settings</item>
+        <item>@mipmap/icon_favorite</item>
+        <item>@mipmap/icon_categories</item>
+    </array>
+    
+    <array name="left_drawer_item_titles">
+        <item>@string/main</item>
+        <item>@string/settings</item>
+        <item>@string/favorites</item>
+        <item>@string/categories</item>
+        <item>@string/rate_us</item>
+        <item>@string/fount_problem</item>
+    </array>
+    
+</resources>

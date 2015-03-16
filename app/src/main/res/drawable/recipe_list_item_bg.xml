@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/recipe_item_pressed"
+        android:state_pressed="true"
+        android:state_active="true"
+        android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/action_bar_primary"/>
+        </shape>
+        </item>
+    <item android:drawable="@android:color/transparent"/>
+</selector>

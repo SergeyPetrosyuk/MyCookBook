@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Action Bar-->
+    <color name="action_bar_primary">#ff008ed0</color>
+    
+    <!--Buttons-->
+    <color name="add_btn">#ed3c3c</color>
+    <color name="add_btn_pressed">#ffba2e2e</color>
+    <color name="drawer_btn_pressed">#8400aeff</color>
+    <color name="add_note_btn">#ffdedede</color>
+    
+    <color name="divider_light_grey">#ffcccccc</color>
+
+    <color name="recipe_item_pressed">#5cffffff</color>
+    <color name="recipe_item_selected">#83ffffff</color>
+
+    <color name="recipe_or_category_title">#ff00adff</color>
+
+    <color name="very_dark_grey">#ff3f3f3f</color>
+</resources>
