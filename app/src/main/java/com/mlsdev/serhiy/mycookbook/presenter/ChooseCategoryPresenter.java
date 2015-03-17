@@ -5,6 +5,7 @@ import android.widget.AdapterView;
 
 import com.mlsdev.serhiy.mycookbook.adapter.ChooseCategoryListAdapter;
 import com.mlsdev.serhiy.mycookbook.asynk_task.LoadCategoriesTask;
+import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.model.RecipeCategory;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnCategoryListLoaded;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IChooseCategoryPresenter;
@@ -33,8 +34,8 @@ public class ChooseCategoryPresenter implements IChooseCategoryPresenter, OnCate
         ChooseCategoryListAdapter adapter = (ChooseCategoryListAdapter) parent.getAdapter();
         RecipeCategory category = (RecipeCategory) adapter.getItem(position);
         Intent dataForResult = new Intent();
-        dataForResult.putExtra(Constants.EXTRAS_CATEGORY_NAME, category.getName());
-        dataForResult.putExtra(Constants.EXTRAS_CATEGORY_ID, category.getId());
+        dataForResult.putExtra(DBContract.RecipeEntry.COLUMN_CATEGORY_ID, category.getName());
+        dataForResult.putExtra(DBContract.CategoryEntry.COLUMN_NAME, category.getId());
         mView.closeItSelfWithResult(dataForResult);
     }
 

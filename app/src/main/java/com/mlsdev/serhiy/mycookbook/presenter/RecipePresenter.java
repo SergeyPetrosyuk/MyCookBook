@@ -7,6 +7,7 @@ import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipeView;
+import com.mlsdev.serhiy.mycookbook.utils.Constants;
 
 import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
 
@@ -21,7 +22,12 @@ public class RecipePresenter implements IRecipePresenter {
     }
 
     @Override
-    public void openRecipe(Bundle recipeData) {
+    public void openRecipe(Bundle recipeData, boolean isAfterEditing) {
+
+        if (isAfterEditing){
+
+        }
+
         Uri imageUri;
 
         String imageUriStr = recipeData.getString(RecipeEntry.COLUMN_IMAGE_URI);
@@ -42,4 +48,11 @@ public class RecipePresenter implements IRecipePresenter {
         mView.setInstructions(recipeInstructions);
         mView.showContent();
     }
+
+    @Override
+    public void openUpdateScreen(Bundle dataForUpdate) {
+        dataForUpdate.putBoolean(Constants.EXTRAS_IS_UPDATE, true);
+        mView.showUpdateFragment(dataForUpdate);
+    }
+
 }

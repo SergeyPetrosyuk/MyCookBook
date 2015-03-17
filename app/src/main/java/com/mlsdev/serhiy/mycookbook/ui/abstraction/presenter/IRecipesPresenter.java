@@ -11,5 +11,6 @@ public interface IRecipesPresenter {
     void loadRecipeList(int categoryId);
     Context getContext();
     void openRecipe(int position);
+    void showEditor();
 
 }

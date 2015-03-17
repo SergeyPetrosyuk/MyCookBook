@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.mlsdev.serhiy.mycookbook.R;
+import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.presenter.AddCategoryPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IAddCategoryPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IAddCategoryView;
@@ -67,8 +68,8 @@ public class AddCategoryFragment extends Fragment implements IAddCategoryView, V
     @Override
     public void openCreatedCategory(int categoryId, String categoryName) {
         Intent intent = new Intent(getActivity(), CategoryActivity.class);
-        intent.putExtra(Constants.EXTRAS_CATEGORY_ID, categoryId);
-        intent.putExtra(Constants.EXTRAS_CATEGORY_NAME, categoryName);
+        intent.putExtra(DBContract.RecipeEntry.COLUMN_CATEGORY_ID, categoryId);
+        intent.putExtra(DBContract.CategoryEntry.COLUMN_NAME, categoryName);
         startActivity(intent);
         getActivity().finish();
     }

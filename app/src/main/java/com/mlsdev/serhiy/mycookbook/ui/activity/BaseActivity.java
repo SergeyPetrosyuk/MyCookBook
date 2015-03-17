@@ -27,6 +27,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mCurrentTitle;
+    private boolean mIsMoreThanOneFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +90,17 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home :
-                finish();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
+
+        if (!mIsMoreThanOneFragment) {
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    finish();
+                    break;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        } else {
+            getFragmentManager().popBackStackImmediate();
         }
         
         return true;
@@ -137,5 +143,13 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected void setupActionBarTransparency(boolean isSetup){
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.transparent_bg));
+    }
+
+    public void setIsMoreThanOneFragment(boolean mIsMoreThanOneFragment) {
+        this.mIsMoreThanOneFragment = mIsMoreThanOneFragment;
+    }
+
+    public boolean getIsIsMoreThanOneFragment() {
+        return mIsMoreThanOneFragment;
     }
 }

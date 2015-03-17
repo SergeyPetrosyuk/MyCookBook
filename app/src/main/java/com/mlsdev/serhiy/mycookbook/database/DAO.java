@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.os.Bundle;
 
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
 import com.mlsdev.serhiy.mycookbook.model.RecipeCategory;
@@ -302,5 +303,41 @@ public class DAO {
         }
 
         return imageUriStr;
+    }
+
+    public static boolean updateRecipe(Context context, Intent dataForInsert){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(RecipeEntry.COLUMN_TITLE, dataForInsert.getStringExtra(RecipeEntry.COLUMN_TITLE));
+        contentValues.put(RecipeEntry.COLUMN_INGREDIENTS, dataForInsert.getStringExtra(RecipeEntry.COLUMN_INGREDIENTS));
+        contentValues.put(RecipeEntry.COLUMN_INSTRUCTIONS, dataForInsert.getStringExtra(RecipeEntry.COLUMN_INSTRUCTIONS));
+        contentValues.put(RecipeEntry.COLUMN_IMAGE_URI, dataForInsert.getStringExtra(RecipeEntry.COLUMN_IMAGE_URI));
+
+        Integer recipeId = dataForInsert.getIntExtra(RecipeEntry.COLUMN_ID, 0);
+
+        if (recipeId == 0){
+            return false;
+        }
+
+        String where = RecipeEntry.COLUMN_ID + " = ?";
+        String[] whereArgs = new String[]{recipeId.toString()};
+
+        try {
+            database.update(
+                    RecipeEntry.TABLE_NAME,
+                    contentValues,
+                    where,
+                    whereArgs
+            );
+
+            return true;
+        } finally {
+            database.close();
+            dbHelper.close();
+        }
+
+
     }
 }

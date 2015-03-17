@@ -9,6 +9,8 @@ public interface IAddRecipePresenter {
 
     void loadImage(Intent data);
     void addRecipe(String title, String ingredients, String instructions);
-    void setupCategoryId(Intent data);
+    void setupData(Intent data);
+    void updateRecipe(String title, String ingredients, String instructions);
+    boolean isEditing();
 
 }

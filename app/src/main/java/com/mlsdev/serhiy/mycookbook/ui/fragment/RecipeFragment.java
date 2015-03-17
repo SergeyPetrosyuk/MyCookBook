@@ -5,10 +5,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -21,6 +22,7 @@ import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.presenter.RecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipeView;
+import com.mlsdev.serhiy.mycookbook.ui.activity.BaseActivity;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -36,6 +38,7 @@ public class RecipeFragment extends Fragment implements IRecipeView {
     private TextView mCategoryTextView;
     private TextView mIngredientsTextView;
     private TextView mInstructionsTextView;
+    private boolean mIsAfterEditing = false;
 
     @Nullable
     @Override
@@ -46,6 +49,8 @@ public class RecipeFragment extends Fragment implements IRecipeView {
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
+        ((BaseActivity) getActivity()).setIsMoreThanOneFragment(false);
+
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_recipe, container, false);
 
         mRecipeImage = (ImageView) view.findViewById(R.id.iv_view_recipe_image);
@@ -55,7 +60,11 @@ public class RecipeFragment extends Fragment implements IRecipeView {
         mInstructionsTextView = (TextView) view.findViewById(R.id.tv_label_instructions);
         mContentContainer = (RelativeLayout) view.findViewById(R.id.rl_recipe_content);
 
-        mPresenter.openRecipe(recipeData);
+        mPresenter.openRecipe(recipeData, mIsAfterEditing);
+
+        if (mIsAfterEditing){
+            mIsAfterEditing = false;
+        }
 
         return view;
     }
@@ -63,6 +72,20 @@ public class RecipeFragment extends Fragment implements IRecipeView {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_recipe, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.edit_recipe_action :
+                mPresenter.openUpdateScreen(recipeData);
+                break;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -100,4 +123,17 @@ public class RecipeFragment extends Fragment implements IRecipeView {
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.show_recipe_content);
         mContentContainer.startAnimation(animation);
     }
+
+    @Override
+    public void showUpdateFragment(Bundle dataForUpdate) {
+        mIsAfterEditing = true;
+        ((BaseActivity)getActivity()).setIsMoreThanOneFragment(true);
+        Fragment updateFragment = new AddRecipeFragment();
+        updateFragment.setArguments(dataForUpdate);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_holder_view_recipe_screen, updateFragment)
+                .addToBackStack(AddRecipeFragment.class.getName())
+                .commit();
+    }
+
 }

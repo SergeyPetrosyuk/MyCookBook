@@ -2,6 +2,7 @@ package com.mlsdev.serhiy.mycookbook.ui.abstraction.view;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 
 /**
  * Created by android on 13.03.15.
@@ -15,5 +16,6 @@ public interface IRecipeView {
     void setCategoryTitle(String categoryTitle);
     Context getContext();
     void showContent();
+    void showUpdateFragment(Bundle dataForUpdate);
 
 }

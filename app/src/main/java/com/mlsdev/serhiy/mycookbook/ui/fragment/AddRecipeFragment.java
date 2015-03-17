@@ -5,30 +5,28 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.mlsdev.serhiy.mycookbook.R;
-import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.presenter.AddRecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IAddRecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IAddRecipeView;
-import com.mlsdev.serhiy.mycookbook.ui.activity.ChooseCategoryActivity;
 import com.mlsdev.serhiy.mycookbook.ui.activity.GetImageActivity;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by android on 05.03.15.
@@ -44,6 +42,8 @@ public class AddRecipeFragment extends Fragment implements IAddRecipeView, View.
     private EditText mInstructions;
     private EditText mCategory;
     private IAddRecipePresenter mAddRecipePresenter;
+    private ProgressBar mProgressBarAddRecipe;
+    private RelativeLayout mConatiner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class AddRecipeFragment extends Fragment implements IAddRecipeView, View.
         findViews(view);
         activateViews();
 
-        mAddRecipePresenter.setupCategoryId(intent);
+        mAddRecipePresenter.setupData(intent);
 
         return view;
 
@@ -79,6 +79,8 @@ public class AddRecipeFragment extends Fragment implements IAddRecipeView, View.
         mIngredients = (EditText) view.findViewById(R.id.et_recipe_ingredients);
         mInstructions = (EditText) view.findViewById(R.id.et_recipe_instructions);
         mCategory = (EditText) view.findViewById(R.id.et_recipe_category);
+        mProgressBarAddRecipe = (ProgressBar) view.findViewById(R.id.pb_add_edit_recipe);
+        mConatiner = (RelativeLayout) view.findViewById(R.id.rl_add_edit_recipe_container);
     }
 
     private void activateViews(){
@@ -123,6 +125,26 @@ public class AddRecipeFragment extends Fragment implements IAddRecipeView, View.
     }
 
     @Override
+    public void setUpImage(Uri imageUri) {
+        Picasso.with(getActivity()).load(imageUri).centerCrop().resize(700, 400).into(mRecipeImage);
+    }
+
+    @Override
+    public void setupTitle(String title) {
+        mRecipeTitle.setText(title);
+    }
+
+    @Override
+    public void setupIngredients(String ingredients) {
+        mIngredients.setText(ingredients);
+    }
+
+    @Override
+    public void setupInstructions(String instructions) {
+        mInstructions.setText(instructions);
+    }
+
+    @Override
     public Context getContext() {
         return getActivity();
     }
@@ -143,19 +165,46 @@ public class AddRecipeFragment extends Fragment implements IAddRecipeView, View.
     }
 
     @Override
+    public void backToRecipe() {
+        getActivity().finish();
+    }
+
+    @Override
+    public void startAdding() {
+        mAddNoteButton.setEnabled(false);
+        mAddImageButton.setEnabled(false);
+        Animation fadeContainer = AnimationUtils.loadAnimation(getActivity(), R.anim.disable_container);
+        fadeContainer.setFillAfter(true);
+        mConatiner.startAnimation(fadeContainer);
+        mProgressBarAddRecipe.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void stopAdding() {
+        mAddNoteButton.setEnabled(true);
+        mAddImageButton.setEnabled(true);
+        mProgressBarAddRecipe.setVisibility(View.GONE);
+        Animation fadeContainer = AnimationUtils.loadAnimation(getActivity(), R.anim.enable_container);
+        fadeContainer.setFillAfter(true);
+        mConatiner.startAnimation(fadeContainer);
+    }
+
+    @Override
     public void onClick(View v) {
         Intent intent;
 
         switch (v.getId()){
-//            case R.id.et_recipe_category:
-//                intent = new Intent(getActivity(), ChooseCategoryActivity.class);
-//                startActivityForResult(intent, Constants.REQUEST_GET_CATEGORY);
-//                break;
             case R.id.btn_add_recipe:
                 String recipeTitle = mRecipeTitle.getText().toString();
                 String ingredients = mIngredients.getText().toString();
                 String instructions= mInstructions.getText().toString();
-                mAddRecipePresenter.addRecipe(recipeTitle, ingredients, instructions);
+
+                if (!mAddRecipePresenter.isEditing()) {
+                    mAddRecipePresenter.addRecipe(recipeTitle, ingredients, instructions);
+                } else {
+                    mAddRecipePresenter.updateRecipe(recipeTitle, ingredients, instructions);
+                }
+
                 break;
             case R.id.btn_add_image:
                 intent = new Intent(getActivity(),GetImageActivity.class);

@@ -56,6 +56,11 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     }
 
     @Override
+    public void showEditor() {
+        mView.showCategoryEditor();
+    }
+
+    @Override
     public void recipeListLoaded(List<Recipe> recipeList) {
         mView.showRecipeList(recipeList);
     }

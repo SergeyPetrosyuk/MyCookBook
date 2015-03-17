@@ -2,6 +2,7 @@ package com.mlsdev.serhiy.mycookbook.ui.activity;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
@@ -12,8 +13,6 @@ public class RecipeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        setupActionBarTransparency(true);
 
         Bundle bundle = getIntent().getExtras();
 

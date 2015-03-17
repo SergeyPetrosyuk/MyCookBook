@@ -18,4 +18,7 @@ public interface IRecipesView {
     void openRecipe(Bundle recipeData);
     BaseAdapter getAdepter();
 
+    void showCategoryEditor();
+    void hideCategoryEditor();
+
 }

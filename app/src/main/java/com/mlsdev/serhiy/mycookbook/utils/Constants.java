@@ -18,4 +18,8 @@ public class Constants {
 
     public static final String EXTRAS_CATEGORY_ID = "extras_category_id";
     public static final String EXTRAS_CATEGORY_NAME = "extras_category_name";
+    public static final String EXTRAS_IS_UPDATE = "extras_is_update";
+
+    public static final String EMPTY_STRING = "";
+    public static final String CONTENT_MEDIA = "content://media";
 }

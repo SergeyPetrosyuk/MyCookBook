@@ -21,7 +21,7 @@
     <!--Hint texts-->
     <string name="note_title_hint">назва</string>
     <string name="note_category_hint">категорія</string>
-    <string name="note_ingredients_hint">інградієнти</string>
+    <string name="note_ingredients_hint">інгредієнти</string>
     <string name="note_instructions_hint">інструкції</string>
 
     <!--Errors-->
@@ -30,7 +30,7 @@
     <string name="add_recipe_empty_error">Помилка! Поле категорія неможе бути пустим</string>
 
     <!-- Recipe labels -->
-    <string name="ingredients_label">Інградієнти</string>
+    <string name="ingredients_label">Інгредієнти</string>
     <string name="instructions_label">Інструкціїї</string>
     <string name="category_label">Категорія</string>
 </resources>

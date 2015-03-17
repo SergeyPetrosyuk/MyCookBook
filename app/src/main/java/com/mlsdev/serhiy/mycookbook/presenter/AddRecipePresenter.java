@@ -3,7 +3,10 @@ package com.mlsdev.serhiy.mycookbook.presenter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.util.Log;
 
+import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.interactor.AddRecipeInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.IAddRecipeInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnImageLoadedListener;
@@ -12,12 +15,16 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IAddRecipePresenter
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IAddRecipeView;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
 
+import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
+
 /**
  * Created by android on 06.03.15.
  */
 public class AddRecipePresenter implements IAddRecipePresenter, OnImageLoadedListener, OnRecipeAddedListener {
     private IAddRecipeView mView;
     private IAddRecipeInteractor mRecipeInteractor;
+    private Intent mRecipeData;
+    private boolean mIsEditing = false;
 
     public AddRecipePresenter(IAddRecipeView mView) {
         this.mView = mView;
@@ -39,15 +46,52 @@ public class AddRecipePresenter implements IAddRecipePresenter, OnImageLoadedLis
     }
 
     @Override
-    public void setupCategoryId(Intent data) {
-        mRecipeInteractor.setupCategoryId(data);
-        String categoryName = data.getStringExtra(Constants.EXTRAS_CATEGORY_NAME);
+    public void setupData(Intent data) {
+        mRecipeData = data;
+        mRecipeInteractor.setupCategoryId(mRecipeData);
+        String categoryName = mRecipeData.getStringExtra(CategoryEntry.COLUMN_NAME);
         mView.setupCategoryName(categoryName);
+
+        mIsEditing = mRecipeData.getBooleanExtra(Constants.EXTRAS_IS_UPDATE, false);
+
+        if (mIsEditing){
+            Uri uri;
+            String imageUriStr = mRecipeData.getStringExtra(RecipeEntry.COLUMN_IMAGE_URI);
+
+            if (!imageUriStr.equals(Constants.EMPTY_STRING)){
+                uri = Uri.parse(Constants.CONTENT_MEDIA + imageUriStr);
+                mView.setUpImage(uri);
+            }
+
+            mView.setupTitle(mRecipeData.getStringExtra(RecipeEntry.COLUMN_TITLE));
+            mView.setupIngredients(mRecipeData.getStringExtra(RecipeEntry.COLUMN_INGREDIENTS));
+            mView.setupInstructions(mRecipeData.getStringExtra(RecipeEntry.COLUMN_INSTRUCTIONS));
+        }
+    }
+
+    @Override
+    public void updateRecipe(String title, String ingredients, String instructions) {
+        mView.startAdding();
+        mRecipeData.putExtra(RecipeEntry.COLUMN_TITLE, title);
+        mRecipeData.putExtra(RecipeEntry.COLUMN_INSTRUCTIONS, instructions);
+        mRecipeData.putExtra(RecipeEntry.COLUMN_INGREDIENTS, ingredients);
+
+        mRecipeInteractor.updateRecipe(mRecipeData);
+    }
+
+    @Override
+    public boolean isEditing() {
+        return mIsEditing;
     }
 
     @Override
     public void recipeWasAdded(long insertedId) {
         mView.openCreatedRecipe(insertedId);
+    }
+
+    @Override
+    public void recipeUpdated(boolean isUpdated) {
+        mView.backToRecipe();
     }
 
     @Override

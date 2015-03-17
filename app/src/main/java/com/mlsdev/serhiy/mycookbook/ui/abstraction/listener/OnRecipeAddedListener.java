@@ -8,6 +8,7 @@ import android.content.Context;
 public interface OnRecipeAddedListener {
 
     void recipeWasAdded(long insertedId);
+    void recipeUpdated(boolean isUpdated);
     Context getContext();
     void onErrorCategory();
 }

@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mlsdev.serhiy.mycookbook.R;
+import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.ui.fragment.RecipeListFragment;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
 
@@ -17,8 +18,7 @@ public class CategoryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         Bundle categoryData = getIntent().getExtras();
-        categoryData.getString(Constants.EXTRAS_CATEGORY_NAME, "");
-        String categoryName = categoryData.getString(Constants.EXTRAS_CATEGORY_NAME, "");
+        String categoryName = categoryData.getString(DBContract.CategoryEntry.COLUMN_NAME, "");
         setActionBarTitle(categoryName);
 
         if (savedInstanceState == null){

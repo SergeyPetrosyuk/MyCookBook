@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.adapter.CategoriesListAdapter;
+import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.listener.OnCategoryItemClickListener;
 import com.mlsdev.serhiy.mycookbook.model.RecipeCategory;
 import com.mlsdev.serhiy.mycookbook.presenter.CategoriesPresenter;
@@ -146,8 +147,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     @Override
     public void openCategory(int categoryId, String categoryName) {
         Intent intent = new Intent(getActivity(), CategoryActivity.class);
-        intent.putExtra(Constants.EXTRAS_CATEGORY_ID, categoryId);
-        intent.putExtra(Constants.EXTRAS_CATEGORY_NAME, categoryName);
+        intent.putExtra(DBContract.RecipeEntry.COLUMN_CATEGORY_ID, categoryId);
+        intent.putExtra(DBContract.CategoryEntry.COLUMN_NAME, categoryName);
         startActivity(intent);
     }
 

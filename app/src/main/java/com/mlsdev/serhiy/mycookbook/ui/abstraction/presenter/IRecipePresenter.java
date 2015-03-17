@@ -7,6 +7,6 @@ import android.os.Bundle;
  */
 public interface IRecipePresenter {
 
-    void openRecipe(Bundle recipeData);
-
+    void openRecipe(Bundle recipeData, boolean isAfterEditing);
+    void openUpdateScreen(Bundle dataForUpdate);
 }
