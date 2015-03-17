@@ -2,6 +2,7 @@ package com.mlsdev.serhiy.mycookbook.ui.abstraction.view;
 
 import android.content.Context;
 import android.view.MenuItem;
+import android.widget.BaseAdapter;
 
 import com.mlsdev.serhiy.mycookbook.model.RecipeCategory;
 
@@ -21,5 +22,6 @@ public interface ICategoriesView {
     void showCategoriesAsList(MenuItem item);
     void showCategoriesAsGrid(MenuItem item);
     void openCategory(int categoryId, String categoryName);
+    BaseAdapter getAdapter();
 
 }

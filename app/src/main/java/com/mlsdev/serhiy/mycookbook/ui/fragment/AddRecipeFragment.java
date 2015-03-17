@@ -56,9 +56,9 @@ public class AddRecipeFragment extends Fragment implements IAddRecipeView, View.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setRetainInstance(true);
 
-        Bundle categoryData = getArguments();
+        Bundle data = getArguments();
         Intent intent = new Intent();
-        intent.putExtras(categoryData);
+        intent.putExtras(data);
 
         View view = inflater.inflate(R.layout.fragment_add_recipe, container, false);
         findViews(view);
@@ -84,7 +84,6 @@ public class AddRecipeFragment extends Fragment implements IAddRecipeView, View.
     private void activateViews(){
         mAddImageButton.setOnClickListener(this);
         mAddNoteButton.setOnClickListener(this);
-//        mCategory.setOnClickListener(this);
     }
 
     @Override

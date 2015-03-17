@@ -4,6 +4,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:colorPrimary">@color/action_bar_primary</item>
+        <item name="android:colorPrimaryDark">@color/action_bar_dark_primary</item>
+
         <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
     </style>
 

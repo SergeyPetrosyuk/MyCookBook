@@ -38,8 +38,8 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     }
 
     @Override
-    public void openRecipe(AdapterView<?> parent, int position) {
-        RecipeAdapter adapter = (RecipeAdapter) parent.getAdapter();
+    public void openRecipe(int position) {
+        RecipeAdapter adapter = (RecipeAdapter) mView.getAdepter();
         Recipe recipe = (Recipe) adapter.getItem(position);
 
         Bundle data = new Bundle();

@@ -23,7 +23,7 @@
     <string name="note_ingredients_hint">ingredients</string>
     <string name="note_instructions_hint">instructions</string>
 
-    <string name="add_note_btn">ADD</string>
+    <string name="add_note_btn">OK</string>
     <string name="title_activity_get_image">GetImageActivity</string>
     <string name="make_photo">make a photo</string>
     <string name="choose_in_gallery">choose in gallery</string>

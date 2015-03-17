@@ -10,7 +10,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mlsdev.serhiy.mycookbook.R;
+import com.mlsdev.serhiy.mycookbook.adapter.holder.PositionHolder;
+import com.mlsdev.serhiy.mycookbook.adapter.holder.RecipeViewHolder;
+import com.mlsdev.serhiy.mycookbook.listener.OnRecipeClickListener;
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -24,10 +28,12 @@ public class RecipeAdapter extends BaseAdapter {
 
     private List<Recipe> mRecipeList;
     private IRecipesView mView;
+    private IRecipesPresenter mPresenter;
 
-    public RecipeAdapter(List<Recipe> recipeList, IRecipesView mView) {
+    public RecipeAdapter(List<Recipe> recipeList, IRecipesView mView, IRecipesPresenter mPresenter) {
         this.mRecipeList = recipeList;
         this.mView = mView;
+        this.mPresenter = mPresenter;
     }
 
     @Override
@@ -54,12 +60,15 @@ public class RecipeAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(mView.getContext()).inflate(R.layout.recipe_list_item, parent, false);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_recipe_icon);
             TextView nameTextView = (TextView) convertView.findViewById(R.id.tv_recipe_title);
+            View foreground = convertView.findViewById(R.id.recipe_item_foreground);
+            RecipeViewHolder viewHolder = new RecipeViewHolder(imageView, nameTextView, foreground);
 
-            ViewHolder viewHolder = new ViewHolder(imageView, nameTextView);
+            foreground.setTag(new PositionHolder(position));
+            foreground.setOnClickListener(new OnRecipeClickListener(mPresenter));
             convertView.setTag(viewHolder);
         }
 
-        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+        RecipeViewHolder viewHolder = (RecipeViewHolder) convertView.getTag();
         ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.pb_recipe_list_item);
 
         if (!mRecipeList.get(reversePosition).getImageUri().equals("")) {
@@ -68,26 +77,17 @@ public class RecipeAdapter extends BaseAdapter {
 
             Picasso.with(mView.getContext())
                     .load(imageUri)
-                    .resize(750, 375)
+                    .resize(750, 400)
                     .centerCrop().
-                    into(viewHolder.iconImageView, new CallBackImageLoader(progressBar, viewHolder.iconImageView));
+                    into(viewHolder.getIconImageView(), new CallBackImageLoader(progressBar, viewHolder.getIconImageView()));
         } else {
-            viewHolder.iconImageView.setImageResource(R.mipmap.no_image);
+            viewHolder.getIconImageView().setImageResource(R.mipmap.no_image);
+            progressBar.setVisibility(View.GONE);
         }
 
-        viewHolder.nameTextView.setText(mRecipeList.get(reversePosition).getTitle());
+        viewHolder.getNameTextView().setText(mRecipeList.get(reversePosition).getTitle());
 
         return convertView;
-    }
-
-    private class ViewHolder{
-        ImageView iconImageView;
-        TextView nameTextView;
-
-        private ViewHolder(ImageView iconImageView, TextView nameTextView) {
-            this.iconImageView = iconImageView;
-            this.nameTextView = nameTextView;
-        }
     }
 
     private class CallBackImageLoader implements Callback {
@@ -111,5 +111,6 @@ public class RecipeAdapter extends BaseAdapter {
             imageView.setImageResource(R.mipmap.no_image);
         }
     }
+
 
 }

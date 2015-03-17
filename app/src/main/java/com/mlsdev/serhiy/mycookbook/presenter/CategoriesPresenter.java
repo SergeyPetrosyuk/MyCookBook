@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.adapter.CategoriesListAdapter;
@@ -81,8 +82,8 @@ public class CategoriesPresenter implements ICategoriesPresenter, OnCategoryList
     }
 
     @Override
-    public void openCategory(AdapterView<?> parent, int position) {
-        CategoriesListAdapter adapter = (CategoriesListAdapter) parent.getAdapter();
+    public void openCategory(int position) {
+        BaseAdapter adapter = mView.getAdapter();
         RecipeCategory category = (RecipeCategory) adapter.getItem(position);
         mView.openCategory(category.getId(), category.getName());
     }

@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -112,7 +113,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void showList(List<RecipeCategory> categoryList, int displayType) {
-        mCategoriesListAdapter = new CategoriesListAdapter(categoryList, this);
+        mCategoriesListAdapter = new CategoriesListAdapter(categoryList, this, mPresenter);
         mCategoriesGridView.setAdapter(mCategoriesListAdapter);
         mCategoriesListView.setAdapter(mCategoriesListAdapter);
 
@@ -124,8 +125,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             mCategoriesListView.invalidate();
         }
 
-        mCategoriesGridView.setOnItemClickListener(new OnCategoryItemClickListener(mPresenter));
-        mCategoriesListView.setOnItemClickListener(new OnCategoryItemClickListener(mPresenter));
+//        mCategoriesGridView.setOnItemClickListener(new OnCategoryItemClickListener(mPresenter));
+//        mCategoriesListView.setOnItemClickListener(new OnCategoryItemClickListener(mPresenter));
     }
 
     @Override
@@ -148,6 +149,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         intent.putExtra(Constants.EXTRAS_CATEGORY_ID, categoryId);
         intent.putExtra(Constants.EXTRAS_CATEGORY_NAME, categoryName);
         startActivity(intent);
+    }
+
+    @Override
+    public BaseAdapter getAdapter() {
+        return mCategoriesListAdapter;
     }
 
     @Override

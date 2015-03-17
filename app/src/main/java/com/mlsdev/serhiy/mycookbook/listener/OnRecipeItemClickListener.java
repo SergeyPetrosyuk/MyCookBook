@@ -18,7 +18,7 @@ public class OnRecipeItemClickListener implements AdapterView.OnItemClickListene
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPresenter.openRecipe(parent, position);
+//        mPresenter.openRecipe(parent, position);
     }
 
 }

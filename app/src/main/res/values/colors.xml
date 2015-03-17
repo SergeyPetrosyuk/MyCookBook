@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Action Bar-->
-    <color name="action_bar_primary">#ff008ed0</color>
-    
+    <color name="action_bar_primary">#4CAF50</color>
+    <color name="action_bar_dark_primary">#388E3C</color>
+
     <!--Buttons-->
     <color name="add_btn">#ed3c3c</color>
     <color name="add_btn_pressed">#ffba2e2e</color>
@@ -12,9 +13,12 @@
     <color name="divider_light_grey">#ffcccccc</color>
 
     <color name="recipe_item_pressed">#5cffffff</color>
+    <color name="recipe_item_pressed_ripple">#ffffffff</color>
     <color name="recipe_item_selected">#83ffffff</color>
 
-    <color name="recipe_or_category_title">#ff00adff</color>
+    <color name="recipe_or_category_title">#5c000000</color>
 
     <color name="very_dark_grey">#ff3f3f3f</color>
+
+    <color name="category_and_recipe_name">#fff</color>
 </resources>

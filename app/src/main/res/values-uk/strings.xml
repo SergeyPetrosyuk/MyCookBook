@@ -4,8 +4,6 @@
     <string name="add_note_screen">Додати рецепт</string>
     <string name="add_category_screen">Додати категорію</string>
 
-    <string name="add_note_btn">Додати</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Налаштування</string>
     <string name="title_activity_second">SecondActivity</string>

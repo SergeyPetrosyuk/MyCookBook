@@ -9,8 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mlsdev.serhiy.mycookbook.R;
+import com.mlsdev.serhiy.mycookbook.adapter.holder.PositionHolder;
+import com.mlsdev.serhiy.mycookbook.listener.OnCategoryClickListener;
 import com.mlsdev.serhiy.mycookbook.model.RecipeCategory;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnListChangedListener;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.ICategoriesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.ICategoriesView;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
 import com.mlsdev.serhiy.mycookbook.utils.PrefManager;
@@ -25,11 +28,14 @@ public class CategoriesListAdapter extends BaseAdapter implements OnListChangedL
 
     private List<RecipeCategory> mCategoryList;
     private ICategoriesView mView;
+    private ICategoriesPresenter mPresenter;
     private int mItemLayoutId;
 
-    public CategoriesListAdapter(List<RecipeCategory> mCategoryList, ICategoriesView mView) {
+    public CategoriesListAdapter(List<RecipeCategory> mCategoryList, ICategoriesView mView,
+                                 ICategoriesPresenter mPresenter) {
         this.mCategoryList = mCategoryList;
         this.mView = mView;
+        this.mPresenter = mPresenter;
         mItemLayoutId = R.layout.category_grid_item;
     }
 
@@ -48,7 +54,6 @@ public class CategoriesListAdapter extends BaseAdapter implements OnListChangedL
 
     @Override
     public Object getItem(int position) {
-        int reversePosition = getCount() - 1 - position;
         return mCategoryList.get(position);
     }
 
@@ -60,13 +65,15 @@ public class CategoriesListAdapter extends BaseAdapter implements OnListChangedL
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        int reversePosition = getCount() - 1 - position;
 
         if (convertView == null){
             convertView = LayoutInflater.from(mView.getContext()).inflate(mItemLayoutId, parent, false);
             TextView nameTextView = (TextView) convertView.findViewById(R.id.tv_category_item);
             ImageView categoryImageView = (ImageView) convertView.findViewById(R.id.iv_category_image);
-            ViewHolder viewHolder = new ViewHolder(nameTextView, categoryImageView);
+            View foregroundView = convertView.findViewById(R.id.category_item_foreground);
+            foregroundView.setTag(new PositionHolder(position));
+            foregroundView.setOnClickListener(new OnCategoryClickListener(mPresenter));
+            ViewHolder viewHolder = new ViewHolder(nameTextView, categoryImageView, foregroundView);
             convertView.setTag(viewHolder);
         }
 
@@ -100,10 +107,12 @@ public class CategoriesListAdapter extends BaseAdapter implements OnListChangedL
         ImageView categoryImage;
         String imageUriStr;
         int categoryId;
+        View foregroundView;
 
-        private ViewHolder(TextView nameTextView, ImageView categoryImage) {
+        private ViewHolder(TextView nameTextView, ImageView categoryImage, View foregroundView) {
             this.nameTextView = nameTextView;
             this.categoryImage = categoryImage;
+            this.foregroundView = foregroundView;
         }
     }
 }

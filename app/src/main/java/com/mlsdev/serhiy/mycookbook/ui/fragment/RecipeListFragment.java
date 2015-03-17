@@ -9,11 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.adapter.RecipeAdapter;
-import com.mlsdev.serhiy.mycookbook.listener.OnRecipeItemClickListener;
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
 import com.mlsdev.serhiy.mycookbook.presenter.RecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
@@ -61,7 +61,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     
     private void initViews(){
         mAddNoteBtn.setOnClickListener(this);
-        mResipeListView.setOnItemClickListener(new OnRecipeItemClickListener(mPresenter));
+//        mResipeListView.setOnItemClickListener(new OnRecipeItemClickListener(mPresenter));
     }
 
     @Override
@@ -86,7 +86,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     @Override
     public void showRecipeList(List<Recipe> recipeList) {
         if (recipeList.size() > 0) {
-            mRecipeAdapter = new RecipeAdapter(recipeList, this);
+            mRecipeAdapter = new RecipeAdapter(recipeList, this, mPresenter);
             mResipeListView.setAdapter(mRecipeAdapter);
             mResipeListView.invalidate();
         }
@@ -102,5 +102,10 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         Intent intent = new Intent(getActivity(), RecipeActivity.class);
         intent.putExtras(recipeData);
         startActivity(intent);
+    }
+
+    @Override
+    public BaseAdapter getAdepter() {
+        return mRecipeAdapter;
     }
 }

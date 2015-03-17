@@ -67,7 +67,7 @@ public class RecipeFragment extends Fragment implements IRecipeView {
 
     @Override
     public void setImage(Uri uri) {
-        Picasso.with(getActivity()).load(uri).resize(500,275).into(mRecipeImage);
+        Picasso.with(getActivity()).load(uri).resize(700,400).centerCrop().into(mRecipeImage);
     }
 
     @Override

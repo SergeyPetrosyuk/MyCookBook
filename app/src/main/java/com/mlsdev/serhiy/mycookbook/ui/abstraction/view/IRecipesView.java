@@ -2,6 +2,7 @@ package com.mlsdev.serhiy.mycookbook.ui.abstraction.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.BaseAdapter;
 
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
 
@@ -15,5 +16,6 @@ public interface IRecipesView {
     void showRecipeList(List<Recipe> recipeList);
     Context getContext();
     void openRecipe(Bundle recipeData);
+    BaseAdapter getAdepter();
 
 }

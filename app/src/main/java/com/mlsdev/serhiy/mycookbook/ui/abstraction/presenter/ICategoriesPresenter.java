@@ -18,6 +18,6 @@ public interface ICategoriesPresenter {
     Context getContext();
     void changeItemDisplayType(MenuItem item);
     int getIconForDisplayTypeAction();
-    void openCategory(AdapterView<?> parent, int position);
+    void openCategory(int position);
 
 }

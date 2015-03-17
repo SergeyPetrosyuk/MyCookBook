@@ -10,6 +10,6 @@ public interface IRecipesPresenter {
 
     void loadRecipeList(int categoryId);
     Context getContext();
-    void openRecipe(AdapterView<?> parent, int position);
+    void openRecipe(int position);
 
 }

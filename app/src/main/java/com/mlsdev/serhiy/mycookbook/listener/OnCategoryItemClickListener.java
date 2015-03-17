@@ -18,7 +18,7 @@ public class OnCategoryItemClickListener implements AdapterView.OnItemClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPresenter.openCategory(parent, position);
+//        mPresenter.openCategory(parent, position);
     }
 
 }
