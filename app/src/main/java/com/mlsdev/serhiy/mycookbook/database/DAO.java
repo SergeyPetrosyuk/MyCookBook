@@ -138,7 +138,7 @@ public class DAO {
                 new String[]{categoryId.toString()},
                 null,
                 null,
-                null
+                RecipeEntry.COLUMN_ID + " DESC"
             );
 
         List<Recipe> recipeList = new ArrayList<>();
