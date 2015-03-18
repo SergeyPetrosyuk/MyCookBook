@@ -43,7 +43,6 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     private Integer mCategoryId = 0;
     private Bundle mCategoryData;
     private RelativeLayout mEditorContainer;
-    private RelativeLayout mRecipesContainer;
 
     @Nullable
     @Override
@@ -68,7 +67,6 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         mAddNoteBtn = (Button) view.findViewById(R.id.btn_add_note);
         mResipeListView = (AbsListView) view.findViewById(R.id.lv_recipes);
         mEditorContainer = (RelativeLayout) view.findViewById(R.id.rl_category_name_editor);
-        mRecipesContainer = (RelativeLayout) view.findViewById(R.id.rl_recipes_container);
     }
     
     private void initViews(){
@@ -80,7 +78,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
         switch (item.getItemId()){
             case R.id.action_edit_category :
-                showCategoryEditor();
+                mPresenter.showEditor();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -148,6 +146,8 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void hideCategoryEditor() {
-
+        Animation hideEditor = AnimationUtils.loadAnimation(getActivity(), R.anim.hide_category_editor);
+        hideEditor.setFillAfter(true);
+        mEditorContainer.startAnimation(hideEditor);
     }
 }

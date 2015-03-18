@@ -22,6 +22,7 @@ import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
 public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedListener {
 
     private IRecipesView mView;
+    private boolean mIsEditorOpened = false;
 
     public RecipesPresenter(IRecipesView mView) {
         this.mView = mView;
@@ -57,7 +58,13 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
 
     @Override
     public void showEditor() {
-        mView.showCategoryEditor();
+        if (mIsEditorOpened){
+            mView.hideCategoryEditor();
+        } else {
+            mView.showCategoryEditor();
+        }
+
+        mIsEditorOpened = mIsEditorOpened ? false : true;
     }
 
     @Override
