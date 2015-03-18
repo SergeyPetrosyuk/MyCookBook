@@ -42,4 +42,6 @@
     <string name="instructions_label">Instructions</string>
     <string name="category_label">Category</string>
 
+    <string name="new_category_label">New name</string>
+
 </resources>

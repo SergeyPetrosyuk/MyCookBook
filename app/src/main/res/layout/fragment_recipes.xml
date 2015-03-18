@@ -43,16 +43,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:paddingTop="20dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="20dp">
+            android:paddingTop="25dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="25dp">
 
             <EditText
                 android:id="@+id/et_edit_category_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/category_label"
+                android:hint="@string/new_category_label"
                 android:layout_centerInParent="true"/>
 
         </RelativeLayout>

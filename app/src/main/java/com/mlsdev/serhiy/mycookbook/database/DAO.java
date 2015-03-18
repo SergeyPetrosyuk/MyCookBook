@@ -310,6 +310,11 @@ public class DAO {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
+        String newTitle =  dataForInsert.getStringExtra(RecipeEntry.COLUMN_TITLE);
+        String newIngredients = dataForInsert.getStringExtra(RecipeEntry.COLUMN_INGREDIENTS);
+        String newInstructions = dataForInsert.getStringExtra(RecipeEntry.COLUMN_INSTRUCTIONS);
+        String newImageUri = dataForInsert.getStringExtra(RecipeEntry.COLUMN_IMAGE_URI);
+
         contentValues.put(RecipeEntry.COLUMN_TITLE, dataForInsert.getStringExtra(RecipeEntry.COLUMN_TITLE));
         contentValues.put(RecipeEntry.COLUMN_INGREDIENTS, dataForInsert.getStringExtra(RecipeEntry.COLUMN_INGREDIENTS));
         contentValues.put(RecipeEntry.COLUMN_INSTRUCTIONS, dataForInsert.getStringExtra(RecipeEntry.COLUMN_INSTRUCTIONS));
@@ -321,7 +326,7 @@ public class DAO {
             return false;
         }
 
-        String where = RecipeEntry.COLUMN_ID + " = ?";
+        String where = RecipeEntry.TABLE_NAME + "." + RecipeEntry.COLUMN_ID + " = ?";
         String[] whereArgs = new String[]{recipeId.toString()};
 
         try {

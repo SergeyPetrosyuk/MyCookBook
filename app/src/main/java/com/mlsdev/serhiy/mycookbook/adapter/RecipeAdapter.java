@@ -43,18 +43,16 @@ public class RecipeAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        int reversePosition = getCount() - 1- position;
-        return mRecipeList.get(reversePosition);
+        return mRecipeList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return getCount() - 1- position;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        int reversePosition = getCount() - 1- position;
 
         if (convertView == null){
             convertView = LayoutInflater.from(mView.getContext()).inflate(R.layout.recipe_list_item, parent, false);
@@ -71,9 +69,9 @@ public class RecipeAdapter extends BaseAdapter {
         RecipeViewHolder viewHolder = (RecipeViewHolder) convertView.getTag();
         ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.pb_recipe_list_item);
 
-        if (!mRecipeList.get(reversePosition).getImageUri().equals("")) {
+        if (!mRecipeList.get(position).getImageUri().equals("")) {
 
-            Uri imageUri = Uri.parse("content://media" + mRecipeList.get(reversePosition).getImageUri());
+            Uri imageUri = Uri.parse("content://media" + mRecipeList.get(position).getImageUri());
 
             Picasso.with(mView.getContext())
                     .load(imageUri)
@@ -85,7 +83,7 @@ public class RecipeAdapter extends BaseAdapter {
             progressBar.setVisibility(View.GONE);
         }
 
-        viewHolder.getNameTextView().setText(mRecipeList.get(reversePosition).getTitle());
+        viewHolder.getNameTextView().setText(mRecipeList.get(position).getTitle());
 
         return convertView;
     }
