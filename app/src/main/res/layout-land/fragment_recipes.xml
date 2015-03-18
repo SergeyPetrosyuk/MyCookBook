@@ -2,19 +2,76 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp">
+    android:foreground="@drawable/recipe_list_item_bg"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingRight="2dp"
+    android:paddingLeft="2dp">
 
-    <GridView
-        android:id="@+id/lv_recipes"
+    <RelativeLayout
+        android:id="@+id/rl_recipes_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <GridView
+            android:id="@+id/lv_recipes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:verticalSpacing="0dp"
+            android:horizontalSpacing="2dp"
+            android:numColumns="3"/>
+
+        <Button
+            android:id="@+id/btn_add_note"
+            style="@style/ButtonAdd"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_category_name_editor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numColumns="3"
-        android:horizontalSpacing="2dp"
-        android:verticalSpacing="0dp"/>
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingBottom="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#ffaeaeae"
+        android:visibility="gone">
 
-    <Button
-        android:id="@+id/btn_add_note"
-        style="@style/ButtonAdd"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white">
+            <RelativeLayout
+                android:id="@+id/rl_edit_text_holder_edit_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingTop="25dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="25dp">
+
+                <EditText
+                    android:id="@+id/et_edit_category_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/new_category_label"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/btn_ready_edit_category"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="18dp"
+            android:visibility="gone"
+            android:background="@drawable/ready_btn_selector"/>
+    </RelativeLayout>
 
 </RelativeLayout>

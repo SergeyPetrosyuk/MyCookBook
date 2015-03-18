@@ -18,8 +18,6 @@ public class CategoryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         Bundle categoryData = getIntent().getExtras();
-        String categoryName = categoryData.getString(DBContract.CategoryEntry.COLUMN_NAME, "");
-        setActionBarTitle(categoryName);
 
         if (savedInstanceState == null){
             Fragment fragment = new RecipeListFragment();

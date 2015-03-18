@@ -1,4 +1,4 @@
-package com.mlsdev.serhiy.mycookbook.ui.abstraction.listener;
+package com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor;
 
 /**
  * Created by android on 10.03.15.

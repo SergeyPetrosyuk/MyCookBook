@@ -3,7 +3,7 @@ package com.mlsdev.serhiy.mycookbook.interactor;
 import android.content.Context;
 
 import com.mlsdev.serhiy.mycookbook.asynk_task.AddCategoryTask;
-import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.IAddCategoryInteractor;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.IAddCategoryInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnCategoryCreatedListener;
 
 /**

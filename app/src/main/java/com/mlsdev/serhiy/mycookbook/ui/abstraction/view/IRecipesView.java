@@ -1,6 +1,7 @@
 package com.mlsdev.serhiy.mycookbook.ui.abstraction.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.BaseAdapter;
 
@@ -20,5 +21,11 @@ public interface IRecipesView {
 
     void showCategoryEditor();
     void hideCategoryEditor();
+
+    void showReadyButton();
+    void hideReadyButton();
+
+    void setupNewCategoryTitle();
+    void openAddRecipeScreen();
 
 }

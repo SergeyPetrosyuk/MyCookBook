@@ -338,6 +338,25 @@ public class DAO {
             dbHelper.close();
         }
 
+    }
 
+    public static int updateCategory(Context context, Integer categoryId, String newTitle){
+
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(CategoryEntry.COLUMN_NAME, newTitle);
+
+        String where = CategoryEntry.COLUMN_ID + " = ? ";
+        String[] whereArgs = new String[]{categoryId.toString()};
+
+        try {
+            int updatedRowCount = database.update(CategoryEntry.TABLE_NAME, contentValues, where, whereArgs);
+            return updatedRowCount;
+        } finally {
+            database.close();
+            dbHelper.close();
+        }
     }
 }

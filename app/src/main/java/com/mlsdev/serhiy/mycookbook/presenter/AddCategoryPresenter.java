@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.interactor.AddCategoryInteractor;
-import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.IAddCategoryInteractor;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.IAddCategoryInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnCategoryCreatedListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IAddCategoryPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IAddCategoryView;

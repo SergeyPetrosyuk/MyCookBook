@@ -5,8 +5,5 @@ package com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor;
  */
 public interface ICategoriesInteractor {
 
-    void deleteCategory(long id);
-    void editCategory(long id);
     void loadCategories();
-
 }

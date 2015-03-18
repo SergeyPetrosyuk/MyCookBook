@@ -22,16 +22,6 @@ public class CategoriesInteractor implements ICategoriesInteractor, OnCategoryLi
     }
 
     @Override
-    public void deleteCategory(long id) {
-
-    }
-
-    @Override
-    public void editCategory(long id) {
-
-    }
-
-    @Override
     public void loadCategories() {
         new LoadCategoriesTask(mPresenter.getContext(), this).execute();
     }

@@ -1,31 +1,42 @@
 package com.mlsdev.serhiy.mycookbook.ui.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.adapter.RecipeAdapter;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
+import com.mlsdev.serhiy.mycookbook.listener.OnTextChangedListener;
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
 import com.mlsdev.serhiy.mycookbook.presenter.RecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
 import com.mlsdev.serhiy.mycookbook.ui.activity.AddRecipeActivity;
+import com.mlsdev.serhiy.mycookbook.ui.activity.BaseActivity;
 import com.mlsdev.serhiy.mycookbook.ui.activity.RecipeActivity;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
 
@@ -43,6 +54,9 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     private Integer mCategoryId = 0;
     private Bundle mCategoryData;
     private RelativeLayout mEditorContainer;
+    private Button mReadyBtn;
+    private RelativeLayout mEditTextHolder;
+    private EditText mEditCategoryName;
 
     @Nullable
     @Override
@@ -51,6 +65,10 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         setHasOptionsMenu(true);
 
         mCategoryData = getArguments();
+
+        String categoryName = mCategoryData.getString(DBContract.CategoryEntry.COLUMN_NAME, "");
+        ((BaseActivity) getActivity()).setActionBarTitle(categoryName);
+
         mCategoryId = mCategoryData.getInt(DBContract.RecipeEntry.COLUMN_CATEGORY_ID);
 
         mPresenter = new RecipesPresenter(this);
@@ -67,6 +85,13 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         mAddNoteBtn = (Button) view.findViewById(R.id.btn_add_note);
         mResipeListView = (AbsListView) view.findViewById(R.id.lv_recipes);
         mEditorContainer = (RelativeLayout) view.findViewById(R.id.rl_category_name_editor);
+        mReadyBtn = (Button) view.findViewById(R.id.btn_ready_edit_category);
+        mEditTextHolder = (RelativeLayout) view.findViewById(R.id.rl_edit_text_holder_edit_category);
+
+        mEditCategoryName = (EditText) view.findViewById(R.id.et_edit_category_name);
+        mEditCategoryName.addTextChangedListener(new OnTextChangedListener(mPresenter));
+
+        mReadyBtn.setOnClickListener(this);
     }
     
     private void initViews(){
@@ -97,9 +122,10 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_add_note:
-                Intent intent = new Intent(getActivity(), AddRecipeActivity.class);
-                intent.putExtras(mCategoryData);
-                startActivity(intent);
+                mPresenter.openAddRecipeScreen();
+                break;
+            case R.id.btn_ready_edit_category:
+                mPresenter.editCategory(mCategoryId, mEditCategoryName.getText().toString());
                 break;
             default:
                 break;
@@ -139,6 +165,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void showCategoryEditor() {
+
         mEditorContainer.setVisibility(View.VISIBLE);
         Animation showEditor = AnimationUtils.loadAnimation(getActivity(), R.anim.show_category_editor);
         mEditorContainer.startAnimation(showEditor);
@@ -149,5 +176,45 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         Animation hideEditor = AnimationUtils.loadAnimation(getActivity(), R.anim.hide_category_editor);
         hideEditor.setFillAfter(true);
         mEditorContainer.startAnimation(hideEditor);
+        mEditCategoryName.setText(Constants.EMPTY_STRING);
+        hideSoftKeyboard(getActivity());
+    }
+
+    @Override
+    public void showReadyButton() {
+        Animation showBtn = AnimationUtils.loadAnimation(getActivity(), R.anim.show_ready_btn);
+        Animation makeEditTextShorter = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_edit_text_to_smoller_size);
+        mReadyBtn.setVisibility(View.VISIBLE);
+        mReadyBtn.startAnimation(showBtn);
+        mEditTextHolder.startAnimation(makeEditTextShorter);
+    }
+
+    @Override
+    public void hideReadyButton() {
+        Animation showBtn = AnimationUtils.loadAnimation(getActivity(), R.anim.hide_ready_btn);
+        Animation makeEditTextShorter = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_edit_text_to_bigger_size);
+        mReadyBtn.startAnimation(showBtn);
+        mEditTextHolder.startAnimation(makeEditTextShorter);
+    }
+
+    @Override
+    public void setupNewCategoryTitle() {
+        ((BaseActivity) getActivity()).setActionBarTitle(mEditCategoryName.getText().toString());
+        getActivity().setTitle(mEditCategoryName.getText().toString());
+    }
+
+    @Override
+    public void openAddRecipeScreen() {
+        String newTitle = ((BaseActivity) getActivity()).getSupportActionBar().getTitle().toString();
+
+        Intent categoryData = new Intent(getContext(), AddRecipeActivity.class);
+        categoryData.putExtra(DBContract.CategoryEntry.COLUMN_NAME, newTitle);
+        categoryData.putExtra(DBContract.RecipeEntry.COLUMN_CATEGORY_ID, mCategoryId);
+        startActivity(categoryData);
+    }
+
+    private static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 }

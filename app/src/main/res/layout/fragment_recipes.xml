@@ -39,23 +39,39 @@
         android:background="#ffaeaeae"
         android:visibility="gone">
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:paddingTop="25dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="25dp">
-
-            <EditText
-                android:id="@+id/et_edit_category_name"
+            android:background="@android:color/white">
+            <RelativeLayout
+                android:id="@+id/rl_edit_text_holder_edit_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/new_category_label"
-                android:layout_centerInParent="true"/>
+                android:background="@android:color/white"
+                android:paddingTop="25dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="25dp">
 
-        </RelativeLayout>
+                <EditText
+                    android:id="@+id/et_edit_category_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/new_category_label"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/btn_ready_edit_category"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="18dp"
+            android:visibility="gone"
+            android:background="@drawable/ready_btn_selector"/>
     </RelativeLayout>
 
 </RelativeLayout>
