@@ -167,6 +167,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     public void showCategoryEditor() {
 
         mEditorContainer.setVisibility(View.VISIBLE);
+        mEditCategoryName.setVisibility(View.VISIBLE);
         Animation showEditor = AnimationUtils.loadAnimation(getActivity(), R.anim.show_category_editor);
         mEditorContainer.startAnimation(showEditor);
     }
@@ -175,8 +176,25 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     public void hideCategoryEditor() {
         Animation hideEditor = AnimationUtils.loadAnimation(getActivity(), R.anim.hide_category_editor);
         hideEditor.setFillAfter(true);
+        hideEditor.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mEditCategoryName.setText(Constants.EMPTY_STRING);
+                mEditorContainer.setVisibility(View.GONE);
+                mEditCategoryName.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         mEditorContainer.startAnimation(hideEditor);
-        mEditCategoryName.setText(Constants.EMPTY_STRING);
         hideSoftKeyboard(getActivity());
     }
 
