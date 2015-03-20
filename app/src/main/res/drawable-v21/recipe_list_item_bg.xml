@@ -3,7 +3,7 @@
     android:color="@color/recipe_item_pressed_ripple">
 
     <item android:id="@android:id/mask"
-        android:drawable="@color/action_bar_primary"/>
+        android:drawable="@android:color/white"/>
 
-    <item android:drawable="@drawable/transparent_bg"/>
+    <item android:drawable="@drawable/recipe_list_item_selector"/>
 </ripple>

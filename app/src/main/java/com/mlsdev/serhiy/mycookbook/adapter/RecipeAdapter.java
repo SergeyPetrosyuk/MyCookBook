@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mlsdev.serhiy.mycookbook.R;
@@ -30,17 +32,23 @@ public class RecipeAdapter extends BaseAdapter {
     private List<Recipe> mRecipeList;
     private IRecipesView mView;
     private IRecipesPresenter mPresenter;
+    private int mSelectedRecipeCount = 0;
+    private int mVisibilityState = View.GONE;
+    private List<RelativeLayout> mCheckboxHolders;
 
     public RecipeAdapter(List<Recipe> recipeList, IRecipesView mView, IRecipesPresenter mPresenter) {
         this.mRecipeList = recipeList;
         this.mView = mView;
         this.mPresenter = mPresenter;
+        mVisibilityState = mSelectedRecipeCount > 0 ? View.VISIBLE : View.GONE;
+        mCheckboxHolders = new ArrayList<>();
     }
 
     public RecipeAdapter(IRecipesView mView, IRecipesPresenter mPresenter) {
         this.mView = mView;
         this.mPresenter = mPresenter;
         mRecipeList = new ArrayList<>();
+        mCheckboxHolders = new ArrayList<>();
     }
 
     @Override
@@ -66,11 +74,17 @@ public class RecipeAdapter extends BaseAdapter {
             ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_recipe_icon);
             TextView nameTextView = (TextView) convertView.findViewById(R.id.tv_recipe_title);
             View foreground = convertView.findViewById(R.id.recipe_item_foreground);
-            RecipeViewHolder viewHolder = new RecipeViewHolder(imageView, nameTextView, foreground);
+            CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.recipe_item_checkbox);
+            RelativeLayout checkBoxHolder = (RelativeLayout) convertView.findViewById(R.id.recipe_item_checkbox_holder);
+            RecipeViewHolder viewHolder = new RecipeViewHolder(imageView, nameTextView, foreground, checkBoxHolder, checkBox);
 
             foreground.setTag(new PositionHolder(position));
             foreground.setOnClickListener(new OnRecipeClickListener(mPresenter));
+            foreground.setOnLongClickListener(new OnLongPressedListener(checkBoxHolder, checkBox));
+            checkBoxHolder.setOnClickListener(new OnCheckBoxHolderClickListener(checkBox));
+            checkBoxHolder.setVisibility(mVisibilityState);
             convertView.setTag(viewHolder);
+            mCheckboxHolders.add(checkBoxHolder);
         }
 
         RecipeViewHolder viewHolder = (RecipeViewHolder) convertView.getTag();
@@ -104,6 +118,9 @@ public class RecipeAdapter extends BaseAdapter {
         this.notifyDataSetChanged();
     }
 
+    /**
+     * CallBackImageLoader
+     * */
     private class CallBackImageLoader implements Callback {
 
         ProgressBar progressBar;
@@ -126,5 +143,66 @@ public class RecipeAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * OnLongClickListener
+     * */
+    private class OnLongPressedListener implements View.OnLongClickListener{
 
+        public RelativeLayout checkBoxHolder;
+        public CheckBox checkBox;
+
+        private OnLongPressedListener(RelativeLayout checkBoxHolder, CheckBox checkBox) {
+            this.checkBoxHolder = checkBoxHolder;
+            this.checkBox = checkBox;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            checkBoxHolder.setVisibility(View.VISIBLE);
+            checkBox.setChecked(true);
+            increaseCheckedItems();
+            updateTopViews();
+            return true;
+        }
+    }
+
+    private class OnCheckBoxHolderClickListener implements View.OnClickListener{
+        public RelativeLayout checkBoxHolder;
+        public CheckBox checkBox;
+
+        private OnCheckBoxHolderClickListener(CheckBox checkBox) {
+            this.checkBox = checkBox;
+        }
+
+        @Override
+        public void onClick(View v) {
+            boolean isChecked = checkBox.isChecked();
+            checkBox.setPressed(true);
+            checkBox.setChecked(!isChecked);
+
+            if (!isChecked){
+                decreaseCheckedItems();
+            } else {
+                increaseCheckedItems();
+            }
+
+            if (mSelectedRecipeCount == 0){
+
+            }
+        }
+    }
+
+    private void increaseCheckedItems(){
+        mSelectedRecipeCount++;
+    }
+
+    private void decreaseCheckedItems(){
+        mSelectedRecipeCount--;
+    }
+
+    private void updateTopViews(){
+        for (RelativeLayout checkboxHolder : mCheckboxHolders){
+            checkboxHolder.setVisibility(View.VISIBLE);
+        }
+    }
 }

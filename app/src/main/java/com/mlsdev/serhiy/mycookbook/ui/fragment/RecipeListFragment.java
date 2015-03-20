@@ -25,6 +25,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -138,7 +139,6 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void showRecipeList(List<Recipe> recipeList) {
-//        mRecipeAdapter = new RecipeAdapter(recipeList, this, mPresenter);
         mRecipeAdapter.setData(recipeList);
         mResipeListView.setAdapter(mRecipeAdapter);
         mResipeListView.invalidate();
@@ -171,9 +171,11 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void hideCategoryEditor() {
-        mEditCategoryName.setText(Constants.EMPTY_STRING);
+        if (mEditCategoryName.getText().length() > 0)
+            mEditCategoryName.setText(Constants.EMPTY_STRING);
+
         ObjectAnimator mover = ObjectAnimator.ofFloat(mEditorContainer, "translationY", -mEditorContainer.getHeight());
-        mover.setDuration(400);
+        mover.setDuration(500);
         mover.start();
         mEditCategoryName.clearFocus();
         hideSoftKeyboard(getActivity());
@@ -212,6 +214,12 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         startActivity(categoryData);
     }
 
+    @Override
+    public void invalidateListView() {
+        mResipeListView.invalidateViews();
+        mResipeListView.invalidate();
+    }
+
     private static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
@@ -224,4 +232,5 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.showSoftInput(edittext, InputMethodManager.SHOW_IMPLICIT);
     }
+
 }

@@ -1,7 +1,9 @@
 package com.mlsdev.serhiy.mycookbook.adapter.holder;
 
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -12,11 +14,15 @@ public class RecipeViewHolder {
     private ImageView iconImageView;
     private TextView nameTextView;
     private View foreground;
+    private RelativeLayout checkboxHolder;
+    private CheckBox checkBox;
 
-    public RecipeViewHolder(ImageView iconImageView, TextView nameTextView, View foreground) {
+    public RecipeViewHolder(ImageView iconImageView, TextView nameTextView, View foreground, RelativeLayout checkboxHolder, CheckBox checkBox) {
         this.iconImageView = iconImageView;
         this.nameTextView = nameTextView;
         this.foreground = foreground;
+        this.checkboxHolder = checkboxHolder;
+        this.checkBox = checkBox;
     }
 
     public ImageView getIconImageView() {
@@ -27,19 +33,4 @@ public class RecipeViewHolder {
         return nameTextView;
     }
 
-    public View getForeground() {
-        return foreground;
-    }
-
-    public void setIconImageView(ImageView iconImageView) {
-        this.iconImageView = iconImageView;
-    }
-
-    public void setNameTextView(TextView nameTextView) {
-        this.nameTextView = nameTextView;
-    }
-
-    public void setForeground(View foreground) {
-        this.foreground = foreground;
-    }
 }

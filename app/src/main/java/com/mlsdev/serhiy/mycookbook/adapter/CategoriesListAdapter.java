@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mlsdev.serhiy.mycookbook.R;
@@ -91,7 +92,7 @@ public class CategoriesListAdapter extends BaseAdapter implements OnListChangedL
         }
 
         if (uri != null) {
-            Picasso.with(mView.getContext()).load(uri).resize(300, 175).centerCrop().into(viewHolder.categoryImage);
+            Picasso.with(mView.getContext()).load(uri).resize(750, 400).centerCrop().into(viewHolder.categoryImage);
         }
 
         return convertView;
