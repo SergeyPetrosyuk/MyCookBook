@@ -37,12 +37,15 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:background="#ffaeaeae"
-        android:visibility="gone">
+        android:visibility="visible"
+        android:translationY="-185dp">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white">
+            android:background="@android:color/white"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
             <RelativeLayout
                 android:id="@+id/rl_edit_text_holder_edit_category"
                 android:layout_width="match_parent"

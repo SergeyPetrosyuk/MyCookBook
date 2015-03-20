@@ -1,10 +1,13 @@
 package com.mlsdev.serhiy.mycookbook.ui.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,12 +42,15 @@ public class RecipeFragment extends Fragment implements IRecipeView {
     private TextView mIngredientsTextView;
     private TextView mInstructionsTextView;
     private boolean mIsAfterEditing = false;
+    private AlertDialog.Builder dialog;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mPresenter = new RecipePresenter(this);
         recipeData = getArguments();
+        mPresenter.setupRecipeData(recipeData);
+        createDialog();
 
         setRetainInstance(true);
         setHasOptionsMenu(true);
@@ -81,6 +87,8 @@ public class RecipeFragment extends Fragment implements IRecipeView {
             case R.id.edit_recipe_action :
                 mPresenter.openUpdateScreen(recipeData);
                 break;
+            case R.id.action_delete_recipe :
+                dialog.create().show();
             default:
                 break;
         }
@@ -136,4 +144,26 @@ public class RecipeFragment extends Fragment implements IRecipeView {
                 .commit();
     }
 
+    @Override
+    public void onRecipeDeleted() {
+        getActivity().finish();
+    }
+
+    private void createDialog(){
+        dialog = new AlertDialog.Builder(getContext());
+        dialog.setTitle(getActivity().getString(R.string.delete_this_recipe));
+        dialog.setPositiveButton(R.string.add_note_btn, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mPresenter.deleteRecipe();
+            }
+        });
+
+        dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return;
+            }
+        });
+    }
 }

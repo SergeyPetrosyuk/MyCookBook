@@ -5,6 +5,6 @@ package com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor;
  */
 public interface IRecipeInteractor {
 
-    void loadNewData(int recipeId);
+    void deleteRecipe(Integer recipeId);
 
 }

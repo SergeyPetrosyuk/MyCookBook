@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mlsdev.serhiy.mycookbook.ui.activity.RecipeActivity">
 
+    <item
+        android:id="@+id/action_delete_recipe"
+        android:title=""
+        app:showAsAction="always"
+        android:icon="@mipmap/icon_delete_action"/>
+
     <item android:id="@+id/edit_recipe_action"
         android:title=""
         app:showAsAction="always"

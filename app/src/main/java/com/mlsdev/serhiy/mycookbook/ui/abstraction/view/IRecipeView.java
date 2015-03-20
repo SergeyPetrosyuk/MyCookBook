@@ -18,5 +18,6 @@ public interface IRecipeView {
     Context getContext();
     void showContent();
     void showUpdateFragment(Bundle dataForUpdate);
+    void onRecipeDeleted();
 
 }

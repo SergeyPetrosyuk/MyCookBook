@@ -4,18 +4,18 @@ import android.content.Context;
 
 import com.mlsdev.serhiy.mycookbook.asynk_task.UpdateCategoryTask;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.ICategoryEditeOrDeleteInteractor;
-import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnCategoryEditDeleteListener;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnEditDeleteListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 
 /**
  * Created by android on 18.03.15.
  */
-public class CategoryEditeOrDeleteInteractor implements ICategoryEditeOrDeleteInteractor, OnCategoryEditDeleteListener {
+public class CategoryEditeOrDeleteInteractor implements ICategoryEditeOrDeleteInteractor, OnEditDeleteListener {
 
-    private OnCategoryEditDeleteListener mListenere;
+    private OnEditDeleteListener mListenere;
     private IRecipesPresenter mPresenter;
 
-    public CategoryEditeOrDeleteInteractor(OnCategoryEditDeleteListener mListenere, IRecipesPresenter mPresenter) {
+    public CategoryEditeOrDeleteInteractor(OnEditDeleteListener mListenere, IRecipesPresenter mPresenter) {
         this.mListenere = mListenere;
         this.mPresenter = mPresenter;
     }

@@ -44,4 +44,7 @@
 
     <string name="new_category_label">New name</string>
 
+    <!--Delete a recipe dialog-->
+    <string name="delete_this_recipe">Delete this recipe?</string>
+
 </resources>

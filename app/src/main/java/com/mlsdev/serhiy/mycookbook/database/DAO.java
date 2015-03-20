@@ -54,6 +54,62 @@ public class DAO {
 
     }
 
+    public static boolean updateRecipe(Context context, Intent dataForInsert){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(RecipeEntry.COLUMN_TITLE, dataForInsert.getStringExtra(RecipeEntry.COLUMN_TITLE));
+        contentValues.put(RecipeEntry.COLUMN_INGREDIENTS, dataForInsert.getStringExtra(RecipeEntry.COLUMN_INGREDIENTS));
+        contentValues.put(RecipeEntry.COLUMN_INSTRUCTIONS, dataForInsert.getStringExtra(RecipeEntry.COLUMN_INSTRUCTIONS));
+        contentValues.put(RecipeEntry.COLUMN_IMAGE_URI, dataForInsert.getStringExtra(RecipeEntry.COLUMN_IMAGE_URI));
+
+        Integer recipeId = dataForInsert.getIntExtra(RecipeEntry.COLUMN_ID, 0);
+
+        if (recipeId == 0){
+            return false;
+        }
+
+        String where = RecipeEntry.TABLE_NAME + "." + RecipeEntry.COLUMN_ID + " = ?";
+        String[] whereArgs = new String[]{recipeId.toString()};
+
+        try {
+            database.update(
+                    RecipeEntry.TABLE_NAME,
+                    contentValues,
+                    where,
+                    whereArgs
+            );
+
+            return true;
+        } finally {
+            database.close();
+            dbHelper.close();
+        }
+
+    }
+
+    public static int deleteRecipe(Context context, Integer aRecipeId){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+
+        String where = RecipeEntry.COLUMN_ID + " = ? ";
+        String[] whereArgs = new String[]{aRecipeId.toString()};
+
+        try {
+            int deletedRows = database.delete(
+                    RecipeEntry.TABLE_NAME,
+                    where,
+                    whereArgs
+            );
+
+            return deletedRows;
+        } finally {
+            database.close();
+            dbHelper.close();
+        }
+    }
+
     public static Recipe getRecipeById(Context context, Integer recipeId, Intent categoryId){
         Recipe recipe = new Recipe();
         DBHelper dbHelper = new DBHelper(context);
@@ -305,41 +361,6 @@ public class DAO {
         return imageUriStr;
     }
 
-    public static boolean updateRecipe(Context context, Intent dataForInsert){
-        DBHelper dbHelper = new DBHelper(context);
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-
-        contentValues.put(RecipeEntry.COLUMN_TITLE, dataForInsert.getStringExtra(RecipeEntry.COLUMN_TITLE));
-        contentValues.put(RecipeEntry.COLUMN_INGREDIENTS, dataForInsert.getStringExtra(RecipeEntry.COLUMN_INGREDIENTS));
-        contentValues.put(RecipeEntry.COLUMN_INSTRUCTIONS, dataForInsert.getStringExtra(RecipeEntry.COLUMN_INSTRUCTIONS));
-        contentValues.put(RecipeEntry.COLUMN_IMAGE_URI, dataForInsert.getStringExtra(RecipeEntry.COLUMN_IMAGE_URI));
-
-        Integer recipeId = dataForInsert.getIntExtra(RecipeEntry.COLUMN_ID, 0);
-
-        if (recipeId == 0){
-            return false;
-        }
-
-        String where = RecipeEntry.TABLE_NAME + "." + RecipeEntry.COLUMN_ID + " = ?";
-        String[] whereArgs = new String[]{recipeId.toString()};
-
-        try {
-            database.update(
-                    RecipeEntry.TABLE_NAME,
-                    contentValues,
-                    where,
-                    whereArgs
-            );
-
-            return true;
-        } finally {
-            database.close();
-            dbHelper.close();
-        }
-
-    }
-
     public static int updateCategory(Context context, Integer categoryId, String newTitle){
 
         DBHelper dbHelper = new DBHelper(context);
@@ -359,4 +380,5 @@ public class DAO {
             dbHelper.close();
         }
     }
+
 }

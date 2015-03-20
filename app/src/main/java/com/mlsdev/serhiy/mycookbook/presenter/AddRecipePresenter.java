@@ -42,6 +42,7 @@ public class AddRecipePresenter implements IAddRecipePresenter, OnImageLoadedLis
 
     @Override
     public void addRecipe(String title, String ingredients, String instructions) {
+        mView.startAdding();
         mRecipeInteractor.addRecipe(title, ingredients, instructions);
     }
 
@@ -91,7 +92,7 @@ public class AddRecipePresenter implements IAddRecipePresenter, OnImageLoadedLis
 
     @Override
     public void recipeUpdated(boolean isUpdated) {
-        mView.backToRecipe();
+        mView.stopAdding();
     }
 
     @Override

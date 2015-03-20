@@ -3,7 +3,7 @@ package com.mlsdev.serhiy.mycookbook.ui.abstraction.listener;
 /**
  * Created by android on 18.03.15.
  */
-public interface OnCategoryEditDeleteListener {
+public interface OnEditDeleteListener {
 
     void onErrorEditCategory();
     void onSuccessEditCategory();

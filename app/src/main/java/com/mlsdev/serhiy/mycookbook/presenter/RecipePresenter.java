@@ -1,10 +1,14 @@
 package com.mlsdev.serhiy.mycookbook.presenter;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.mlsdev.serhiy.mycookbook.R;
+import com.mlsdev.serhiy.mycookbook.asynk_task.DeleteRecipeTask;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.IRecipeInteractor;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnDeleteRecipeListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipeView;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
@@ -14,19 +18,18 @@ import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
 /**
  * Created by android on 13.03.15.
  */
-public class RecipePresenter implements IRecipePresenter {
+public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener {
     private IRecipeView mView;
+    private Bundle mRecipeData;
+    private IRecipeInteractor mInteractor;
 
     public RecipePresenter(IRecipeView mView) {
         this.mView = mView;
+        mInteractor = new DeleteRecipeTask(this,this);
     }
 
     @Override
     public void openRecipe(Bundle recipeData, boolean isAfterEditing) {
-
-        if (isAfterEditing){
-
-        }
 
         Uri imageUri;
 
@@ -55,4 +58,29 @@ public class RecipePresenter implements IRecipePresenter {
         mView.showUpdateFragment(dataForUpdate);
     }
 
+    @Override
+    public void setupRecipeData(Bundle aRecipeData) {
+        mRecipeData = aRecipeData;
+    }
+
+    @Override
+    public void deleteRecipe() {
+        int recipeId = mRecipeData.getInt(RecipeEntry.COLUMN_ID);
+        mInteractor.deleteRecipe(recipeId);
+    }
+
+    @Override
+    public Context getContext() {
+        return mView.getContext();
+    }
+
+    @Override
+    public void onSuccess() {
+        mView.onRecipeDeleted();
+    }
+
+    @Override
+    public void onError() {
+
+    }
 }

@@ -35,4 +35,7 @@
     <string name="category_label">Категорія</string>
 
     <string name="new_category_label">Нова назва</string>
+
+    <!--Delete a recipe dialog-->
+    <string name="delete_this_recipe">Видалити цей рецепт?</string>
 </resources>

@@ -4,17 +4,17 @@ import android.os.AsyncTask;
 
 import com.mlsdev.serhiy.mycookbook.database.DAO;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.ICategoryEditeOrDeleteInteractor;
-import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnCategoryEditDeleteListener;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnEditDeleteListener;
 
 /**
  * Created by android on 18.03.15.
  */
 public class UpdateCategoryTask extends AsyncTask<Object, Void, Integer> {
 
-    private OnCategoryEditDeleteListener mListener;
+    private OnEditDeleteListener mListener;
     private ICategoryEditeOrDeleteInteractor mInteractor;
 
-    public UpdateCategoryTask(OnCategoryEditDeleteListener mListener, ICategoryEditeOrDeleteInteractor mInteractor) {
+    public UpdateCategoryTask(OnEditDeleteListener mListener, ICategoryEditeOrDeleteInteractor mInteractor) {
         this.mListener = mListener;
         this.mInteractor = mInteractor;
     }

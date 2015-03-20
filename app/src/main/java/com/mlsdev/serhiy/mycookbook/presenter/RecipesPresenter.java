@@ -1,21 +1,17 @@
 package com.mlsdev.serhiy.mycookbook.presenter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.AdapterView;
 
 import com.mlsdev.serhiy.mycookbook.adapter.RecipeAdapter;
 import com.mlsdev.serhiy.mycookbook.asynk_task.LoadRecipeListTask;
-import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.interactor.CategoryEditeOrDeleteInteractor;
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.ICategoryEditeOrDeleteInteractor;
-import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnCategoryEditDeleteListener;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnEditDeleteListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnRecipeListLoadedListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
-import com.mlsdev.serhiy.mycookbook.ui.activity.AddRecipeActivity;
 
 import java.util.List;
 
@@ -24,7 +20,7 @@ import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
 /**
  * Created by android on 11.03.15.
  */
-public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedListener, OnCategoryEditDeleteListener {
+public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedListener, OnEditDeleteListener {
 
     private IRecipesView mView;
     private boolean mIsEditorOpened = false;

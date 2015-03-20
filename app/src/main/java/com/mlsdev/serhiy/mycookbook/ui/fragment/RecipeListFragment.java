@@ -1,5 +1,6 @@
 package com.mlsdev.serhiy.mycookbook.ui.fragment;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -90,7 +91,6 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
         mEditCategoryName = (EditText) view.findViewById(R.id.et_edit_category_name);
         mEditCategoryName.addTextChangedListener(new OnTextChangedListener(mPresenter));
-
         mReadyBtn.setOnClickListener(this);
     }
     
@@ -165,36 +165,19 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void showCategoryEditor() {
-
-        mEditorContainer.setVisibility(View.VISIBLE);
-        mEditCategoryName.setVisibility(View.VISIBLE);
-        Animation showEditor = AnimationUtils.loadAnimation(getActivity(), R.anim.show_category_editor);
-        mEditorContainer.startAnimation(showEditor);
+        ObjectAnimator mover = ObjectAnimator.ofFloat(mEditorContainer, "translationY", 0);
+        mover.setDuration(400);
+        mover.start();
+        showSoftKeyboard(getActivity(), mEditCategoryName);
     }
 
     @Override
     public void hideCategoryEditor() {
-        Animation hideEditor = AnimationUtils.loadAnimation(getActivity(), R.anim.hide_category_editor);
-        hideEditor.setFillAfter(true);
-        hideEditor.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mEditCategoryName.setText(Constants.EMPTY_STRING);
-                mEditorContainer.setVisibility(View.GONE);
-                mEditCategoryName.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        mEditorContainer.startAnimation(hideEditor);
+        mEditCategoryName.setText(Constants.EMPTY_STRING);
+        ObjectAnimator mover = ObjectAnimator.ofFloat(mEditorContainer, "translationY", -mEditorContainer.getHeight());
+        mover.setDuration(400);
+        mover.start();
+        mEditCategoryName.clearFocus();
         hideSoftKeyboard(getActivity());
     }
 
@@ -234,5 +217,13 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     private static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    private static void showSoftKeyboard(Activity activity, EditText edittext){
+        edittext.setFocusableInTouchMode(true);
+        edittext.requestFocus();
+        final InputMethodManager inputMethodManager = (InputMethodManager) activity
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(edittext, InputMethodManager.SHOW_IMPLICIT);
     }
 }
