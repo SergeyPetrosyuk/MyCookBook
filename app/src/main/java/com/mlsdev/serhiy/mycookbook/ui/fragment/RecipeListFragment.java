@@ -66,16 +66,15 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         setHasOptionsMenu(true);
 
         mCategoryData = getArguments();
-
         String categoryName = mCategoryData.getString(DBContract.CategoryEntry.COLUMN_NAME, "");
         ((BaseActivity) getActivity()).setActionBarTitle(categoryName);
-
         mCategoryId = mCategoryData.getInt(DBContract.RecipeEntry.COLUMN_CATEGORY_ID);
-
         mPresenter = new RecipesPresenter(this);
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
         findViews(view);
         initViews();
+
+        mRecipeAdapter = new RecipeAdapter(this, mPresenter);
 
         mPresenter.loadRecipeList(mCategoryId);
 
@@ -139,11 +138,10 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void showRecipeList(List<Recipe> recipeList) {
-        if (recipeList.size() > 0) {
-            mRecipeAdapter = new RecipeAdapter(recipeList, this, mPresenter);
-            mResipeListView.setAdapter(mRecipeAdapter);
-            mResipeListView.invalidate();
-        }
+//        mRecipeAdapter = new RecipeAdapter(recipeList, this, mPresenter);
+        mRecipeAdapter.setData(recipeList);
+        mResipeListView.setAdapter(mRecipeAdapter);
+        mResipeListView.invalidate();
     }
 
     @Override

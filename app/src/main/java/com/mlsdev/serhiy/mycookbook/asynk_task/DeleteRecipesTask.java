@@ -6,25 +6,28 @@ import com.mlsdev.serhiy.mycookbook.database.DAO;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.IRecipeInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnDeleteRecipeListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipePresenter;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by android on 19.03.15.
  */
-public class DeleteRecipeTask extends AsyncTask<Integer, Void, Integer> implements IRecipeInteractor {
+public class DeleteRecipesTask extends AsyncTask<List<Integer>, Void, Integer> {
 
-    private IRecipePresenter mPresenter;
+    private IRecipesPresenter mPresenter;
     private OnDeleteRecipeListener mListener;
 
-    public DeleteRecipeTask(IRecipePresenter mPresenter, OnDeleteRecipeListener mListener) {
+    public DeleteRecipesTask(IRecipesPresenter mPresenter, OnDeleteRecipeListener mListener) {
         this.mPresenter = mPresenter;
         this.mListener = mListener;
     }
 
     @Override
-    protected Integer doInBackground(Integer... params) {
-        Integer recipeId = params[0];
-        Integer deletedRows = DAO.deleteRecipe(mPresenter.getContext(), recipeId);
-        return deletedRows;
+    protected Integer doInBackground(List<Integer>... params) {
+        List<Integer> recipeIds = params[0];
+        return DAO.deleteRecipes(mPresenter.getContext(), recipeIds);
     }
 
     @Override
@@ -34,8 +37,8 @@ public class DeleteRecipeTask extends AsyncTask<Integer, Void, Integer> implemen
         }
     }
 
-    @Override
-    public void deleteRecipe(Integer recipeId) {
-        this.execute(recipeId);
-    }
+//    @Override
+//    public void deleteRecipe(List<Integer> recipeIds) {
+//        this.execute(recipeIds);
+//    }
 }

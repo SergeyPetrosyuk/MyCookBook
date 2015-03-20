@@ -110,6 +110,31 @@ public class DAO {
         }
     }
 
+    public static int deleteRecipes(Context context, List<Integer> aRecipeIds){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+
+        String recipeIdsStr = "";
+
+        for (int i = 0; i < aRecipeIds.size(); i++){
+            recipeIdsStr += "'" + aRecipeIds.get(i).toString() + "'";
+
+            if (i < aRecipeIds.size()-1){
+                recipeIdsStr += ",";
+            }
+        }
+
+        String where = RecipeEntry.COLUMN_ID + " IN (" + recipeIdsStr + ") ";
+
+        try {
+            database.execSQL("DELETE FROM " + RecipeEntry.TABLE_NAME + " WHERE " + where);
+            return 1;
+        } finally {
+            database.close();
+            dbHelper.close();
+        }
+    }
+
     public static Recipe getRecipeById(Context context, Integer recipeId, Intent categoryId){
         Recipe recipe = new Recipe();
         DBHelper dbHelper = new DBHelper(context);

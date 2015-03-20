@@ -19,6 +19,7 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +35,12 @@ public class RecipeAdapter extends BaseAdapter {
         this.mRecipeList = recipeList;
         this.mView = mView;
         this.mPresenter = mPresenter;
+    }
+
+    public RecipeAdapter(IRecipesView mView, IRecipesPresenter mPresenter) {
+        this.mView = mView;
+        this.mPresenter = mPresenter;
+        mRecipeList = new ArrayList<>();
     }
 
     @Override
@@ -86,6 +93,15 @@ public class RecipeAdapter extends BaseAdapter {
         viewHolder.getNameTextView().setText(mRecipeList.get(position).getTitle());
 
         return convertView;
+    }
+
+    public void setData(List<Recipe> recipeList) {
+        if (recipeList.size() == mRecipeList.size())
+            return;
+
+        mRecipeList.clear();
+        mRecipeList.addAll(recipeList);
+        this.notifyDataSetChanged();
     }
 
     private class CallBackImageLoader implements Callback {
