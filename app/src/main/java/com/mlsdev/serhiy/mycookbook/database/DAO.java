@@ -280,40 +280,40 @@ public class DAO {
 
     }
 
-    public static RecipeCategory getCategoryById(Context context, long id){
-        DBHelper dbHelper = new DBHelper(context);
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
-
-        Cursor cursor = database.query(
-                CategoryEntry.TABLE_NAME,
-                null,
-                CategoryEntry.TABLE_NAME + "." + CategoryEntry.COLUMN_ID + " = ?",
-                new String[]{Long.toString(id)},
-                null,
-                null,
-                null);
-
-        try {
-            if (cursor.moveToFirst()){
-                RecipeCategory category = new RecipeCategory();
-
-                int idColumnIndex = cursor.getColumnIndex(CategoryEntry.COLUMN_ID);
-                int nameColumnIndex = cursor.getColumnIndex(CategoryEntry.COLUMN_NAME);
-
-                category.setId(cursor.getInt(idColumnIndex));
-                category.setName(cursor.getString(nameColumnIndex));
-
-                return category;
-            } else {
-                return null;
-            }
-        } finally {
-            if (cursor != null) { cursor.close(); }
-            if (database != null) { database.close(); }
-            if (dbHelper != null) { dbHelper.close(); }
-        }
-
-    }
+//    public static RecipeCategory getCategoryById(Context context, long id){
+//        DBHelper dbHelper = new DBHelper(context);
+//        SQLiteDatabase database = dbHelper.getReadableDatabase();
+//
+//        Cursor cursor = database.query(
+//                CategoryEntry.TABLE_NAME,
+//                null,
+//                CategoryEntry.TABLE_NAME + "." + CategoryEntry.COLUMN_ID + " = ?",
+//                new String[]{Long.toString(id)},
+//                null,
+//                null,
+//                null);
+//
+//        try {
+//            if (cursor.moveToFirst()){
+//                RecipeCategory category = new RecipeCategory();
+//
+//                int idColumnIndex = cursor.getColumnIndex(CategoryEntry.COLUMN_ID);
+//                int nameColumnIndex = cursor.getColumnIndex(CategoryEntry.COLUMN_NAME);
+//
+//                category.setId(cursor.getInt(idColumnIndex));
+//                category.setName(cursor.getString(nameColumnIndex));
+//
+//                return category;
+//            } else {
+//                return null;
+//            }
+//        } finally {
+//            if (cursor != null) { cursor.close(); }
+//            if (database != null) { database.close(); }
+//            if (dbHelper != null) { dbHelper.close(); }
+//        }
+//
+//    }
 
     public static List<RecipeCategory> getRecipeCategoryList(Context context){
         List<RecipeCategory> recipeCategoryList = new ArrayList<>();
@@ -403,6 +403,40 @@ public class DAO {
         } finally {
             database.close();
             dbHelper.close();
+        }
+    }
+
+    public static RecipeCategory getCategoryById(Context context, Integer aCategoryId){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        Cursor cursor = null;
+
+        String where = CategoryEntry.COLUMN_ID + " = ? ";
+        String[] whereArgs = new String[]{aCategoryId.toString()};
+
+        try {
+            RecipeCategory category = new RecipeCategory();
+            cursor = database.query(CategoryEntry.TABLE_NAME, null, where, whereArgs, null, null, null);
+
+            if (cursor.moveToFirst()) {
+
+                int columnIndexCategoryName = cursor.getColumnIndex(CategoryEntry.COLUMN_NAME);
+                int columnIndexCategoryId = cursor.getColumnIndex(CategoryEntry.COLUMN_ID);
+
+                Integer categoryId = cursor.getInt(columnIndexCategoryId);
+                String categoryName = cursor.getString(columnIndexCategoryName);
+
+                category.setName(categoryName);
+                category.setId(categoryId);
+
+                return category;
+            } else {
+                return null;
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+            if (database != null) database.close();
+            if (dbHelper != null) dbHelper.close();
         }
     }
 

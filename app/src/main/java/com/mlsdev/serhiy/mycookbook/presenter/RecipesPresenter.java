@@ -4,11 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.mlsdev.serhiy.mycookbook.adapter.RecipeAdapter;
+import com.mlsdev.serhiy.mycookbook.asynk_task.LoadCategoryNameTask;
 import com.mlsdev.serhiy.mycookbook.asynk_task.LoadRecipeListTask;
+import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.interactor.CategoryEditeOrDeleteInteractor;
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
+import com.mlsdev.serhiy.mycookbook.model.RecipeCategory;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.ICategoryEditeOrDeleteInteractor;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.ILoadCategoryNameInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnEditDeleteListener;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnLoadCategoryListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnRecipeListLoadedListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
@@ -20,14 +25,18 @@ import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
 /**
  * Created by android on 11.03.15.
  */
-public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedListener, OnEditDeleteListener {
+public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedListener, OnEditDeleteListener,
+        OnLoadCategoryListener{
 
     private IRecipesView mView;
     private boolean mIsEditorOpened = false;
     private ICategoryEditeOrDeleteInteractor mInteractor;
+    private Bundle mCategoryData;
+    private ILoadCategoryNameInteractor mLoadCategoryNameInteractor;
 
     public RecipesPresenter(IRecipesView mView) {
         this.mView = mView;
+        mLoadCategoryNameInteractor = new LoadCategoryNameTask(this, this);
     }
 
     @Override
@@ -93,6 +102,21 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     }
 
     @Override
+    public void setCategoryData(Bundle categoryData) {
+        mCategoryData = categoryData;
+    }
+
+    @Override
+    public Integer getCategoryId() {
+        return mCategoryData.getInt(DBContract.RecipeEntry.COLUMN_CATEGORY_ID);
+    }
+
+    @Override
+    public void setupCategoryName() {
+        mLoadCategoryNameInteractor.loadCatrgoryName(getCategoryId());
+    }
+
+    @Override
     public void recipeListLoaded(List<Recipe> recipeList) {
         mView.showRecipeList(recipeList);
     }
@@ -123,5 +147,15 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
             mView.hideCategoryEditor();
             mIsEditorOpened = mIsEditorOpened ? false : true;
         }
+    }
+
+    @Override
+    public void onLoadCategorySuccess(RecipeCategory category) {
+        mView.setupCategoryName(category.getName());
+    }
+
+    @Override
+    public void onLoadCategoryFailure() {
+        mView.setupCategoryName(mCategoryData.getString(CategoryEntry.COLUMN_NAME));
     }
 }

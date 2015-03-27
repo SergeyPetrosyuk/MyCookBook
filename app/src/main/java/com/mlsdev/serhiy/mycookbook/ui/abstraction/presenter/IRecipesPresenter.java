@@ -18,5 +18,8 @@ public interface IRecipesPresenter {
     void activateReadyButton(int editTextChars);
     void editCategory(int categoryId, String newTitle);
     void openAddRecipeScreen();
+    void setCategoryData(Bundle categoryData);
+    Integer getCategoryId();
+    void setupCategoryName();
 
 }

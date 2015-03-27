@@ -27,6 +27,6 @@ public interface IRecipesView {
 
     void setupNewCategoryTitle();
     void openAddRecipeScreen();
-    void invalidateListView();
+    void setupCategoryName(String categoryName);
 
 }

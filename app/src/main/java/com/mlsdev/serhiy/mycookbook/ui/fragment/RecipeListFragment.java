@@ -53,8 +53,6 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     private AbsListView mResipeListView;
     private RecipeAdapter mRecipeAdapter;
     private IRecipesPresenter mPresenter;
-    private Integer mCategoryId = 0;
-    private Bundle mCategoryData;
     private RelativeLayout mEditorContainer;
     private Button mReadyBtn;
     private RelativeLayout mEditTextHolder;
@@ -66,18 +64,18 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
-        mCategoryData = getArguments();
-        String categoryName = mCategoryData.getString(DBContract.CategoryEntry.COLUMN_NAME, "");
-        ((BaseActivity) getActivity()).setActionBarTitle(categoryName);
-        mCategoryId = mCategoryData.getInt(DBContract.RecipeEntry.COLUMN_CATEGORY_ID);
+
         mPresenter = new RecipesPresenter(this);
+        mPresenter.setCategoryData(getArguments());
+        mPresenter.setupCategoryName();
+
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
         findViews(view);
         initViews();
 
         mRecipeAdapter = new RecipeAdapter(this, mPresenter);
 
-        mPresenter.loadRecipeList(mCategoryId);
+        mPresenter.loadRecipeList(mPresenter.getCategoryId());
 
         return view;
     }
@@ -115,7 +113,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.loadRecipeList(mCategoryId);
+        mPresenter.loadRecipeList(mPresenter.getCategoryId());
     }
 
     @Override
@@ -125,7 +123,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
                 mPresenter.openAddRecipeScreen();
                 break;
             case R.id.btn_ready_edit_category:
-                mPresenter.editCategory(mCategoryId, mEditCategoryName.getText().toString());
+                mPresenter.editCategory(mPresenter.getCategoryId(), mEditCategoryName.getText().toString());
                 break;
             default:
                 break;
@@ -210,14 +208,13 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
         Intent categoryData = new Intent(getContext(), AddRecipeActivity.class);
         categoryData.putExtra(DBContract.CategoryEntry.COLUMN_NAME, newTitle);
-        categoryData.putExtra(DBContract.RecipeEntry.COLUMN_CATEGORY_ID, mCategoryId);
+        categoryData.putExtra(DBContract.RecipeEntry.COLUMN_CATEGORY_ID, mPresenter.getCategoryId());
         startActivity(categoryData);
     }
 
     @Override
-    public void invalidateListView() {
-        mResipeListView.invalidateViews();
-        mResipeListView.invalidate();
+    public void setupCategoryName(String categoryName) {
+        ((BaseActivity) getActivity()).setActionBarTitle(categoryName);
     }
 
     private static void hideSoftKeyboard(Activity activity) {
