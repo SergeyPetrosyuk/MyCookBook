@@ -440,4 +440,32 @@ public class DAO {
         }
     }
 
+    public static Integer deleteCategory(Context aContext, Integer aCategoryId){
+        DBHelper dbHelper = new DBHelper(aContext);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+
+        try {
+            // Delete recipes which are related to the category
+            String whereCategory = RecipeEntry.COLUMN_CATEGORY_ID + " = ? ";
+            String[] whereCategoryArgs = new String[]{aCategoryId.toString()};
+            database.delete(RecipeEntry.TABLE_NAME, whereCategory, whereCategoryArgs);
+
+            //Delete category
+            String where = CategoryEntry.COLUMN_ID + " = ? ";
+            String[] whereArgs = new String[]{aCategoryId.toString()};
+            Integer deletedRowsCount = database.delete(
+                    CategoryEntry.TABLE_NAME, where, whereArgs
+                );
+
+            if (deletedRowsCount > 0){
+                return deletedRowsCount;
+            } else {
+                return null;
+            }
+        } finally {
+            if (database != null) database.close();
+            if (dbHelper != null) dbHelper.close();
+        }
+    }
+
 }

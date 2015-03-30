@@ -22,5 +22,6 @@ public interface IRecipesPresenter {
     Integer getCategoryId();
     void setupCategoryName();
     void deleteRecipes();
+    void deleteCategory();
 
 }

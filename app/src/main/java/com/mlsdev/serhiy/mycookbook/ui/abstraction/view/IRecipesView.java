@@ -13,21 +13,19 @@ import java.util.List;
  * Created by android on 11.03.15.
  */
 public interface IRecipesView {
-
     void showRecipeList(List<Recipe> recipeList);
     Context getContext();
     void openRecipe(Bundle recipeData);
     BaseAdapter getAdepter();
-
     void showCategoryEditor();
     void hideCategoryEditor();
-
     void showReadyButton();
     void hideReadyButton();
-
-    void setupNewCategoryTitle();
     void openAddRecipeScreen();
     void setupCategoryName(String categoryName);
-
     void showDeleteAction(boolean isShow);
+    void onDeleteCategorySuccess();
+    void onDeleteCategoryError();
+    void onEditCategorySuccess();
+    void onEditCategoryError();
 }

@@ -63,6 +63,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     private EditText mEditCategoryName;
     private Menu mMenu;
     private AlertDialog.Builder dialog;
+    private AlertDialog.Builder mDeleteCategoryDialog;
 
     @Nullable
     @Override
@@ -110,7 +111,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
                 mPresenter.showEditor();
                 break;
             case R.id.action_delete_recipes:
-                dialog.setTitle(R.string.delete_this_recipes).create().show();
+                dialog.create().show();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -135,9 +136,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
                 mPresenter.editCategory(mPresenter.getCategoryId(), mEditCategoryName.getText().toString());
                 break;
             case R.id.bt_delete_category:
-                dialog.setIcon(R.mipmap.ic_delete_action_darck);
-                dialog.setMessage(R.string.delete_category_with_recipes).setTitle(R.string.delete).create().show();
-                Toast.makeText(getActivity(), "Поки не реалізовано", Toast.LENGTH_LONG).show();
+                mDeleteCategoryDialog.create().show();
                 break;
             default:
                 break;
@@ -213,15 +212,8 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void setupNewCategoryTitle() {
-        ((BaseActivity) getActivity()).setActionBarTitle(mEditCategoryName.getText().toString());
-        getActivity().setTitle(mEditCategoryName.getText().toString());
-    }
-
-    @Override
     public void openAddRecipeScreen() {
         String newTitle = ((BaseActivity) getActivity()).getSupportActionBar().getTitle().toString();
-
         Intent categoryData = new Intent(getContext(), AddRecipeActivity.class);
         categoryData.putExtra(DBContract.CategoryEntry.COLUMN_NAME, newTitle);
         categoryData.putExtra(DBContract.RecipeEntry.COLUMN_CATEGORY_ID, mPresenter.getCategoryId());
@@ -239,6 +231,27 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
             mMenu.getItem(0).setVisible(isShow);
     }
 
+    @Override
+    public void onDeleteCategorySuccess() {
+        getActivity().finish();
+    }
+
+    @Override
+    public void onDeleteCategoryError() {
+
+    }
+
+    @Override
+    public void onEditCategorySuccess() {
+        ((BaseActivity) getActivity()).setActionBarTitle(mEditCategoryName.getText().toString());
+        getActivity().setTitle(mEditCategoryName.getText().toString());
+    }
+
+    @Override
+    public void onEditCategoryError() {
+        Toast.makeText(getActivity(), "", Toast.LENGTH_LONG).show();
+    }
+
     private static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
@@ -253,6 +266,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     }
 
     private void createDialog(){
+        // Delete recipes dialog.
         dialog = new AlertDialog.Builder(getContext());
         dialog.setTitle(getActivity().getString(R.string.delete_this_recipes));
         dialog.setPositiveButton(R.string.add_note_btn, new DialogInterface.OnClickListener() {
@@ -261,13 +275,31 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
                 mPresenter.deleteRecipes();
             }
         });
-
         dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 return;
             }
         });
+
+        // Delete category dialog.
+        mDeleteCategoryDialog = new AlertDialog.Builder(getActivity());
+        mDeleteCategoryDialog.setPositiveButton(R.string.add_note_btn, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mPresenter.deleteCategory();
+            }
+        });
+        mDeleteCategoryDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return;
+            }
+        });
+
+        mDeleteCategoryDialog.setIcon(R.mipmap.ic_delete_action_darck)
+                .setMessage(R.string.delete_category_with_recipes)
+                .setTitle(R.string.delete);
     }
 
 }

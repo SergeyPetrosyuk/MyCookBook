@@ -2,6 +2,7 @@ package com.mlsdev.serhiy.mycookbook.interactor;
 
 import android.content.Context;
 
+import com.mlsdev.serhiy.mycookbook.asynk_task.DeleteCategoryTask;
 import com.mlsdev.serhiy.mycookbook.asynk_task.UpdateCategoryTask;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.ICategoryEditeOrDeleteInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnEditDeleteListener;
@@ -27,7 +28,7 @@ public class CategoryEditeOrDeleteInteractor implements ICategoryEditeOrDeleteIn
 
     @Override
     public void deleteCategory(Integer id) {
-
+        new DeleteCategoryTask(mPresenter, this).execute(id);
     }
 
     @Override

@@ -127,29 +127,34 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     }
 
     @Override
+    public void deleteCategory() {
+        mInteractor.deleteCategory(mCategoryData.getInt(RecipeEntry.COLUMN_CATEGORY_ID, 0));
+    }
+
+    @Override
     public void recipeListLoaded(List<Recipe> recipeList) {
         mView.showRecipeList(recipeList);
     }
 
     @Override
     public void onErrorEditCategory() {
-
+        mView.onEditCategoryError();
     }
 
     @Override
     public void onSuccessEditCategory() {
-        mView.setupNewCategoryTitle();
+        mView.onEditCategorySuccess();
         showEditor();
     }
 
     @Override
     public void onErrorDeleteCategory() {
-
+        mView.onEditCategoryError();
     }
 
     @Override
     public void onSuccessDeleteCategory() {
-
+        mView.onDeleteCategorySuccess();
     }
 
     private void closeCategoryEditor(){
