@@ -46,5 +46,10 @@
 
     <!--Delete a recipe dialog-->
     <string name="delete_this_recipe">Delete this recipe?</string>
+    <string name="delete_this_recipes">Delete these recipes?</string>
+
+    <!--Delete a category dialog-->
+    <string name="delete">DELETE</string>
+    <string name="delete_category_with_recipes">The category would be deleted with recipes which it contains! \nDelete anyway?</string>
 
 </resources>

@@ -2,8 +2,10 @@ package com.mlsdev.serhiy.mycookbook.ui.fragment;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,8 +28,10 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.adapter.RecipeAdapter;
@@ -50,20 +54,21 @@ import java.util.List;
 public class RecipeListFragment extends Fragment implements View.OnClickListener, IRecipesView {
 
     private Button mAddNoteBtn;
+    private ImageButton mDeleteCategoryBtn;
     private AbsListView mResipeListView;
-    private RecipeAdapter mRecipeAdapter;
     private IRecipesPresenter mPresenter;
     private RelativeLayout mEditorContainer;
     private Button mReadyBtn;
     private RelativeLayout mEditTextHolder;
     private EditText mEditCategoryName;
+    private Menu mMenu;
+    private AlertDialog.Builder dialog;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setRetainInstance(true);
         setHasOptionsMenu(true);
-
 
         mPresenter = new RecipesPresenter(this);
         mPresenter.setCategoryData(getArguments());
@@ -73,14 +78,14 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         findViews(view);
         initViews();
 
-        mRecipeAdapter = new RecipeAdapter(this, mPresenter);
-
+        createDialog();
         mPresenter.loadRecipeList(mPresenter.getCategoryId());
 
         return view;
     }
     
     private void findViews(View view){
+        mDeleteCategoryBtn = (ImageButton) view.findViewById(R.id.bt_delete_category);
         mAddNoteBtn = (Button) view.findViewById(R.id.btn_add_note);
         mResipeListView = (AbsListView) view.findViewById(R.id.lv_recipes);
         mEditorContainer = (RelativeLayout) view.findViewById(R.id.rl_category_name_editor);
@@ -90,6 +95,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         mEditCategoryName = (EditText) view.findViewById(R.id.et_edit_category_name);
         mEditCategoryName.addTextChangedListener(new OnTextChangedListener(mPresenter));
         mReadyBtn.setOnClickListener(this);
+        mDeleteCategoryBtn.setOnClickListener(this);
     }
     
     private void initViews(){
@@ -102,6 +108,9 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         switch (item.getItemId()){
             case R.id.action_edit_category :
                 mPresenter.showEditor();
+                break;
+            case R.id.action_delete_recipes:
+                dialog.setTitle(R.string.delete_this_recipes).create().show();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -125,6 +134,11 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
             case R.id.btn_ready_edit_category:
                 mPresenter.editCategory(mPresenter.getCategoryId(), mEditCategoryName.getText().toString());
                 break;
+            case R.id.bt_delete_category:
+                dialog.setIcon(R.mipmap.ic_delete_action_darck);
+                dialog.setMessage(R.string.delete_category_with_recipes).setTitle(R.string.delete).create().show();
+                Toast.makeText(getActivity(), "Поки не реалізовано", Toast.LENGTH_LONG).show();
+                break;
             default:
                 break;
         }
@@ -133,12 +147,14 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_recipe_list, menu);
+        mMenu = menu;
     }
 
     @Override
     public void showRecipeList(List<Recipe> recipeList) {
-        mRecipeAdapter.setData(recipeList);
-        mResipeListView.setAdapter(mRecipeAdapter);
+        RecipeAdapter adapter = new RecipeAdapter(this, mPresenter);
+        adapter.setData(recipeList);
+        mResipeListView.setAdapter(adapter);
         mResipeListView.invalidate();
     }
 
@@ -156,7 +172,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public BaseAdapter getAdepter() {
-        return mRecipeAdapter;
+        return (BaseAdapter) mResipeListView.getAdapter();
     }
 
     @Override
@@ -217,6 +233,12 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         ((BaseActivity) getActivity()).setActionBarTitle(categoryName);
     }
 
+    @Override
+    public void showDeleteAction(boolean isShow) {
+        if (mMenu != null)
+            mMenu.getItem(0).setVisible(isShow);
+    }
+
     private static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
@@ -228,6 +250,24 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         final InputMethodManager inputMethodManager = (InputMethodManager) activity
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.showSoftInput(edittext, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    private void createDialog(){
+        dialog = new AlertDialog.Builder(getContext());
+        dialog.setTitle(getActivity().getString(R.string.delete_this_recipes));
+        dialog.setPositiveButton(R.string.add_note_btn, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mPresenter.deleteRecipes();
+            }
+        });
+
+        dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return;
+            }
+        });
     }
 
 }

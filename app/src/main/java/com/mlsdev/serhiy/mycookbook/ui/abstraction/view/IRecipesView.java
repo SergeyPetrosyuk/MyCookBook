@@ -29,4 +29,5 @@ public interface IRecipesView {
     void openAddRecipeScreen();
     void setupCategoryName(String categoryName);
 
+    void showDeleteAction(boolean isShow);
 }

@@ -21,5 +21,6 @@ public interface IRecipesPresenter {
     void setCategoryData(Bundle categoryData);
     Integer getCategoryId();
     void setupCategoryName();
+    void deleteRecipes();
 
 }

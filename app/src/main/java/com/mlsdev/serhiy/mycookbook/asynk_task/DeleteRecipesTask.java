@@ -3,6 +3,7 @@ package com.mlsdev.serhiy.mycookbook.asynk_task;
 import android.os.AsyncTask;
 
 import com.mlsdev.serhiy.mycookbook.database.DAO;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.IDeleteRecipesInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.IRecipeInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnDeleteRecipeListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipePresenter;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * Created by android on 19.03.15.
  */
-public class DeleteRecipesTask extends AsyncTask<List<Integer>, Void, Integer> {
+public class DeleteRecipesTask extends AsyncTask<List<Integer>, Void, Integer> implements IDeleteRecipesInteractor {
 
     private IRecipesPresenter mPresenter;
     private OnDeleteRecipeListener mListener;
@@ -37,8 +38,8 @@ public class DeleteRecipesTask extends AsyncTask<List<Integer>, Void, Integer> {
         }
     }
 
-//    @Override
-//    public void deleteRecipe(List<Integer> recipeIds) {
-//        this.execute(recipeIds);
-//    }
+    @Override
+    public void deleteRecipe(List<Integer> recipeIds) {
+        this.execute(recipeIds);
+    }
 }

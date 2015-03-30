@@ -22,7 +22,9 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by android on 11.03.15.
@@ -35,20 +37,14 @@ public class RecipeAdapter extends BaseAdapter {
     private int mSelectedRecipeCount = 0;
     private int mVisibilityState = View.GONE;
     private List<RelativeLayout> mCheckboxHolders;
-
-    public RecipeAdapter(List<Recipe> recipeList, IRecipesView mView, IRecipesPresenter mPresenter) {
-        this.mRecipeList = recipeList;
-        this.mView = mView;
-        this.mPresenter = mPresenter;
-        mVisibilityState = mSelectedRecipeCount > 0 ? View.VISIBLE : View.GONE;
-        mCheckboxHolders = new ArrayList<>();
-    }
+    private Map<RelativeLayout, Integer> mCheckboxHoldersMap;
 
     public RecipeAdapter(IRecipesView mView, IRecipesPresenter mPresenter) {
         this.mView = mView;
         this.mPresenter = mPresenter;
         mRecipeList = new ArrayList<>();
         mCheckboxHolders = new ArrayList<>();
+        mCheckboxHoldersMap = new HashMap<>();
     }
 
     @Override
@@ -85,6 +81,7 @@ public class RecipeAdapter extends BaseAdapter {
             checkBoxHolder.setVisibility(mVisibilityState);
             convertView.setTag(viewHolder);
             mCheckboxHolders.add(checkBoxHolder);
+            mCheckboxHoldersMap.put(checkBoxHolder, position);
         }
 
         RecipeViewHolder viewHolder = (RecipeViewHolder) convertView.getTag();
@@ -167,7 +164,6 @@ public class RecipeAdapter extends BaseAdapter {
     }
 
     private class OnCheckBoxHolderClickListener implements View.OnClickListener{
-        public RelativeLayout checkBoxHolder;
         public CheckBox checkBox;
 
         private OnCheckBoxHolderClickListener(CheckBox checkBox) {
@@ -176,18 +172,17 @@ public class RecipeAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View v) {
-            boolean isChecked = checkBox.isChecked();
             checkBox.setPressed(true);
-            checkBox.setChecked(!isChecked);
+            checkBox.setChecked(!checkBox.isChecked());
 
-            if (!isChecked){
+            if (!checkBox.isChecked()){
                 decreaseCheckedItems();
             } else {
                 increaseCheckedItems();
             }
 
             if (mSelectedRecipeCount == 0){
-
+                hideCheckboxes();
             }
         }
     }
@@ -201,8 +196,39 @@ public class RecipeAdapter extends BaseAdapter {
     }
 
     private void updateTopViews(){
-        for (RelativeLayout checkboxHolder : mCheckboxHolders){
-            checkboxHolder.setVisibility(View.VISIBLE);
+        for (Map.Entry<RelativeLayout, Integer> entry : mCheckboxHoldersMap.entrySet()){
+            entry.getKey().setVisibility(View.VISIBLE);
         }
+
+        mView.showDeleteAction(true);
+    }
+
+    private void hideCheckboxes(){
+        for (Map.Entry<RelativeLayout, Integer> entry : mCheckboxHoldersMap.entrySet()){
+            entry.getKey().setVisibility(View.GONE);
+        }
+
+        mView.showDeleteAction(false);
+    }
+
+    public List<Integer> getSelectedRecipeIds(){
+        List<Integer> recipeListForDelete = new ArrayList<>();
+
+        for (Map.Entry<RelativeLayout, Integer> entry : mCheckboxHoldersMap.entrySet()){
+            CheckBox checkBox = (CheckBox) entry.getKey().findViewById(R.id.recipe_item_checkbox);
+
+            if (checkBox.isChecked()){
+                Recipe recipe = (Recipe) getItem(entry.getValue());
+                recipeListForDelete.add(recipe.get_id());
+            }
+        }
+
+        return recipeListForDelete;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+
     }
 }

@@ -40,7 +40,8 @@
         android:visibility="visible"
         android:translationY="-185dp">
 
-        <FrameLayout
+        <RelativeLayout
+            android:id="@+id/fl_category_editor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
@@ -64,7 +65,18 @@
                     android:layout_centerInParent="true"/>
 
             </RelativeLayout>
-        </FrameLayout>
+
+            <ImageButton
+                android:id="@+id/bt_delete_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_edit_text_holder_edit_category"
+                android:background="@drawable/add_note_btn_bg"
+                android:src="@mipmap/ic_delete_action_darck"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/delete"/>
+        </RelativeLayout>
 
         <Button
             android:id="@+id/btn_ready_edit_category"
@@ -75,6 +87,7 @@
             android:layout_marginRight="18dp"
             android:visibility="gone"
             android:background="@drawable/ready_btn_selector"/>
+
     </RelativeLayout>
 
 </RelativeLayout>

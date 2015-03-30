@@ -38,4 +38,8 @@
 
     <!--Delete a recipe dialog-->
     <string name="delete_this_recipe">Видалити цей рецепт?</string>
+    <string name="delete_this_recipes">Видалити ці рецепти?</string>
+    <string name="delete">ВИДАЛИТИ</string>
+
+    <string name="delete_category_with_recipes">Категорію буде видалено з усіма рецептани, що вона містить! \nВсеодно видалити?</string>
 </resources>
