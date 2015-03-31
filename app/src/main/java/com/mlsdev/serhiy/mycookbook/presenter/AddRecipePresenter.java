@@ -74,9 +74,8 @@ public class AddRecipePresenter implements IAddRecipePresenter, OnImageLoadedLis
     public void updateRecipe(String title, String ingredients, String instructions) {
         mView.startAdding();
         mRecipeData.putExtra(RecipeEntry.COLUMN_TITLE, title);
-        mRecipeData.putExtra(RecipeEntry.COLUMN_INSTRUCTIONS, instructions);
         mRecipeData.putExtra(RecipeEntry.COLUMN_INGREDIENTS, ingredients);
-
+        mRecipeData.putExtra(RecipeEntry.COLUMN_INSTRUCTIONS, instructions);
         mRecipeInteractor.updateRecipe(mRecipeData);
     }
 
@@ -92,7 +91,8 @@ public class AddRecipePresenter implements IAddRecipePresenter, OnImageLoadedLis
 
     @Override
     public void recipeUpdated(boolean isUpdated) {
-        mView.stopAdding();
+        if (isUpdated)
+            mView.onRecipeUpdated(mRecipeData);
     }
 
     @Override

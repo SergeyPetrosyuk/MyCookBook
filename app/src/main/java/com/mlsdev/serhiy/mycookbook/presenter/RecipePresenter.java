@@ -75,10 +75,21 @@ public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener
     }
 
     @Override
+    public boolean isRecipeFavorite() {
+        return true;
+    }
+
+    @Override
+    public void favoriteAction() {
+
+    }
+
+    @Override
     public void onSuccess() {
         mView.onRecipeDeleted();
     }
 
+    // Recipe deleting error
     @Override
     public void onError() {
 

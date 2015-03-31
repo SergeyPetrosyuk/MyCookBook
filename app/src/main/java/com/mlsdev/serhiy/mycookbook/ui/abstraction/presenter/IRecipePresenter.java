@@ -13,5 +13,6 @@ public interface IRecipePresenter {
     void setupRecipeData(Bundle recipeData);
     void deleteRecipe();
     Context getContext();
-
+    boolean isRecipeFavorite();
+    void favoriteAction();
 }

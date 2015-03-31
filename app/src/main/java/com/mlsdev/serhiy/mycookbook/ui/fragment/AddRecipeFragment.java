@@ -100,7 +100,6 @@ public class AddRecipeFragment extends Fragment implements IAddRecipeView, View.
         } else if (Constants.REQUEST_GET_CATEGORY == requestCode
                 && Activity.RESULT_OK == resultCode
                 && data != null){
-//            mAddRecipePresenter.setupCategoryId(data);
         }
     }
 
@@ -187,6 +186,12 @@ public class AddRecipeFragment extends Fragment implements IAddRecipeView, View.
         Animation fadeContainer = AnimationUtils.loadAnimation(getActivity(), R.anim.enable_container);
         fadeContainer.setFillAfter(true);
         mConatiner.startAnimation(fadeContainer);
+    }
+
+    @Override
+    public void onRecipeUpdated(Intent updatedRecipeData) {
+        getActivity().setIntent(updatedRecipeData);
+        getActivity().getFragmentManager().popBackStackImmediate();
     }
 
     @Override

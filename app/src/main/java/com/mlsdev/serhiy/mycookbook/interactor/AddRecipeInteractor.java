@@ -26,6 +26,7 @@ public class AddRecipeInteractor implements IAddRecipeInteractor, OnImageLoadedL
     private OnRecipeAddedListener mOnRecipeAddedListener;
     private Uri mUri;
     private int mCategoryId = 0;
+    private Intent mDataForInsert;
 
     public AddRecipeInteractor(OnImageLoadedListener mListener, OnRecipeAddedListener mOnRecipeAddedListener) {
         this.mListener = mListener;
@@ -50,19 +51,19 @@ public class AddRecipeInteractor implements IAddRecipeInteractor, OnImageLoadedL
         if (mCategoryId == 0){
             onErrorCategory();
         } else {
-            Intent dataForInsert = new Intent();
+            mDataForInsert = new Intent();
             String imageUri = "";
             if (mUri != null) {
                 imageUri = mUri.getPath();
             }
 
-            dataForInsert.putExtra(RecipeEntry.COLUMN_TITLE, title);
-            dataForInsert.putExtra(RecipeEntry.COLUMN_INGREDIENTS, ingredients);
-            dataForInsert.putExtra(RecipeEntry.COLUMN_INSTRUCTIONS, instructions);
-            dataForInsert.putExtra(RecipeEntry.COLUMN_IMAGE_URI, imageUri);
-            dataForInsert.putExtra(RecipeEntry.COLUMN_CATEGORY_ID, mCategoryId);
+            mDataForInsert.putExtra(RecipeEntry.COLUMN_TITLE, title);
+            mDataForInsert.putExtra(RecipeEntry.COLUMN_INGREDIENTS, ingredients);
+            mDataForInsert.putExtra(RecipeEntry.COLUMN_INSTRUCTIONS, instructions);
+            mDataForInsert.putExtra(RecipeEntry.COLUMN_IMAGE_URI, imageUri);
+            mDataForInsert.putExtra(RecipeEntry.COLUMN_CATEGORY_ID, mCategoryId);
 
-            new AddRecipeTask(this).execute(dataForInsert);
+            new AddRecipeTask(this).execute(mDataForInsert);
         }
     }
 

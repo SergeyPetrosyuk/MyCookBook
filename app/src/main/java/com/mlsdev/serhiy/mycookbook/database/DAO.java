@@ -59,6 +59,10 @@ public class DAO {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
+        String title= dataForInsert.getStringExtra(RecipeEntry.COLUMN_TITLE);
+        String ingr = dataForInsert.getStringExtra(RecipeEntry.COLUMN_INGREDIENTS);
+        String instr= dataForInsert.getStringExtra(RecipeEntry.COLUMN_INSTRUCTIONS);
+
         contentValues.put(RecipeEntry.COLUMN_TITLE, dataForInsert.getStringExtra(RecipeEntry.COLUMN_TITLE));
         contentValues.put(RecipeEntry.COLUMN_INGREDIENTS, dataForInsert.getStringExtra(RecipeEntry.COLUMN_INGREDIENTS));
         contentValues.put(RecipeEntry.COLUMN_INSTRUCTIONS, dataForInsert.getStringExtra(RecipeEntry.COLUMN_INSTRUCTIONS));

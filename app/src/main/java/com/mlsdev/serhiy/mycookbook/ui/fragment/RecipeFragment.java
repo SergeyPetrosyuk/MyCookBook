@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,15 +18,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mlsdev.serhiy.mycookbook.R;
+import com.mlsdev.serhiy.mycookbook.listener.OnFavoriteBtnClickListener;
 import com.mlsdev.serhiy.mycookbook.presenter.RecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipeView;
 import com.mlsdev.serhiy.mycookbook.ui.activity.BaseActivity;
+import com.mlsdev.serhiy.mycookbook.ui.activity.RecipeActivity;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -34,6 +38,7 @@ import com.squareup.picasso.Picasso;
 public class RecipeFragment extends Fragment implements IRecipeView {
 
     private ImageView mRecipeImage;
+    private ImageButton mFavoriteBtn;
     private TextView mRecipeTitle;
     private Bundle recipeData;
     private IRecipePresenter mPresenter;
@@ -48,8 +53,7 @@ public class RecipeFragment extends Fragment implements IRecipeView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mPresenter = new RecipePresenter(this);
-        recipeData = getArguments();
-        mPresenter.setupRecipeData(recipeData);
+        recipeData = ((RecipeActivity)getActivity()).getRecipeData();
         createDialog();
 
         setRetainInstance(true);
@@ -65,6 +69,7 @@ public class RecipeFragment extends Fragment implements IRecipeView {
         mIngredientsTextView = (TextView) view.findViewById(R.id.tv_label_ingredients);
         mInstructionsTextView = (TextView) view.findViewById(R.id.tv_label_instructions);
         mContentContainer = (RelativeLayout) view.findViewById(R.id.rl_recipe_content);
+        mFavoriteBtn = (ImageButton) view.findViewById(R.id.ibt_make_recipe_favorite);
 
         mPresenter.openRecipe(recipeData, mIsAfterEditing);
 
@@ -72,7 +77,15 @@ public class RecipeFragment extends Fragment implements IRecipeView {
             mIsAfterEditing = false;
         }
 
+        mFavoriteBtn.setOnClickListener(new OnFavoriteBtnClickListener(mFavoriteBtn, mPresenter));
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        recipeData = ((RecipeActivity)getActivity()).getRecipeData();
+        mPresenter.setupRecipeData(recipeData);
     }
 
     @Override

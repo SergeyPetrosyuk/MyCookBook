@@ -26,5 +26,5 @@ public interface IAddRecipeView {
     void backToRecipe();
     void startAdding();
     void stopAdding();
-
+    void onRecipeUpdated(Intent updatedRecipeData);
 }
