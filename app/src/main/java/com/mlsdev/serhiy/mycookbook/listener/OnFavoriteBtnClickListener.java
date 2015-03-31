@@ -30,6 +30,7 @@ public class OnFavoriteBtnClickListener implements View.OnClickListener {
             transitionDrawable.startTransition(500);
 
         mFavoriteBtn.setSelected(!mFavoriteBtn.isSelected());
+        mPresenter.favoriteAction();
     }
 
     private void checkIfAlreadyFavorite(){

@@ -6,7 +6,10 @@ import android.os.Bundle;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.asynk_task.DeleteRecipeTask;
+import com.mlsdev.serhiy.mycookbook.asynk_task.MakeRecipeFavoriteTask;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
+import com.mlsdev.serhiy.mycookbook.listener.OnMoveToFavoritesListener;
+import com.mlsdev.serhiy.mycookbook.model.Recipe;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.IRecipeInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnDeleteRecipeListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipePresenter;
@@ -18,7 +21,7 @@ import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
 /**
  * Created by android on 13.03.15.
  */
-public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener {
+public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener, OnMoveToFavoritesListener {
     private IRecipeView mView;
     private Bundle mRecipeData;
     private IRecipeInteractor mInteractor;
@@ -76,12 +79,16 @@ public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener
 
     @Override
     public boolean isRecipeFavorite() {
-        return true;
+        return mRecipeData.getBoolean(RecipeEntry.COLUMN_IS_FAVORITE, false);
     }
 
     @Override
     public void favoriteAction() {
+        Recipe recipe = new Recipe();
+        recipe.set_id(mRecipeData.getInt(RecipeEntry.COLUMN_ID));
+        recipe.setIsFavorite(mRecipeData.getBoolean(RecipeEntry.COLUMN_IS_FAVORITE, false));
 
+        new MakeRecipeFavoriteTask(this, this).execute(recipe);
     }
 
     @Override
@@ -92,6 +99,16 @@ public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener
     // Recipe deleting error
     @Override
     public void onError() {
+
+    }
+
+    @Override
+    public void onMoveToFavoritesSuccess(boolean aNewStatus) {
+        mView.updateFavoriteStatus(aNewStatus);
+    }
+
+    @Override
+    public void onMoveToFavoritesError() {
 
     }
 }

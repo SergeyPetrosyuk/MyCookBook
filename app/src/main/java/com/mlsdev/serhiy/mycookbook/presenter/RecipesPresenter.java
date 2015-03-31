@@ -2,9 +2,8 @@ package com.mlsdev.serhiy.mycookbook.presenter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.widget.BaseAdapter;
 
-import com.mlsdev.serhiy.mycookbook.adapter.RecipeAdapter;
+import com.mlsdev.serhiy.mycookbook.adapter.RecipeListAdapter;
 import com.mlsdev.serhiy.mycookbook.asynk_task.DeleteRecipesTask;
 import com.mlsdev.serhiy.mycookbook.asynk_task.LoadCategoryNameTask;
 import com.mlsdev.serhiy.mycookbook.asynk_task.LoadRecipeListTask;
@@ -13,7 +12,6 @@ import com.mlsdev.serhiy.mycookbook.interactor.CategoryEditeOrDeleteInteractor;
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
 import com.mlsdev.serhiy.mycookbook.model.RecipeCategory;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.ICategoryEditeOrDeleteInteractor;
-import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.IDeleteRecipesInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.interactor.ILoadCategoryNameInteractor;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnDeleteRecipeListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnEditDeleteListener;
@@ -56,7 +54,7 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
 
     @Override
     public void openRecipe(int position) {
-        RecipeAdapter adapter = (RecipeAdapter) mView.getAdepter();
+        RecipeListAdapter adapter = (RecipeListAdapter) mView.getAdepter();
         Recipe recipe = (Recipe) adapter.getItem(position);
 
         Bundle data = new Bundle();
@@ -68,6 +66,7 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
         data.putString(RecipeEntry.COLUMN_IMAGE_URI, recipe.getImageUri());
         data.putString(RecipeEntry.COLUMN_INGREDIENTS, recipe.getIngredients());
         data.putString(RecipeEntry.COLUMN_INSTRUCTIONS, recipe.getInstructions());
+        data.putBoolean(RecipeEntry.COLUMN_IS_FAVORITE, recipe.getIsFavorite());
 
         mView.openRecipe(data);
 
@@ -122,7 +121,7 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
 
     @Override
     public void deleteRecipes() {
-        RecipeAdapter adapter = (RecipeAdapter) mView.getAdepter();
+        RecipeListAdapter adapter = (RecipeListAdapter) mView.getAdepter();
         new DeleteRecipesTask(this, this).deleteRecipe(adapter.getSelectedRecipeIds());
     }
 

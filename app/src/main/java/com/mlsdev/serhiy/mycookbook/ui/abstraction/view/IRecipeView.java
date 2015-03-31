@@ -1,7 +1,6 @@
 package com.mlsdev.serhiy.mycookbook.ui.abstraction.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -19,5 +18,6 @@ public interface IRecipeView {
     void showContent();
     void showUpdateFragment(Bundle dataForUpdate);
     void onRecipeDeleted();
+    void updateFavoriteStatus(Boolean aNewStatus);
 
 }

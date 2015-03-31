@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * Created by android on 11.03.15.
  */
-public class RecipeAdapter extends BaseAdapter {
+public class RecipeListAdapter extends BaseAdapter {
 
     private List<Recipe> mRecipeList;
     private IRecipesView mView;
@@ -39,7 +39,7 @@ public class RecipeAdapter extends BaseAdapter {
     private List<RelativeLayout> mCheckboxHolders;
     private Map<RelativeLayout, Integer> mCheckboxHoldersMap;
 
-    public RecipeAdapter(IRecipesView mView, IRecipesPresenter mPresenter) {
+    public RecipeListAdapter(IRecipesView mView, IRecipesPresenter mPresenter) {
         this.mView = mView;
         this.mPresenter = mPresenter;
         mRecipeList = new ArrayList<>();

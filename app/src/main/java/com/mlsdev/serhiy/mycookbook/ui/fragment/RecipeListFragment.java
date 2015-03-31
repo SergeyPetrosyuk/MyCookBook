@@ -9,17 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -27,14 +22,12 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mlsdev.serhiy.mycookbook.R;
-import com.mlsdev.serhiy.mycookbook.adapter.RecipeAdapter;
+import com.mlsdev.serhiy.mycookbook.adapter.RecipeListAdapter;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.listener.OnTextChangedListener;
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
@@ -151,7 +144,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void showRecipeList(List<Recipe> recipeList) {
-        RecipeAdapter adapter = new RecipeAdapter(this, mPresenter);
+        RecipeListAdapter adapter = new RecipeListAdapter(this, mPresenter);
         adapter.setData(recipeList);
         mResipeListView.setAdapter(adapter);
         mResipeListView.invalidate();

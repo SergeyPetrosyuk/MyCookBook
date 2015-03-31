@@ -12,6 +12,7 @@ public class Recipe {
     private String mIngredients  = null;
     private String mInstructions = null;
     private int mCategoryId      = 0;
+    private boolean mIsFavorite  = false;
     
     public Recipe() {
     }
@@ -55,6 +56,10 @@ public class Recipe {
         this.mCategoryId = mCategoryId;
     }
 
+    public void setIsFavorite(boolean aIsFavorite){
+        mIsFavorite = aIsFavorite;
+    }
+
     public int getCategoryId() {
         return mCategoryId;
     }
@@ -81,5 +86,9 @@ public class Recipe {
 
     public String getInstructions() {
         return mInstructions;
+    }
+
+    public boolean getIsFavorite(){
+        return mIsFavorite;
     }
 }

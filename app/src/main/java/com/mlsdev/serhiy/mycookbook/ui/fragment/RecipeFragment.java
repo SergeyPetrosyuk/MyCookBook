@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mlsdev.serhiy.mycookbook.R;
+import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.listener.OnFavoriteBtnClickListener;
 import com.mlsdev.serhiy.mycookbook.presenter.RecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipePresenter;
@@ -54,6 +56,7 @@ public class RecipeFragment extends Fragment implements IRecipeView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mPresenter = new RecipePresenter(this);
         recipeData = ((RecipeActivity)getActivity()).getRecipeData();
+        mPresenter.setupRecipeData(recipeData);
         createDialog();
 
         setRetainInstance(true);
@@ -160,6 +163,13 @@ public class RecipeFragment extends Fragment implements IRecipeView {
     @Override
     public void onRecipeDeleted() {
         getActivity().finish();
+    }
+
+    @Override
+    public void updateFavoriteStatus(Boolean aNewStatus) {
+        Intent intent = getActivity().getIntent();
+        intent.putExtra(DBContract.RecipeEntry.COLUMN_IS_FAVORITE, aNewStatus);
+        getActivity().setIntent(intent);
     }
 
     private void createDialog(){

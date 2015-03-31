@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
 import com.mlsdev.serhiy.mycookbook.model.RecipeCategory;
+import com.mlsdev.serhiy.mycookbook.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,10 +59,6 @@ public class DAO {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-
-        String title= dataForInsert.getStringExtra(RecipeEntry.COLUMN_TITLE);
-        String ingr = dataForInsert.getStringExtra(RecipeEntry.COLUMN_INGREDIENTS);
-        String instr= dataForInsert.getStringExtra(RecipeEntry.COLUMN_INSTRUCTIONS);
 
         contentValues.put(RecipeEntry.COLUMN_TITLE, dataForInsert.getStringExtra(RecipeEntry.COLUMN_TITLE));
         contentValues.put(RecipeEntry.COLUMN_INGREDIENTS, dataForInsert.getStringExtra(RecipeEntry.COLUMN_INGREDIENTS));
@@ -238,6 +235,7 @@ public class DAO {
                 int columnIndexImageUri = cursor.getColumnIndex(RecipeEntry.COLUMN_IMAGE_URI);
                 int columnIndexCategoryName = cursor.getColumnIndex(CategoryEntry.COLUMN_NAME);
                 int columnIndexRecipeId = cursor.getColumnIndex(RecipeEntry.COLUMN_ID);
+                int columnIndexRecipeIsFavorite = cursor.getColumnIndex(RecipeEntry.COLUMN_IS_FAVORITE);
 
                 String recipeName = cursor.getString(columnIndexName);
                 String categoryName = cursor.getString(columnIndexCategoryName);
@@ -246,6 +244,7 @@ public class DAO {
                 String imageUri = cursor.getString(columnIndexImageUri);
                 int recipeCategoryId = cursor.getInt(columnIndexCategoryId);
                 int recipeId = cursor.getInt(columnIndexRecipeId);
+                boolean isRecipeInFavorites = cursor.getInt(columnIndexRecipeIsFavorite) == 0 ? false : true;
 
                 Recipe recipe = new Recipe();
                 recipe.setCategoryName(categoryName);
@@ -255,6 +254,7 @@ public class DAO {
                 recipe.setTitle(recipeName);
                 recipe.setCategoryId(recipeCategoryId);
                 recipe.set_id(recipeId);
+                recipe.setIsFavorite(isRecipeInFavorites);
 
                 recipeList.add(recipe);
             }
@@ -283,41 +283,6 @@ public class DAO {
         }
 
     }
-
-//    public static RecipeCategory getCategoryById(Context context, long id){
-//        DBHelper dbHelper = new DBHelper(context);
-//        SQLiteDatabase database = dbHelper.getReadableDatabase();
-//
-//        Cursor cursor = database.query(
-//                CategoryEntry.TABLE_NAME,
-//                null,
-//                CategoryEntry.TABLE_NAME + "." + CategoryEntry.COLUMN_ID + " = ?",
-//                new String[]{Long.toString(id)},
-//                null,
-//                null,
-//                null);
-//
-//        try {
-//            if (cursor.moveToFirst()){
-//                RecipeCategory category = new RecipeCategory();
-//
-//                int idColumnIndex = cursor.getColumnIndex(CategoryEntry.COLUMN_ID);
-//                int nameColumnIndex = cursor.getColumnIndex(CategoryEntry.COLUMN_NAME);
-//
-//                category.setId(cursor.getInt(idColumnIndex));
-//                category.setName(cursor.getString(nameColumnIndex));
-//
-//                return category;
-//            } else {
-//                return null;
-//            }
-//        } finally {
-//            if (cursor != null) { cursor.close(); }
-//            if (database != null) { database.close(); }
-//            if (dbHelper != null) { dbHelper.close(); }
-//        }
-//
-//    }
 
     public static List<RecipeCategory> getRecipeCategoryList(Context context){
         List<RecipeCategory> recipeCategoryList = new ArrayList<>();
@@ -472,4 +437,22 @@ public class DAO {
         }
     }
 
+    public static Integer moveRecipeToFavorites(Context aContext, Integer aRecipeId, boolean aNewStatus){
+        DBHelper dbHelper = new DBHelper(aContext);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(RecipeEntry.COLUMN_IS_FAVORITE, aNewStatus ? 1 : 0);
+
+        String where = RecipeEntry.COLUMN_ID + " = ? ";
+        String[] whereArgs = new String[]{aRecipeId.toString()};
+
+        try {
+            Integer updatedRows = database.update(RecipeEntry.TABLE_NAME, contentValues, where, whereArgs);
+            return updatedRows;
+        } finally {
+            if (database != null) database.close();
+            if (dbHelper != null) dbHelper.close();
+        }
+    }
 }

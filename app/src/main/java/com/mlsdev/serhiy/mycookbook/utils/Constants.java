@@ -22,4 +22,7 @@ public class Constants {
 
     public static final String EMPTY_STRING = "";
     public static final String CONTENT_MEDIA = "content://media";
+
+    public static final String FAVORITE = "1";
+    public static final String NOT_FAVORITE = "0";
 }

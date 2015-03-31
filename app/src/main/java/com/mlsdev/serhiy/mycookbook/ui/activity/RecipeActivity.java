@@ -3,7 +3,6 @@ package com.mlsdev.serhiy.mycookbook.ui.activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
