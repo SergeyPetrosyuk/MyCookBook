@@ -23,5 +23,6 @@ public interface IRecipesPresenter {
     void setupCategoryName();
     void deleteRecipes();
     void deleteCategory();
-
+    boolean isOnlyFavorites();
+    void setupIsFavorite(boolean newStatus);
 }

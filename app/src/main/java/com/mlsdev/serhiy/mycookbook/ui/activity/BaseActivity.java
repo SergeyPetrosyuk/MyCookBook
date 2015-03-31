@@ -12,6 +12,8 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.utils.TypefaceSpan;
@@ -28,6 +30,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mCurrentTitle;
     private boolean mIsMoreThanOneFragment = false;
+    private ImageButton mFilterImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +47,12 @@ public abstract class BaseActivity extends ActionBarActivity {
             setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+            mFilterImageButton = (ImageButton) mToolbar.findViewById(R.id.iv_filter_by_favorites);
         }
 
         mCurrentTitle = getTitle().toString();
     }
-    
+
     protected void initLeftDrawerNav(){
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -149,7 +153,14 @@ public abstract class BaseActivity extends ActionBarActivity {
         this.mIsMoreThanOneFragment = mIsMoreThanOneFragment;
     }
 
-    public boolean getIsIsMoreThanOneFragment() {
-        return mIsMoreThanOneFragment;
+    public ImageButton getFilterBtn() {
+        return mFilterImageButton;
+    }
+
+    public void showFilterBtn(boolean isShow){
+        if (isShow)
+            mFilterImageButton.setVisibility(View.VISIBLE);
+        else
+            mFilterImageButton.setVisibility(View.GONE);
     }
 }

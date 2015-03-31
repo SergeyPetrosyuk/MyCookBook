@@ -4,20 +4,18 @@ import android.graphics.drawable.TransitionDrawable;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipePresenter;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 
 /**
  * Created by android on 31.03.15.
  */
-public class OnFavoriteBtnClickListener implements View.OnClickListener {
-
+public class OnFilterByFavoriteClickListener implements View.OnClickListener {
     private ImageButton mFavoriteBtn;
-    private IRecipePresenter mPresenter;
+    private IRecipesPresenter mPresenter;
 
-    public OnFavoriteBtnClickListener(ImageButton mFavoriteBtn, IRecipePresenter mPresenter) {
+    public OnFilterByFavoriteClickListener(ImageButton mFavoriteBtn, IRecipesPresenter mPresenter) {
         this.mFavoriteBtn = mFavoriteBtn;
         this.mPresenter = mPresenter;
-        checkIfAlreadyFavorite();
     }
 
     @Override
@@ -30,14 +28,8 @@ public class OnFavoriteBtnClickListener implements View.OnClickListener {
             transitionDrawable.startTransition(300);
 
         mFavoriteBtn.setSelected(!mFavoriteBtn.isSelected());
-        mPresenter.favoriteAction();
-    }
+        mPresenter.setupIsFavorite(mFavoriteBtn.isSelected());
+        mPresenter.loadRecipeList(mPresenter.getCategoryId());
 
-    private void checkIfAlreadyFavorite(){
-        if (mPresenter.isRecipeFavorite()) {
-            TransitionDrawable transitionDrawable = (TransitionDrawable) mFavoriteBtn.getDrawable();
-            transitionDrawable.startTransition(0);
-            mFavoriteBtn.setSelected(true);
-        }
     }
 }

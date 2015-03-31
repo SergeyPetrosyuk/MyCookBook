@@ -16,13 +16,15 @@ public class RecipeViewHolder {
     private View foreground;
     private RelativeLayout checkboxHolder;
     private CheckBox checkBox;
+    private ImageView favoriteStatus;
 
-    public RecipeViewHolder(ImageView iconImageView, TextView nameTextView, View foreground, RelativeLayout checkboxHolder, CheckBox checkBox) {
+    public RecipeViewHolder(ImageView iconImageView, TextView nameTextView, View foreground, RelativeLayout checkboxHolder, CheckBox checkBox, ImageView favoriteStatus) {
         this.iconImageView = iconImageView;
         this.nameTextView = nameTextView;
         this.foreground = foreground;
         this.checkboxHolder = checkboxHolder;
         this.checkBox = checkBox;
+        this.favoriteStatus = favoriteStatus;
     }
 
     public ImageView getIconImageView() {
@@ -33,4 +35,7 @@ public class RecipeViewHolder {
         return nameTextView;
     }
 
+    public ImageView getFavoriteStatus() {
+        return favoriteStatus;
+    }
 }

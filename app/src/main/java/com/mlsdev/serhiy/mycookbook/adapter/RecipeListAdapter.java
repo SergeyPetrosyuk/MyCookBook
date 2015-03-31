@@ -72,7 +72,8 @@ public class RecipeListAdapter extends BaseAdapter {
             View foreground = convertView.findViewById(R.id.recipe_item_foreground);
             CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.recipe_item_checkbox);
             RelativeLayout checkBoxHolder = (RelativeLayout) convertView.findViewById(R.id.recipe_item_checkbox_holder);
-            RecipeViewHolder viewHolder = new RecipeViewHolder(imageView, nameTextView, foreground, checkBoxHolder, checkBox);
+            ImageView favoriteStatus = (ImageView) convertView.findViewById(R.id.iv_favorite_status);
+            RecipeViewHolder viewHolder = new RecipeViewHolder(imageView, nameTextView, foreground, checkBoxHolder, checkBox, favoriteStatus);
 
             foreground.setTag(new PositionHolder(position));
             foreground.setOnClickListener(new OnRecipeClickListener(mPresenter));
@@ -102,6 +103,11 @@ public class RecipeListAdapter extends BaseAdapter {
         }
 
         viewHolder.getNameTextView().setText(mRecipeList.get(position).getTitle());
+
+        if (mRecipeList.get(position).getIsFavorite())
+            viewHolder.getFavoriteStatus().setVisibility(View.VISIBLE);
+        else
+            viewHolder.getFavoriteStatus().setVisibility(View.GONE);
 
         return convertView;
     }

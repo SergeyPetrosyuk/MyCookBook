@@ -122,7 +122,7 @@
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
                 android:src="@drawable/bt_favorite_transition_normal"
-                android:background="@android:color/transparent"/>
+                android:background="@drawable/bt_favorite_selector"/>
         </FrameLayout>
     </RelativeLayout>
 </ScrollView>

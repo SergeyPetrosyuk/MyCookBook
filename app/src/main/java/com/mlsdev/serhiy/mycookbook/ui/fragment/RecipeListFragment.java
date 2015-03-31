@@ -23,12 +23,14 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.adapter.RecipeListAdapter;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
+import com.mlsdev.serhiy.mycookbook.listener.OnFilterByFavoriteClickListener;
 import com.mlsdev.serhiy.mycookbook.listener.OnTextChangedListener;
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
 import com.mlsdev.serhiy.mycookbook.presenter.RecipesPresenter;
@@ -75,6 +77,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         createDialog();
         mPresenter.loadRecipeList(mPresenter.getCategoryId());
 
+        defineFilterIcon();
         return view;
     }
     
@@ -90,6 +93,8 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         mEditCategoryName.addTextChangedListener(new OnTextChangedListener(mPresenter));
         mReadyBtn.setOnClickListener(this);
         mDeleteCategoryBtn.setOnClickListener(this);
+
+        defineFilterIcon();
     }
     
     private void initViews(){
@@ -117,6 +122,13 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         mPresenter.loadRecipeList(mPresenter.getCategoryId());
+        showFilterIcon();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        hideFilterIcon();
     }
 
     @Override
@@ -295,4 +307,20 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
                 .setTitle(R.string.delete);
     }
 
+    private void defineFilterIcon(){
+        BaseActivity activity = ((BaseActivity) getActivity());
+        activity.showFilterBtn(true);
+        ImageButton filterImageButton = activity.getFilterBtn();
+        filterImageButton.setOnClickListener(new OnFilterByFavoriteClickListener(filterImageButton, mPresenter));
+    }
+
+    private void hideFilterIcon(){
+        BaseActivity activity = ((BaseActivity) getActivity());
+        activity.showFilterBtn(true);
+    }
+
+    private void showFilterIcon(){
+        BaseActivity activity = ((BaseActivity) getActivity());
+        activity.showFilterBtn(true);
+    }
 }

@@ -35,6 +35,7 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     private ICategoryEditeOrDeleteInteractor mInteractor;
     private Bundle mCategoryData;
     private ILoadCategoryNameInteractor mLoadCategoryNameInteractor;
+    private boolean mIsOnlyFavorites = false;
 
     public RecipesPresenter(IRecipesView mView) {
         this.mView = mView;
@@ -128,6 +129,16 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     @Override
     public void deleteCategory() {
         mInteractor.deleteCategory(mCategoryData.getInt(RecipeEntry.COLUMN_CATEGORY_ID, 0));
+    }
+
+    @Override
+    public boolean isOnlyFavorites() {
+        return mIsOnlyFavorites;
+    }
+
+    @Override
+    public void setupIsFavorite(boolean newStatus) {
+        mIsOnlyFavorites = newStatus;
     }
 
     @Override

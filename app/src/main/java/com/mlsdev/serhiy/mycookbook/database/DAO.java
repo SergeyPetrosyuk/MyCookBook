@@ -200,28 +200,39 @@ public class DAO {
     }
 
     public static List<Recipe> getRecipeList(Context context, Integer categoryId){
+        String projection = CategoryEntry.TABLE_NAME + "." + CategoryEntry.COLUMN_ID + " = ?";
+        String[] whereArgs = new String[]{categoryId.toString()};
+        return loadRecipeList(context, projection, whereArgs);
+    }
+
+    public static List<Recipe> getRecipeListByFavoriteStatus(Context context, Integer categoryId){
+        String projection = CategoryEntry.TABLE_NAME + "." + CategoryEntry.COLUMN_ID + " = ? AND " +
+                RecipeEntry.COLUMN_IS_FAVORITE + " = ? ";
+        String[] whereArgs = new String[]{categoryId.toString(), Constants.FAVORITE};
+        return loadRecipeList(context, projection, whereArgs);
+    }
+
+    private static List<Recipe> loadRecipeList(Context context, String where, String[] whereArgs){
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
-        String projection = CategoryEntry.TABLE_NAME + "." + CategoryEntry.COLUMN_ID + " = ?";
-
         final SQLiteQueryBuilder recipeWithCategoryQueryBuilder = new SQLiteQueryBuilder();
 
-            recipeWithCategoryQueryBuilder.setTables(
-                    RecipeEntry.TABLE_NAME + " INNER JOIN " + CategoryEntry.TABLE_NAME +
-                            " ON " + RecipeEntry.TABLE_NAME + "." + RecipeEntry.COLUMN_CATEGORY_ID +
-                            " = " + CategoryEntry.TABLE_NAME + "." + CategoryEntry.COLUMN_ID
-            );
+        recipeWithCategoryQueryBuilder.setTables(
+                RecipeEntry.TABLE_NAME + " INNER JOIN " + CategoryEntry.TABLE_NAME +
+                        " ON " + RecipeEntry.TABLE_NAME + "." + RecipeEntry.COLUMN_CATEGORY_ID +
+                        " = " + CategoryEntry.TABLE_NAME + "." + CategoryEntry.COLUMN_ID
+        );
 
         Cursor cursor = recipeWithCategoryQueryBuilder.query(
                 database,
                 null,
-                projection,
-                new String[]{categoryId.toString()},
+                where,
+                whereArgs,
                 null,
                 null,
                 RecipeEntry.COLUMN_ID + " DESC"
-            );
+        );
 
         List<Recipe> recipeList = new ArrayList<>();
 

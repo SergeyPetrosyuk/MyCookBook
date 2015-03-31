@@ -25,7 +25,10 @@ public class LoadRecipeListTask extends AsyncTask<Integer, Void, List<Recipe>> {
     @Override
     protected List<Recipe> doInBackground(Integer... params) {
         int categoryId = params[0];
-        return DAO.getRecipeList(mPresenter.getContext(), categoryId);
+        if (!mPresenter.isOnlyFavorites())
+            return DAO.getRecipeList(mPresenter.getContext(), categoryId);
+        else
+            return DAO.getRecipeListByFavoriteStatus(mPresenter.getContext(), categoryId);
     }
 
     @Override

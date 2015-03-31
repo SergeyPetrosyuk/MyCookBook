@@ -6,8 +6,19 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/abc_action_bar_default_padding_material"
     android:background="@color/action_bar_primary"
-    android:gravity="center_vertical"
+    android:gravity="center_vertical|end"
     android:elevation="5dp"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+    <ImageButton
+        android:id="@+id/iv_filter_by_favorites"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="5dp"
+        android:src="@drawable/bt_favorite_transition_normal"
+        android:scaleType="centerInside"
+        android:layout_gravity="center_vertical|end"
+        android:background="@drawable/bt_favorite_selector"
+        android:visibility="gone"/>
 
 </android.support.v7.widget.Toolbar>
