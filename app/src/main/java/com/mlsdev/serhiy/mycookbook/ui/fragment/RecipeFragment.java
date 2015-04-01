@@ -22,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mlsdev.serhiy.mycookbook.R;
@@ -32,6 +33,7 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipeView;
 import com.mlsdev.serhiy.mycookbook.ui.activity.BaseActivity;
 import com.mlsdev.serhiy.mycookbook.ui.activity.RecipeActivity;
+import com.mlsdev.serhiy.mycookbook.ui.vidget.ObservableScrollView;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -50,6 +52,7 @@ public class RecipeFragment extends Fragment implements IRecipeView {
     private TextView mInstructionsTextView;
     private boolean mIsAfterEditing = false;
     private AlertDialog.Builder dialog;
+    private ObservableScrollView mRecipeContainer;
 
     @Nullable
     @Override
@@ -73,6 +76,7 @@ public class RecipeFragment extends Fragment implements IRecipeView {
         mInstructionsTextView = (TextView) view.findViewById(R.id.tv_label_instructions);
         mContentContainer = (RelativeLayout) view.findViewById(R.id.rl_recipe_content);
         mFavoriteBtn = (ImageButton) view.findViewById(R.id.ibt_make_recipe_favorite);
+        mRecipeContainer = (ObservableScrollView) view.findViewById(R.id.sv_recipe_container);
 
         mPresenter.openRecipe(recipeData, mIsAfterEditing);
 
@@ -81,6 +85,7 @@ public class RecipeFragment extends Fragment implements IRecipeView {
         }
 
         mFavoriteBtn.setOnClickListener(new OnFavoriteBtnClickListener(mFavoriteBtn, mPresenter));
+        mRecipeContainer.setActionBar(((BaseActivity)getActivity()).getToolBar());
         return view;
     }
 

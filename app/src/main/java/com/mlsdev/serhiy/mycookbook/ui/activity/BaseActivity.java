@@ -163,4 +163,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         else
             mFilterImageButton.setVisibility(View.GONE);
     }
+
+    public Toolbar getToolBar() {
+        return mToolbar;
+    }
 }

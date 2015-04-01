@@ -1,6 +1,7 @@
 package com.mlsdev.serhiy.mycookbook.ui.fragment;
 
 import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -62,7 +63,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         mCategoriesListView = (ListView) mRootView.findViewById(R.id.lv_categories_list);
         mAddCategoryButton = (Button) mRootView.findViewById(R.id.btn_add_new_category);
 
-        mPresenter.loadCategories();
+        mPresenter.viewOnCreateState();
 
         mAddCategoryButton.setOnClickListener(this);
 
@@ -74,7 +75,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         super.onResume();
 
         if (mCategoriesListAdapter != null){
-            mPresenter.loadCategories();
+            mPresenter.viewOnResumeState();
         }
     }
 
@@ -83,21 +84,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         if (v.getId() == R.id.btn_add_new_category){
             mPresenter.addCategory();
         }
-    }
-
-    @Override
-    public void addCategory() {
-
-    }
-
-    @Override
-    public void deleteCategory() {
-
-    }
-
-    @Override
-    public void editCategory() {
-
     }
 
     @Override
@@ -125,9 +111,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             showListView();
             mCategoriesListView.invalidate();
         }
-
-//        mCategoriesGridView.setOnItemClickListener(new OnCategoryItemClickListener(mPresenter));
-//        mCategoriesListView.setOnItemClickListener(new OnCategoryItemClickListener(mPresenter));
     }
 
     @Override
@@ -155,6 +138,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     @Override
     public BaseAdapter getAdapter() {
         return mCategoriesListAdapter;
+    }
+
+    @Override
+    public LoaderManager getLoaderManagerForPresenter() {
+        return getLoaderManager();
     }
 
     @Override

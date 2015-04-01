@@ -11,13 +11,11 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.ICategoriesView;
  */
 public interface ICategoriesPresenter {
 
-    void loadCategories();
     void addCategory();
-    void deleteCategory(long id);
-    void editCategory(long id);
     Context getContext();
     void changeItemDisplayType(MenuItem item);
     int getIconForDisplayTypeAction();
     void openCategory(int position);
-
+    void viewOnCreateState();
+    void viewOnResumeState();
 }

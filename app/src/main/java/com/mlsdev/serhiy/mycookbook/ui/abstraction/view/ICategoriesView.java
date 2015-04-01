@@ -1,5 +1,6 @@
 package com.mlsdev.serhiy.mycookbook.ui.abstraction.view;
 
+import android.app.LoaderManager;
 import android.content.Context;
 import android.view.MenuItem;
 import android.widget.BaseAdapter;
@@ -13,9 +14,6 @@ import java.util.List;
  */
 public interface ICategoriesView {
 
-    void addCategory();
-    void deleteCategory();
-    void editCategory();
     void openAddNewCategoryScreen();
     Context getContext();
     void showList(List<RecipeCategory> categoryList, int displayType);
@@ -23,5 +21,6 @@ public interface ICategoriesView {
     void showCategoriesAsGrid(MenuItem item);
     void openCategory(int categoryId, String categoryName);
     BaseAdapter getAdapter();
+    LoaderManager getLoaderManagerForPresenter();
 
 }
