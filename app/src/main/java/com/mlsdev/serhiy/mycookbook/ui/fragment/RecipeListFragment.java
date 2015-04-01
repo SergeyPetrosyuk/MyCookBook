@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -75,7 +76,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         initViews();
 
         createDialog();
-        mPresenter.loadRecipeList(mPresenter.getCategoryId());
+        mPresenter.viewOnCreateState();
 
         defineFilterIcon();
         return view;
@@ -121,7 +122,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.loadRecipeList(mPresenter.getCategoryId());
+        mPresenter.viewOnResumeState();
         showFilterIcon();
     }
 
@@ -254,7 +255,12 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onEditCategoryError() {
-        Toast.makeText(getActivity(), "", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "Error while edit category", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public LoaderManager getLoaderManagerForPresenter() {
+        return getLoaderManager();
     }
 
     private static void hideSoftKeyboard(Activity activity) {

@@ -1,9 +1,12 @@
 package com.mlsdev.serhiy.mycookbook.presenter;
 
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Loader;
 import android.os.Bundle;
 
 import com.mlsdev.serhiy.mycookbook.adapter.RecipeListAdapter;
+import com.mlsdev.serhiy.mycookbook.async.tasc.loader.LoadRecipeListTaskLoader;
 import com.mlsdev.serhiy.mycookbook.asynk_task.DeleteRecipesTask;
 import com.mlsdev.serhiy.mycookbook.asynk_task.LoadCategoryNameTask;
 import com.mlsdev.serhiy.mycookbook.asynk_task.LoadRecipeListTask;
@@ -19,6 +22,7 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnLoadCategoryListen
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnRecipeListLoadedListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
+import com.mlsdev.serhiy.mycookbook.utils.Constants;
 
 import java.util.List;
 
@@ -28,7 +32,7 @@ import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
  * Created by android on 11.03.15.
  */
 public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedListener, OnEditDeleteListener,
-        OnLoadCategoryListener, OnDeleteRecipeListener{
+        OnLoadCategoryListener, OnDeleteRecipeListener, LoaderManager.LoaderCallbacks<List<Recipe>>{
 
     private IRecipesView mView;
     private boolean mIsEditorOpened = false;
@@ -36,15 +40,11 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     private Bundle mCategoryData;
     private ILoadCategoryNameInteractor mLoadCategoryNameInteractor;
     private boolean mIsOnlyFavorites = false;
+    private static final int sRecipeLoaderId = 1;
 
     public RecipesPresenter(IRecipesView mView) {
         this.mView = mView;
         mLoadCategoryNameInteractor = new LoadCategoryNameTask(this, this);
-    }
-
-    @Override
-    public void loadRecipeList(int categoryId) {
-        new LoadRecipeListTask(this, this).execute(categoryId);
         mInteractor = new CategoryEditeOrDeleteInteractor(this, this);
     }
 
@@ -142,6 +142,16 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     }
 
     @Override
+    public void viewOnCreateState() {
+        mView.getLoaderManagerForPresenter().initLoader(sRecipeLoaderId, getArgsForLoader(), this);
+    }
+
+    @Override
+    public void viewOnResumeState() {
+        mView.getLoaderManagerForPresenter().restartLoader(sRecipeLoaderId, getArgsForLoader(), this);
+    }
+
+    @Override
     public void recipeListLoaded(List<Recipe> recipeList) {
         mView.showRecipeList(recipeList);
     }
@@ -188,12 +198,40 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     @Override
     public void onSuccess() {
         mView.showDeleteAction(false);
-        loadRecipeList(mCategoryData.getInt(DBContract.RecipeEntry.COLUMN_CATEGORY_ID));
+        mView.getLoaderManagerForPresenter().restartLoader(sRecipeLoaderId, getArgsForLoader(), this);
     }
 
     // Delete recipes list onError
     @Override
     public void onError() {
 
+    }
+
+    @Override
+    public Loader<List<Recipe>> onCreateLoader(int id, Bundle args) {
+        Loader<List<Recipe>> loader = null;
+
+        if (id == sRecipeLoaderId){
+            loader = new LoadRecipeListTaskLoader(mView.getContext(), args);
+        }
+
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> recipeList) {
+        mView.showRecipeList(recipeList);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Recipe>> loader) {
+
+    }
+
+    private Bundle getArgsForLoader(){
+        Bundle args = new Bundle();
+        args.putBoolean(Constants.EXTRAS_IS_FAVORITE, isOnlyFavorites());
+        args.putInt(RecipeEntry.COLUMN_CATEGORY_ID, getCategoryId());
+        return args;
     }
 }

@@ -2,6 +2,7 @@ package com.mlsdev.serhiy.mycookbook.ui.abstraction.view;
 
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Intent;
 import android.view.MenuItem;
 import android.widget.BaseAdapter;
 
@@ -19,7 +20,7 @@ public interface ICategoriesView {
     void showList(List<RecipeCategory> categoryList, int displayType);
     void showCategoriesAsList(MenuItem item);
     void showCategoriesAsGrid(MenuItem item);
-    void openCategory(int categoryId, String categoryName);
+    void openCategory(Intent intent);
     BaseAdapter getAdapter();
     LoaderManager getLoaderManagerForPresenter();
 

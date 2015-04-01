@@ -128,10 +128,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void openCategory(int categoryId, String categoryName) {
-        Intent intent = new Intent(getActivity(), CategoryActivity.class);
-        intent.putExtra(DBContract.RecipeEntry.COLUMN_CATEGORY_ID, categoryId);
-        intent.putExtra(DBContract.CategoryEntry.COLUMN_NAME, categoryName);
+    public void openCategory(Intent intent) {
         startActivity(intent);
     }
 

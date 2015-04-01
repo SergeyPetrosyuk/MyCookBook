@@ -10,11 +10,9 @@ import android.widget.AdapterView;
  */
 public interface IRecipesPresenter {
 
-    void loadRecipeList(int categoryId);
     Context getContext();
     void openRecipe(int position);
     void showEditor();
-
     void activateReadyButton(int editTextChars);
     void editCategory(int categoryId, String newTitle);
     void openAddRecipeScreen();
@@ -25,4 +23,6 @@ public interface IRecipesPresenter {
     void deleteCategory();
     boolean isOnlyFavorites();
     void setupIsFavorite(boolean newStatus);
+    void viewOnCreateState();
+    void viewOnResumeState();
 }

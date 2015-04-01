@@ -2,6 +2,7 @@ package com.mlsdev.serhiy.mycookbook.presenter;
 
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -9,10 +10,12 @@ import android.widget.BaseAdapter;
 
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.async.tasc.loader.LoadCategoryListTaskLoader;
+import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.model.RecipeCategory;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnCategoryListLoaded;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.ICategoriesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.ICategoriesView;
+import com.mlsdev.serhiy.mycookbook.ui.activity.CategoryActivity;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
 import com.mlsdev.serhiy.mycookbook.utils.PrefManager;
 
@@ -68,7 +71,12 @@ public class CategoriesPresenter implements ICategoriesPresenter, OnCategoryList
     public void openCategory(int position) {
         BaseAdapter adapter = mView.getAdapter();
         RecipeCategory category = (RecipeCategory) adapter.getItem(position);
-        mView.openCategory(category.getId(), category.getName());
+
+        Intent intent = new Intent(getContext(), CategoryActivity.class);
+        intent.putExtra(DBContract.RecipeEntry.COLUMN_CATEGORY_ID, category.getId());
+        intent.putExtra(DBContract.CategoryEntry.COLUMN_NAME, category.getName());
+
+        mView.openCategory(intent);
     }
 
     @Override

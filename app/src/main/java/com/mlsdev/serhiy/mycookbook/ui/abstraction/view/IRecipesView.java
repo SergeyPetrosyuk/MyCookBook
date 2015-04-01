@@ -1,5 +1,6 @@
 package com.mlsdev.serhiy.mycookbook.ui.abstraction.view;
 
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,4 +29,6 @@ public interface IRecipesView {
     void onDeleteCategoryError();
     void onEditCategorySuccess();
     void onEditCategoryError();
+
+    LoaderManager getLoaderManagerForPresenter();
 }

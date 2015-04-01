@@ -29,7 +29,6 @@ public class OnFilterByFavoriteClickListener implements View.OnClickListener {
 
         mFavoriteBtn.setSelected(!mFavoriteBtn.isSelected());
         mPresenter.setupIsFavorite(mFavoriteBtn.isSelected());
-        mPresenter.loadRecipeList(mPresenter.getCategoryId());
-
+        mPresenter.viewOnResumeState();
     }
 }
