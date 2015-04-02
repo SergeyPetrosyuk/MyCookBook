@@ -307,7 +307,8 @@ public class DAO {
 
             while (cursor.moveToNext()){
                 int columnIndex = cursor.getColumnIndex(RecipeEntry.COLUMN_IMAGE_URI);
-                imageUriStr = cursor.getString(columnIndex);
+                String uriFromCursor = cursor.getString(columnIndex);
+                imageUriStr = uriFromCursor == null ? Constants.EMPTY_STRING : uriFromCursor;
             }
         } finally {
             if (cursor != null){
@@ -434,6 +435,7 @@ public class DAO {
         String ingredients = cursor.getString(columnIndexIngredients);
         String instructions = cursor.getString(columnIndexInstructions);
         String imageUri = cursor.getString(columnIndexImageUri);
+        imageUri = imageUri == null ? Constants.EMPTY_STRING : imageUri;
         int recipeCategoryId = cursor.getInt(columnIndexCategoryId);
         int recipeId = cursor.getInt(columnIndexRecipeId);
         boolean isRecipeInFavorites = cursor.getInt(columnIndexRecipeIsFavorite) == 0 ? false : true;
