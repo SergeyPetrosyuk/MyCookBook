@@ -37,7 +37,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
 
-        if (!(this instanceof MainActivity)) {
+        if (!(this instanceof MainActivity) && savedInstanceState == null) {
             overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
         }
 
