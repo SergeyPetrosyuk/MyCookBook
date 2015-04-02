@@ -18,6 +18,7 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.ICategoriesPresente
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.ICategoriesView;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
 import com.mlsdev.serhiy.mycookbook.utils.PrefManager;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -92,7 +93,8 @@ public class CategoriesListAdapter extends BaseAdapter implements OnListChangedL
         }
 
         if (uri != null) {
-            Picasso.with(mView.getContext()).load(uri).resize(750, 400).centerCrop().into(viewHolder.categoryImage);
+            Picasso.with(mView.getContext()).load(uri).resize(750, 400).centerCrop().into(viewHolder.categoryImage,
+                    new CallBackImageLoader(viewHolder.categoryImage));
         }
 
         return convertView;
@@ -114,6 +116,26 @@ public class CategoriesListAdapter extends BaseAdapter implements OnListChangedL
             this.nameTextView = nameTextView;
             this.categoryImage = categoryImage;
             this.foregroundView = foregroundView;
+        }
+    }
+
+    /**
+     * CallBackImageLoader
+     * */
+    private class CallBackImageLoader implements Callback {
+
+        ImageView imageView;
+
+        private CallBackImageLoader(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        @Override
+        public void onSuccess() { }
+
+        @Override
+        public void onError() {
+            imageView.setImageResource(R.mipmap.no_image);
         }
     }
 }

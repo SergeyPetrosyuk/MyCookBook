@@ -81,8 +81,11 @@ public class RecipeListAdapter extends BaseAdapter {
             checkBoxHolder.setOnClickListener(new OnCheckBoxHolderClickListener(checkBox));
             checkBoxHolder.setVisibility(mVisibilityState);
             convertView.setTag(viewHolder);
-            mCheckboxHolders.add(checkBoxHolder);
-            mCheckboxHoldersMap.put(checkBoxHolder, position);
+
+            if (mCheckboxHolders.size() < mRecipeList.size()) {
+                mCheckboxHolders.add(checkBoxHolder);
+                mCheckboxHoldersMap.put(checkBoxHolder, position);
+            }
         }
 
         RecipeViewHolder viewHolder = (RecipeViewHolder) convertView.getTag();
@@ -114,6 +117,8 @@ public class RecipeListAdapter extends BaseAdapter {
 
     public void setData(List<Recipe> recipeList) {
         mRecipeList.clear();
+        mCheckboxHolders.clear();
+        mCheckboxHoldersMap.clear();
         mRecipeList.addAll(recipeList);
         this.notifyDataSetChanged();
     }
