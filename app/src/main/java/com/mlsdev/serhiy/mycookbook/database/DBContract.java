@@ -7,7 +7,7 @@ package com.mlsdev.serhiy.mycookbook.database;
 public class DBContract {
 
     public static final String DB_NAME = "my_cookbook";
-    public static final int DB_VERSION = 6;
+    public static final int DB_VERSION = 8;
 
     public static class CategoryEntry{
         public static final String TABLE_NAME = "categories";

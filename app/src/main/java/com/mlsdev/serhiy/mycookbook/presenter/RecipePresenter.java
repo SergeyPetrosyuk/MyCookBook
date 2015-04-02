@@ -1,10 +1,13 @@
 package com.mlsdev.serhiy.mycookbook.presenter;
 
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.mlsdev.serhiy.mycookbook.R;
+import com.mlsdev.serhiy.mycookbook.async.tasc.loader.LoadRecipeTaskLoader;
 import com.mlsdev.serhiy.mycookbook.asynk_task.DeleteRecipeTask;
 import com.mlsdev.serhiy.mycookbook.asynk_task.MakeRecipeFavoriteTask;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
@@ -21,44 +24,47 @@ import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
 /**
  * Created by android on 13.03.15.
  */
-public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener, OnMoveToFavoritesListener {
+public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener, OnMoveToFavoritesListener,
+                                        LoaderManager.LoaderCallbacks<Recipe> {
     private IRecipeView mView;
     private Bundle mRecipeData;
     private IRecipeInteractor mInteractor;
+    private boolean mIsRecipeFavorite = false;
+    private final int sRecipeLoaderId = 3;
 
     public RecipePresenter(IRecipeView mView) {
         this.mView = mView;
         mInteractor = new DeleteRecipeTask(this,this);
     }
 
-    @Override
-    public void openRecipe(Bundle recipeData, boolean isAfterEditing) {
+    private void openRecipe(Recipe recipe) {
 
         Uri imageUri;
 
-        String imageUriStr = recipeData.getString(RecipeEntry.COLUMN_IMAGE_URI);
+        String imageUriStr = recipe.getImageUri();
 
         if (!imageUriStr.equals("")){
             imageUri = Uri.parse("content://media" + imageUriStr);
             mView.setImage(imageUri);
         }
 
-        String recipeTitle = recipeData.getString(RecipeEntry.COLUMN_TITLE, mView.getContext().getString(R.string.app_name));
-        String recipeCategory = recipeData.getString(CategoryEntry.COLUMN_NAME);
-        String recipeIngredients = recipeData.getString(RecipeEntry.COLUMN_INGREDIENTS);
-        String recipeInstructions = recipeData.getString(RecipeEntry.COLUMN_INSTRUCTIONS);
+        mIsRecipeFavorite = recipe.getIsFavorite();
+        String recipeTitle = recipe.getTitle();
+        String recipeCategory = recipe.getCategoryName();
+        String recipeIngredients = recipe.getIngredients();
+        String recipeInstructions = recipe.getInstructions();
 
         mView.setRecipeTitle(recipeTitle);
         mView.setCategoryTitle(recipeCategory);
         mView.setIngredients(recipeIngredients);
         mView.setInstructions(recipeInstructions);
         mView.showContent();
+        mView.activateFavorite();
     }
 
     @Override
     public void openUpdateScreen(Bundle dataForUpdate) {
-        dataForUpdate.putBoolean(Constants.EXTRAS_IS_UPDATE, true);
-        mView.showUpdateFragment(dataForUpdate);
+        mView.showUpdateFragment();
     }
 
     @Override
@@ -79,16 +85,26 @@ public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener
 
     @Override
     public boolean isRecipeFavorite() {
-        return mRecipeData.getBoolean(RecipeEntry.COLUMN_IS_FAVORITE, false);
+        return mIsRecipeFavorite;
     }
 
     @Override
     public void favoriteAction() {
         Recipe recipe = new Recipe();
         recipe.set_id(mRecipeData.getInt(RecipeEntry.COLUMN_ID));
-        recipe.setIsFavorite(mRecipeData.getBoolean(RecipeEntry.COLUMN_IS_FAVORITE, false));
+        recipe.setIsFavorite(mIsRecipeFavorite);
 
         new MakeRecipeFavoriteTask(this, this).execute(recipe);
+    }
+
+    @Override
+    public void viewOnCreateState() {
+        mView.getLoaderManagerForPresenter().initLoader(sRecipeLoaderId, null, this);
+    }
+
+    @Override
+    public void viewOnResumeState() {
+        mView.getLoaderManagerForPresenter().restartLoader(sRecipeLoaderId, null, this);
     }
 
     @Override
@@ -109,6 +125,28 @@ public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener
 
     @Override
     public void onMoveToFavoritesError() {
+
+    }
+
+    @Override
+    public Loader<Recipe> onCreateLoader(int id, Bundle args) {
+        Loader<Recipe> loader = null;
+
+        if (id == sRecipeLoaderId){
+            loader = new LoadRecipeTaskLoader(mView.getContext(), mRecipeData.getInt(RecipeEntry.COLUMN_ID));
+        }
+
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Recipe> loader, Recipe loadedRecipe) {
+        if (loadedRecipe != null)
+            openRecipe(loadedRecipe);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Recipe> loader) {
 
     }
 }

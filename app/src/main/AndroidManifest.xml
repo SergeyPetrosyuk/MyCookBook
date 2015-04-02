@@ -67,7 +67,8 @@
         <activity
             android:name=".ui.activity.RecipeActivity"
             android:label="@string/title_activity_recipe"
-            android:parentActivityName=".ui.activity.CategoryActivity" >
+            android:parentActivityName=".ui.activity.CategoryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mlsdev.serhiy.mycookbook.ui.activity.CategoryActivity" />

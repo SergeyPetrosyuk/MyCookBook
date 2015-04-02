@@ -1,5 +1,6 @@
 package com.mlsdev.serhiy.mycookbook.ui.abstraction.view;
 
+import android.app.LoaderManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,8 +17,9 @@ public interface IRecipeView {
     void setCategoryTitle(String categoryTitle);
     Context getContext();
     void showContent();
-    void showUpdateFragment(Bundle dataForUpdate);
+    void showUpdateFragment();
     void onRecipeDeleted();
     void updateFavoriteStatus(Boolean aNewStatus);
-
+    LoaderManager getLoaderManagerForPresenter();
+    void activateFavorite();
 }

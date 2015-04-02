@@ -22,7 +22,7 @@ import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
  */
 public class DAO {
 
-    public static long insertRecipe(Context context, Intent dataForInsert){
+    public static Recipe insertRecipe(Context context, Intent dataForInsert){
 
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase database = dbHelper.getWritableDatabase();
@@ -46,8 +46,8 @@ public class DAO {
         contentValues.put(RecipeEntry.COLUMN_CATEGORY_ID, categoryId);
 
         try {
-            long insertedRow = database.insert(RecipeEntry.TABLE_NAME, null, contentValues);
-            return insertedRow;
+            Long insertedRow = database.insert(RecipeEntry.TABLE_NAME, null, contentValues);
+            return getRecipeById(context, insertedRow.intValue());
         } finally {
             database.close();
             dbHelper.close();
@@ -55,7 +55,7 @@ public class DAO {
 
     }
 
-    public static boolean updateRecipe(Context context, Intent dataForInsert){
+    public static Recipe updateRecipe(Context context, Intent dataForInsert){
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -68,7 +68,7 @@ public class DAO {
         Integer recipeId = dataForInsert.getIntExtra(RecipeEntry.COLUMN_ID, 0);
 
         if (recipeId == 0){
-            return false;
+            return null;
         }
 
         String where = RecipeEntry.TABLE_NAME + "." + RecipeEntry.COLUMN_ID + " = ?";
@@ -82,7 +82,7 @@ public class DAO {
                     whereArgs
             );
 
-            return true;
+            return getRecipeById(context, recipeId);
         } finally {
             database.close();
             dbHelper.close();
@@ -136,16 +136,14 @@ public class DAO {
         }
     }
 
-    public static Recipe getRecipeById(Context context, Integer recipeId, Intent categoryId){
+    public static Recipe getRecipeById(Context context, Integer recipeId){
         Recipe recipe = new Recipe();
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
-        String selection = RecipeEntry.TABLE_NAME + "." + RecipeEntry.COLUMN_ID + " = ? AND " +
-                            CategoryEntry.TABLE_NAME + "." + CategoryEntry.COLUMN_ID + " = ?";
+        String selection = RecipeEntry.TABLE_NAME + "." + RecipeEntry.COLUMN_ID + " = ? ";
         String[] selectionArgs = new String[]{
                 recipeId.toString(),
-                categoryId.toString()
             };
 
         final SQLiteQueryBuilder recipeWithCategoryQueryBuilder = new SQLiteQueryBuilder();
@@ -160,38 +158,20 @@ public class DAO {
                 database,
                 null,
                 selection,
-                new String[]{categoryId.toString()},
+                selectionArgs,
                 null,
                 null,
                 null
         );
 
         try {
-            while (cursor.moveToNext()){
-                int columnIndexName = cursor.getColumnIndex(RecipeEntry.COLUMN_TITLE);
-                int columnIndexCategoryId = cursor.getColumnIndex(RecipeEntry.COLUMN_CATEGORY_ID);
-                int columnIndexIngredients = cursor.getColumnIndex(RecipeEntry.COLUMN_INGREDIENTS);
-                int columnIndexInstructions = cursor.getColumnIndex(RecipeEntry.COLUMN_INSTRUCTIONS);
-                int columnIndexImageUri = cursor.getColumnIndex(RecipeEntry.COLUMN_IMAGE_URI);
-                int columnIndexCategoryName = cursor.getColumnIndex(CategoryEntry.COLUMN_NAME);
-
-                String recipeName = cursor.getString(columnIndexName);
-                String categoryName = cursor.getString(columnIndexCategoryName);
-                String ingredients = cursor.getString(columnIndexIngredients);
-                String instructions = cursor.getString(columnIndexInstructions);
-                String imageUri = cursor.getString(columnIndexImageUri);
-                int recipeCategoryId = cursor.getInt(columnIndexCategoryId);
-
-                recipe.setCategoryName(categoryName);
-                recipe.setImageUri(imageUri);
-                recipe.setInstructions(instructions);
-                recipe.setIngredients(ingredients);
-                recipe.setTitle(recipeName);
-                recipe.setCategoryId(recipeCategoryId);
-                recipe.set_id(recipeId);
+            if (cursor.moveToFirst()){
+                recipe = getRecipeFromCursor(cursor);
+                return recipe;
+            } else {
+                return null;
             }
 
-            return recipe;
         } finally {
             if (cursor != null){ cursor.close(); }
             database.close();
@@ -239,35 +219,7 @@ public class DAO {
         try {
 
             while (cursor.moveToNext()){
-                int columnIndexName = cursor.getColumnIndex(RecipeEntry.COLUMN_TITLE);
-                int columnIndexCategoryId = cursor.getColumnIndex(RecipeEntry.COLUMN_CATEGORY_ID);
-                int columnIndexIngredients = cursor.getColumnIndex(RecipeEntry.COLUMN_INGREDIENTS);
-                int columnIndexInstructions = cursor.getColumnIndex(RecipeEntry.COLUMN_INSTRUCTIONS);
-                int columnIndexImageUri = cursor.getColumnIndex(RecipeEntry.COLUMN_IMAGE_URI);
-                int columnIndexCategoryName = cursor.getColumnIndex(CategoryEntry.COLUMN_NAME);
-                int columnIndexRecipeId = cursor.getColumnIndex(RecipeEntry.COLUMN_ID);
-                int columnIndexRecipeIsFavorite = cursor.getColumnIndex(RecipeEntry.COLUMN_IS_FAVORITE);
-
-                String recipeName = cursor.getString(columnIndexName);
-                String categoryName = cursor.getString(columnIndexCategoryName);
-                String ingredients = cursor.getString(columnIndexIngredients);
-                String instructions = cursor.getString(columnIndexInstructions);
-                String imageUri = cursor.getString(columnIndexImageUri);
-                int recipeCategoryId = cursor.getInt(columnIndexCategoryId);
-                int recipeId = cursor.getInt(columnIndexRecipeId);
-                boolean isRecipeInFavorites = cursor.getInt(columnIndexRecipeIsFavorite) == 0 ? false : true;
-
-                Recipe recipe = new Recipe();
-                recipe.setCategoryName(categoryName);
-                recipe.setImageUri(imageUri);
-                recipe.setInstructions(instructions);
-                recipe.setIngredients(ingredients);
-                recipe.setTitle(recipeName);
-                recipe.setCategoryId(recipeCategoryId);
-                recipe.set_id(recipeId);
-                recipe.setIsFavorite(isRecipeInFavorites);
-
-                recipeList.add(recipe);
+                recipeList.add(getRecipeFromCursor(cursor));
             }
 
         } finally {
@@ -465,5 +417,37 @@ public class DAO {
             if (database != null) database.close();
             if (dbHelper != null) dbHelper.close();
         }
+    }
+
+    private static Recipe getRecipeFromCursor(Cursor cursor){
+        int columnIndexName = cursor.getColumnIndex(RecipeEntry.COLUMN_TITLE);
+        int columnIndexCategoryId = cursor.getColumnIndex(RecipeEntry.COLUMN_CATEGORY_ID);
+        int columnIndexIngredients = cursor.getColumnIndex(RecipeEntry.COLUMN_INGREDIENTS);
+        int columnIndexInstructions = cursor.getColumnIndex(RecipeEntry.COLUMN_INSTRUCTIONS);
+        int columnIndexImageUri = cursor.getColumnIndex(RecipeEntry.COLUMN_IMAGE_URI);
+        int columnIndexCategoryName = cursor.getColumnIndex(CategoryEntry.COLUMN_NAME);
+        int columnIndexRecipeId = cursor.getColumnIndex(RecipeEntry.COLUMN_ID);
+        int columnIndexRecipeIsFavorite = cursor.getColumnIndex(RecipeEntry.COLUMN_IS_FAVORITE);
+
+        String recipeName = cursor.getString(columnIndexName);
+        String categoryName = cursor.getString(columnIndexCategoryName);
+        String ingredients = cursor.getString(columnIndexIngredients);
+        String instructions = cursor.getString(columnIndexInstructions);
+        String imageUri = cursor.getString(columnIndexImageUri);
+        int recipeCategoryId = cursor.getInt(columnIndexCategoryId);
+        int recipeId = cursor.getInt(columnIndexRecipeId);
+        boolean isRecipeInFavorites = cursor.getInt(columnIndexRecipeIsFavorite) == 0 ? false : true;
+
+        Recipe recipe = new Recipe();
+        recipe.setCategoryName(categoryName);
+        recipe.setImageUri(imageUri);
+        recipe.setInstructions(instructions);
+        recipe.setIngredients(ingredients);
+        recipe.setTitle(recipeName);
+        recipe.setCategoryId(recipeCategoryId);
+        recipe.set_id(recipeId);
+        recipe.setIsFavorite(isRecipeInFavorites);
+
+        return recipe;
     }
 }

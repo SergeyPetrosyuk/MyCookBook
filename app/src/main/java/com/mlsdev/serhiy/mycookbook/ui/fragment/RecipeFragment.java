@@ -2,6 +2,7 @@ package com.mlsdev.serhiy.mycookbook.ui.fragment;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,23 +35,22 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipeView;
 import com.mlsdev.serhiy.mycookbook.ui.activity.BaseActivity;
 import com.mlsdev.serhiy.mycookbook.ui.activity.RecipeActivity;
 import com.mlsdev.serhiy.mycookbook.ui.vidget.ObservableScrollView;
+import com.mlsdev.serhiy.mycookbook.utils.Constants;
 import com.squareup.picasso.Picasso;
 
 /**
  * Created by android on 13.03.15.
  */
-public class RecipeFragment extends Fragment implements IRecipeView {
+public class RecipeFragment extends Fragment  implements IRecipeView {
 
     private ImageView mRecipeImage;
     private ImageButton mFavoriteBtn;
     private TextView mRecipeTitle;
-    private Bundle recipeData;
     private IRecipePresenter mPresenter;
     private RelativeLayout mContentContainer;
     private TextView mCategoryTextView;
     private TextView mIngredientsTextView;
     private TextView mInstructionsTextView;
-    private boolean mIsAfterEditing = false;
     private AlertDialog.Builder dialog;
     private ObservableScrollView mRecipeContainer;
 
@@ -58,8 +58,7 @@ public class RecipeFragment extends Fragment implements IRecipeView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mPresenter = new RecipePresenter(this);
-        recipeData = ((RecipeActivity)getActivity()).getRecipeData();
-        mPresenter.setupRecipeData(recipeData);
+        mPresenter.setupRecipeData(getArguments());
         createDialog();
 
         setRetainInstance(true);
@@ -78,22 +77,16 @@ public class RecipeFragment extends Fragment implements IRecipeView {
         mFavoriteBtn = (ImageButton) view.findViewById(R.id.ibt_make_recipe_favorite);
         mRecipeContainer = (ObservableScrollView) view.findViewById(R.id.sv_recipe_container);
 
-        mPresenter.openRecipe(recipeData, mIsAfterEditing);
+        mPresenter.viewOnCreateState();
 
-        if (mIsAfterEditing){
-            mIsAfterEditing = false;
-        }
-
-        mFavoriteBtn.setOnClickListener(new OnFavoriteBtnClickListener(mFavoriteBtn, mPresenter));
-        mRecipeContainer.setActionBar(((BaseActivity)getActivity()).getToolBar());
+        mRecipeContainer.setActionBar(((BaseActivity) getActivity()).getToolBar());
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        recipeData = ((RecipeActivity)getActivity()).getRecipeData();
-        mPresenter.setupRecipeData(recipeData);
+        mPresenter.viewOnResumeState();
     }
 
     @Override
@@ -106,7 +99,7 @@ public class RecipeFragment extends Fragment implements IRecipeView {
 
         switch (item.getItemId()){
             case R.id.edit_recipe_action :
-                mPresenter.openUpdateScreen(recipeData);
+                mPresenter.openUpdateScreen(getArguments());
                 break;
             case R.id.action_delete_recipe :
                 dialog.create().show();
@@ -154,11 +147,12 @@ public class RecipeFragment extends Fragment implements IRecipeView {
     }
 
     @Override
-    public void showUpdateFragment(Bundle dataForUpdate) {
-        mIsAfterEditing = true;
+    public void showUpdateFragment() {
         ((BaseActivity)getActivity()).setIsMoreThanOneFragment(true);
         Fragment updateFragment = new AddRecipeFragment();
-        updateFragment.setArguments(dataForUpdate);
+        Bundle bundle = getArguments();
+        bundle.putBoolean(Constants.EXTRAS_IS_UPDATE, true);
+        updateFragment.setArguments(getArguments());
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_holder_view_recipe_screen, updateFragment)
                 .addToBackStack(AddRecipeFragment.class.getName())
@@ -175,6 +169,16 @@ public class RecipeFragment extends Fragment implements IRecipeView {
         Intent intent = getActivity().getIntent();
         intent.putExtra(DBContract.RecipeEntry.COLUMN_IS_FAVORITE, aNewStatus);
         getActivity().setIntent(intent);
+    }
+
+    @Override
+    public LoaderManager getLoaderManagerForPresenter() {
+        return getLoaderManager();
+    }
+
+    @Override
+    public void activateFavorite() {
+        mFavoriteBtn.setOnClickListener(new OnFavoriteBtnClickListener(mFavoriteBtn, mPresenter));
     }
 
     private void createDialog(){

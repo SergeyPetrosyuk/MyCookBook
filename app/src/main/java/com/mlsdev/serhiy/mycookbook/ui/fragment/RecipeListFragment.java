@@ -60,6 +60,7 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     private Menu mMenu;
     private AlertDialog.Builder dialog;
     private AlertDialog.Builder mDeleteCategoryDialog;
+    private RecipeListAdapter mRecipeListAdapter;
 
     @Nullable
     @Override
@@ -157,9 +158,11 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void showRecipeList(List<Recipe> recipeList) {
-        RecipeListAdapter adapter = new RecipeListAdapter(this, mPresenter);
-        adapter.setData(recipeList);
-        mResipeListView.setAdapter(adapter);
+        if (mRecipeListAdapter == null)
+            mRecipeListAdapter = new RecipeListAdapter(this, mPresenter);
+
+        mRecipeListAdapter.setData(recipeList);
+        mResipeListView.setAdapter(mRecipeListAdapter);
         mResipeListView.invalidate();
     }
 
@@ -169,10 +172,8 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void openRecipe(Bundle recipeData) {
-        Intent intent = new Intent(getActivity(), RecipeActivity.class);
-        intent.putExtras(recipeData);
-        startActivity(intent);
+    public void openRecipe(Intent recipeData) {
+        startActivity(recipeData);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.mlsdev.serhiy.mycookbook.presenter;
 
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 
@@ -22,6 +23,7 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnLoadCategoryListen
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnRecipeListLoadedListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
+import com.mlsdev.serhiy.mycookbook.ui.activity.RecipeActivity;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
 
 import java.util.List;
@@ -58,18 +60,21 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
         RecipeListAdapter adapter = (RecipeListAdapter) mView.getAdepter();
         Recipe recipe = (Recipe) adapter.getItem(position);
 
-        Bundle data = new Bundle();
+//        Bundle data = new Bundle();
 
-        data.putInt(RecipeEntry.COLUMN_ID, recipe.get_id());
-        data.putInt(RecipeEntry.COLUMN_CATEGORY_ID, recipe.getCategoryId());
-        data.putString(CategoryEntry.COLUMN_NAME, recipe.getCategoryName());
-        data.putString(RecipeEntry.COLUMN_TITLE, recipe.getTitle());
-        data.putString(RecipeEntry.COLUMN_IMAGE_URI, recipe.getImageUri());
-        data.putString(RecipeEntry.COLUMN_INGREDIENTS, recipe.getIngredients());
-        data.putString(RecipeEntry.COLUMN_INSTRUCTIONS, recipe.getInstructions());
-        data.putBoolean(RecipeEntry.COLUMN_IS_FAVORITE, recipe.getIsFavorite());
+//        data.putInt(RecipeEntry.COLUMN_ID, recipe.get_id());
+//        data.putInt(RecipeEntry.COLUMN_CATEGORY_ID, recipe.getCategoryId());
+//        data.putString(CategoryEntry.COLUMN_NAME, recipe.getCategoryName());
+//        data.putString(RecipeEntry.COLUMN_TITLE, recipe.getTitle());
+//        data.putString(RecipeEntry.COLUMN_IMAGE_URI, recipe.getImageUri());
+//        data.putString(RecipeEntry.COLUMN_INGREDIENTS, recipe.getIngredients());
+//        data.putString(RecipeEntry.COLUMN_INSTRUCTIONS, recipe.getInstructions());
+//        data.putBoolean(RecipeEntry.COLUMN_IS_FAVORITE, recipe.getIsFavorite());
 
-        mView.openRecipe(data);
+        Intent intent = new Intent(getContext(), RecipeActivity.class);
+        intent.putExtra(RecipeEntry.COLUMN_ID, recipe.get_id());
+
+        mView.openRecipe(intent);
 
         closeCategoryEditor();
     }

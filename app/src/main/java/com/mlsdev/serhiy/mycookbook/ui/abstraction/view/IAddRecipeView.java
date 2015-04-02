@@ -1,5 +1,6 @@
 package com.mlsdev.serhiy.mycookbook.ui.abstraction.view;
 
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,4 +28,5 @@ public interface IAddRecipeView {
     void startAdding();
     void stopAdding();
     void onRecipeUpdated(Intent updatedRecipeData);
+    LoaderManager getLoaderManagerForPresenter();
 }

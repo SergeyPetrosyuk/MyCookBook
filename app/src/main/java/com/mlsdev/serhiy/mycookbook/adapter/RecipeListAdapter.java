@@ -113,9 +113,6 @@ public class RecipeListAdapter extends BaseAdapter {
     }
 
     public void setData(List<Recipe> recipeList) {
-        if (recipeList.size() == mRecipeList.size())
-            return;
-
         mRecipeList.clear();
         mRecipeList.addAll(recipeList);
         this.notifyDataSetChanged();

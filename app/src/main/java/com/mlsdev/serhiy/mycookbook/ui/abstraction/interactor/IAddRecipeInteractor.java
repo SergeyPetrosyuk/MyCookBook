@@ -12,4 +12,5 @@ public interface IAddRecipeInteractor {
     void addRecipe(String title, String ingredients, String instructions);
     void setupCategoryId(Intent data);
     void updateRecipe(Intent updatedData);
+    String getImageUriStr();
 }

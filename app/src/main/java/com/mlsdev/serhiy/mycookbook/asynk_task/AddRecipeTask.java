@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 
 import com.mlsdev.serhiy.mycookbook.database.DAO;
+import com.mlsdev.serhiy.mycookbook.model.Recipe;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnRecipeAddedListener;
 
 /**
  * Created by android on 11.03.15.
  */
-public class AddRecipeTask extends AsyncTask<Intent, Void, Long> {
+public class AddRecipeTask extends AsyncTask<Intent, Void, Recipe> {
 
     private OnRecipeAddedListener listener;
 
@@ -18,17 +19,17 @@ public class AddRecipeTask extends AsyncTask<Intent, Void, Long> {
     }
 
     @Override
-    protected Long doInBackground(Intent... params) {
+    protected Recipe doInBackground(Intent... params) {
 
         Intent dataForInsert = params[0];
 
-        long insertedId = DAO.insertRecipe(listener.getContext(), dataForInsert);
+        Recipe recipe = DAO.insertRecipe(listener.getContext(), dataForInsert);
 
-        return insertedId;
+        return recipe;
     }
 
     @Override
-    protected void onPostExecute(Long id) {
-        listener.recipeWasAdded(id);
+    protected void onPostExecute(Recipe recipe) {
+        listener.recipeWasAdded(recipe.get_id());
     }
 }

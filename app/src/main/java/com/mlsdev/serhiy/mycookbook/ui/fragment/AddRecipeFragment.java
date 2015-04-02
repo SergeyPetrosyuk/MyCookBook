@@ -2,6 +2,7 @@ package com.mlsdev.serhiy.mycookbook.ui.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -192,6 +193,11 @@ public class AddRecipeFragment extends Fragment implements IAddRecipeView, View.
     public void onRecipeUpdated(Intent updatedRecipeData) {
         getActivity().setIntent(updatedRecipeData);
         getActivity().getFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public LoaderManager getLoaderManagerForPresenter() {
+        return getLoaderManager();
     }
 
     @Override

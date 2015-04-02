@@ -83,6 +83,15 @@ public class AddRecipeInteractor implements IAddRecipeInteractor, OnImageLoadedL
     }
 
     @Override
+    public String getImageUriStr() {
+        String imageUri = "";
+        if (mUri != null) {
+            imageUri = mUri.getPath();
+        }
+        return imageUri;
+    }
+
+    @Override
     public Context getContext() {
         return mListener.getContext();
     }

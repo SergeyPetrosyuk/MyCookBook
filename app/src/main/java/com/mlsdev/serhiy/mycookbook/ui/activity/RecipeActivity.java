@@ -17,24 +17,21 @@ public class RecipeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String recipeTitle = bundle.getString(DBContract.RecipeEntry.COLUMN_TITLE, getString(R.string.app_name));
+        setActionBarTitle(recipeTitle);
         Fragment fragment = new RecipeFragment();
 
         if (savedInstanceState != null){
             fragment = getFragmentManager().findFragmentByTag(RecipeFragment.class.getName());
+        } else {
+            fragment.setArguments(bundle);
         }
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_holder_view_recipe_screen, fragment, RecipeFragment.class.getName())
                 .commit();
 
-    }
-
-    public Bundle getRecipeData(){
-        intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        String recipeTitle = bundle.getString(DBContract.RecipeEntry.COLUMN_TITLE, getString(R.string.app_name));
-        setActionBarTitle(recipeTitle);
-        return bundle;
     }
 
     @Override

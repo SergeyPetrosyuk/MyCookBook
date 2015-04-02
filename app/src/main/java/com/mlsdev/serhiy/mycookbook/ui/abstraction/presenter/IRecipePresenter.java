@@ -8,11 +8,12 @@ import android.os.Bundle;
  */
 public interface IRecipePresenter {
 
-    void openRecipe(Bundle recipeData, boolean isAfterEditing);
     void openUpdateScreen(Bundle dataForUpdate);
     void setupRecipeData(Bundle recipeData);
     void deleteRecipe();
     Context getContext();
     boolean isRecipeFavorite();
     void favoriteAction();
+    void viewOnCreateState();
+    void viewOnResumeState();
 }

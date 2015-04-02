@@ -16,7 +16,7 @@ import java.util.List;
 public interface IRecipesView {
     void showRecipeList(List<Recipe> recipeList);
     Context getContext();
-    void openRecipe(Bundle recipeData);
+    void openRecipe(Intent recipeData);
     BaseAdapter getAdepter();
     void showCategoryEditor();
     void hideCategoryEditor();
