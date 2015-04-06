@@ -1,6 +1,7 @@
 package com.mlsdev.serhiy.mycookbook.adapter;
 
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,7 @@ public class CategoriesListAdapter extends BaseAdapter implements OnListChangedL
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        Log.d(Constants.LOG_TAG, "getView() position: " + position + " value:" + convertView);
 
         if (convertView == null){
             convertView = LayoutInflater.from(mView.getContext()).inflate(mItemLayoutId, parent, false);
@@ -106,11 +108,11 @@ public class CategoriesListAdapter extends BaseAdapter implements OnListChangedL
     }
 
     private class ViewHolder{
-        TextView nameTextView;
-        ImageView categoryImage;
+        final TextView nameTextView;
+        final ImageView categoryImage;
         String imageUriStr;
         int categoryId;
-        View foregroundView;
+        final View foregroundView;
 
         private ViewHolder(TextView nameTextView, ImageView categoryImage, View foregroundView) {
             this.nameTextView = nameTextView;

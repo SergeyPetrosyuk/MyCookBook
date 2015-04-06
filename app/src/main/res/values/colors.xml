@@ -13,7 +13,7 @@
     <color name="divider_light_grey">#ffcccccc</color>
 
     <color name="recipe_item_pressed">#5cffffff</color>
-    <color name="recipe_item_pressed_ripple">#ffffffff</color>
+    <color name="recipe_item_pressed_ripple">#bbffffff</color>
     <color name="recipe_item_selected">#83ffffff</color>
 
     <color name="recipe_or_category_title">#5c000000</color>

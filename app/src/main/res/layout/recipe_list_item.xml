@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:paddingTop="2dp">
 
     <ImageView
@@ -41,21 +41,17 @@
         android:background="@drawable/recipe_list_item_bg"
         android:clickable="true"/>
 
-    <RelativeLayout
-        android:id="@+id/recipe_item_checkbox_holder"
+    <ImageButton
+        android:id="@+id/ib_select_for_deleting"
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:background="@android:color/transparent"
-        android:clickable="true"
-        android:visibility="gone">
-        <CheckBox
-            android:id="@+id/recipe_item_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"/>
-        </RelativeLayout>
+        android:src="@drawable/bt_recipe_transition_checked"
+        android:scaleType="fitEnd"
+        android:paddingTop="30dp"
+        android:paddingBottom="70dp"
+        android:paddingRight="10dp"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/iv_favorite_status"

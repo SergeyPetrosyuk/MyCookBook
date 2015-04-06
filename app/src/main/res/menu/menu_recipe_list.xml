@@ -4,15 +4,4 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mlsdev.serhiy.mycookbook.ui.activity.AddCategoryActivity">
 
-    <item android:id="@+id/action_delete_recipes"
-        android:title=""
-        android:icon="@mipmap/icon_delete_action"
-        app:showAsAction="always"
-        android:visible="false"/>
-
-    <item android:id="@+id/action_edit_category"
-        android:title=""
-        android:icon="@mipmap/icon_edit_action"
-        app:showAsAction="always" />
-
 </menu>

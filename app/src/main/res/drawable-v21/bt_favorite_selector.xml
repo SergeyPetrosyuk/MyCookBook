@@ -3,7 +3,7 @@
     android:color="@color/recipe_item_pressed_ripple">
 
     <item android:id="@android:id/mask"
-        android:drawable="@drawable/bt_favorite_bg"/>
+        android:drawable="@drawable/circle_mask"/>
 
     <item android:drawable="@android:color/transparent"/>
 </ripple>

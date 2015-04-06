@@ -14,7 +14,7 @@ public interface IRecipesPresenter {
     void openRecipe(int position);
     void showEditor();
     void activateReadyButton(int editTextChars);
-    void editCategory(int categoryId, String newTitle);
+    void editCategory(String newTitle);
     void openAddRecipeScreen();
     void setCategoryData(Bundle categoryData);
     Integer getCategoryId();
@@ -25,4 +25,6 @@ public interface IRecipesPresenter {
     void setupIsFavorite(boolean newStatus);
     void viewOnCreateState();
     void viewOnResumeState();
+
+    void viewOnDestroyState();
 }

@@ -8,6 +8,7 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -31,23 +32,31 @@ import android.widget.Toast;
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.adapter.RecipeListAdapter;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
+import com.mlsdev.serhiy.mycookbook.listener.OnActionBarItemClickListener;
 import com.mlsdev.serhiy.mycookbook.listener.OnFilterByFavoriteClickListener;
 import com.mlsdev.serhiy.mycookbook.listener.OnTextChangedListener;
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
 import com.mlsdev.serhiy.mycookbook.presenter.RecipesPresenter;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipeListAdapter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
 import com.mlsdev.serhiy.mycookbook.ui.activity.AddRecipeActivity;
 import com.mlsdev.serhiy.mycookbook.ui.activity.BaseActivity;
 import com.mlsdev.serhiy.mycookbook.ui.activity.RecipeActivity;
+import com.mlsdev.serhiy.mycookbook.utils.AnimationFactory;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
+import com.mlsdev.serhiy.mycookbook.utils.DialogHelper;
 
 import java.util.List;
 
 /**
  * Created by android on 04.03.15.
  */
-public class RecipeListFragment extends Fragment implements View.OnClickListener, IRecipesView {
+public class RecipeListFragment extends Fragment implements IRecipesView {
+
+    private static final int sOnCreateState = 0;
+    private static final int sOnResumeState = 1;
+    private static int sFragmentState;
 
     private Button mAddNoteBtn;
     private ImageButton mDeleteCategoryBtn;
@@ -57,29 +66,29 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     private Button mReadyBtn;
     private RelativeLayout mEditTextHolder;
     private EditText mEditCategoryName;
-    private Menu mMenu;
-    private AlertDialog.Builder dialog;
-    private AlertDialog.Builder mDeleteCategoryDialog;
     private RecipeListAdapter mRecipeListAdapter;
+    private BaseActivity mActivity;
+    private DialogHelper mDialogHelper;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setRetainInstance(true);
-        setHasOptionsMenu(true);
+        sFragmentState = sOnCreateState;
+        mActivity = ((BaseActivity) getActivity());
 
         mPresenter = new RecipesPresenter(this);
         mPresenter.setCategoryData(getArguments());
         mPresenter.setupCategoryName();
+        mDialogHelper = new DialogHelper(getActivity(), mPresenter);
 
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
         findViews(view);
         initViews();
 
-        createDialog();
         mPresenter.viewOnCreateState();
 
-        defineFilterIcon();
+        defineActionBarIcons();
         return view;
     }
     
@@ -93,77 +102,62 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
         mEditCategoryName = (EditText) view.findViewById(R.id.et_edit_category_name);
         mEditCategoryName.addTextChangedListener(new OnTextChangedListener(mPresenter));
-        mReadyBtn.setOnClickListener(this);
-        mDeleteCategoryBtn.setOnClickListener(this);
-
-        defineFilterIcon();
+        mReadyBtn.setOnClickListener(new OnActionBarItemClickListener(mPresenter, this));
+        mDeleteCategoryBtn.setOnClickListener(new OnActionBarItemClickListener(mPresenter, this));
     }
     
     private void initViews(){
-        mAddNoteBtn.setOnClickListener(this);
+        mAddNoteBtn.setOnClickListener(new OnActionBarItemClickListener(mPresenter, this));
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public String getNewCategoryName() {
+        return mEditCategoryName.getText().toString();
+    }
 
-        switch (item.getItemId()){
-            case R.id.action_edit_category :
-                mPresenter.showEditor();
-                break;
-            case R.id.action_delete_recipes:
-                dialog.create().show();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    @Override
+    public void showDeleteCategoryDialog(){
+        mDialogHelper.showDeleteCategoryDialog();
+    }
 
-        return true;
+    @Override
+    public void showDeleteRecipesDialog(){
+        mDialogHelper.showDeleteRecipeDialog();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.viewOnResumeState();
+        if (sFragmentState == sOnResumeState)
+            mPresenter.viewOnResumeState();
+        else
+            sFragmentState = sOnResumeState;
+
         showFilterIcon();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        hideFilterIcon();
+        hideActionIcons();
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btn_add_note:
-                mPresenter.openAddRecipeScreen();
-                break;
-            case R.id.btn_ready_edit_category:
-                mPresenter.editCategory(mPresenter.getCategoryId(), mEditCategoryName.getText().toString());
-                break;
-            case R.id.bt_delete_category:
-                mDeleteCategoryDialog.create().show();
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_recipe_list, menu);
-        mMenu = menu;
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.viewOnDestroyState();
     }
 
     @Override
     public void showRecipeList(List<Recipe> recipeList) {
-        if (mRecipeListAdapter == null)
+        if (mRecipeListAdapter == null) {
             mRecipeListAdapter = new RecipeListAdapter(this, mPresenter);
+            mResipeListView.setAdapter(mRecipeListAdapter);
+        } else {
+            mResipeListView.setAdapter(mRecipeListAdapter);
+        }
 
         mRecipeListAdapter.setData(recipeList);
-        mResipeListView.setAdapter(mRecipeListAdapter);
-        mResipeListView.invalidate();
     }
 
     @Override
@@ -177,8 +171,8 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public BaseAdapter getAdepter() {
-        return (BaseAdapter) mResipeListView.getAdapter();
+    public IRecipeListAdapter getAdepter() {
+        return (IRecipeListAdapter) mResipeListView.getAdapter();
     }
 
     @Override
@@ -203,19 +197,15 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void showReadyButton() {
-        Animation showBtn = AnimationUtils.loadAnimation(getActivity(), R.anim.show_ready_btn);
-        Animation makeEditTextShorter = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_edit_text_to_smoller_size);
         mReadyBtn.setVisibility(View.VISIBLE);
-        mReadyBtn.startAnimation(showBtn);
-        mEditTextHolder.startAnimation(makeEditTextShorter);
+        mReadyBtn.startAnimation(AnimationFactory.getShowReadyEditButtonAnim(getActivity()));
+        mEditTextHolder.startAnimation(AnimationFactory.getMakeEditTextShorterAnim(getActivity()));
     }
 
     @Override
     public void hideReadyButton() {
-        Animation showBtn = AnimationUtils.loadAnimation(getActivity(), R.anim.hide_ready_btn);
-        Animation makeEditTextShorter = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_edit_text_to_bigger_size);
-        mReadyBtn.startAnimation(showBtn);
-        mEditTextHolder.startAnimation(makeEditTextShorter);
+        mReadyBtn.startAnimation(AnimationFactory.getHideReadyEditButtonAnim(getActivity()));
+        mEditTextHolder.startAnimation(AnimationFactory.getMakeEditTextLongerAnim(getActivity()));
     }
 
     @Override
@@ -234,18 +224,22 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void showDeleteAction(boolean isShow) {
-        if (mMenu != null)
-            mMenu.getItem(0).setVisible(isShow);
+        mActivity.showDeleteRecipesBtn(isShow);
+    }
+
+    @Override
+    public void showEditAction(boolean isShow) {
+        mActivity.showEditCategoryBtn(isShow);
+    }
+
+    @Override
+    public void showUnselectAllAction(boolean isShow) {
+        mActivity.showUnselectRecipesBtn(isShow);
     }
 
     @Override
     public void onDeleteCategorySuccess() {
         getActivity().finish();
-    }
-
-    @Override
-    public void onDeleteCategoryError() {
-
     }
 
     @Override
@@ -277,57 +271,22 @@ public class RecipeListFragment extends Fragment implements View.OnClickListener
         inputMethodManager.showSoftInput(edittext, InputMethodManager.SHOW_IMPLICIT);
     }
 
-    private void createDialog(){
-        // Delete recipes dialog.
-        dialog = new AlertDialog.Builder(getContext());
-        dialog.setTitle(getActivity().getString(R.string.delete_this_recipes));
-        dialog.setPositiveButton(R.string.add_note_btn, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mPresenter.deleteRecipes();
-            }
-        });
-        dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                return;
-            }
-        });
-
-        // Delete category dialog.
-        mDeleteCategoryDialog = new AlertDialog.Builder(getActivity());
-        mDeleteCategoryDialog.setPositiveButton(R.string.add_note_btn, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mPresenter.deleteCategory();
-            }
-        });
-        mDeleteCategoryDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                return;
-            }
-        });
-
-        mDeleteCategoryDialog.setIcon(R.mipmap.ic_delete_action_darck)
-                .setMessage(R.string.delete_category_with_recipes)
-                .setTitle(R.string.delete);
+    private void defineActionBarIcons(){
+        mActivity.getFilterBtn().setOnClickListener(new OnFilterByFavoriteClickListener(mActivity.getFilterBtn(), mPresenter));
+        mActivity.getDeleteRecipesImageButton().setOnClickListener(new OnActionBarItemClickListener(mPresenter, this));
+        mActivity.getUnselectAllImageButton().setOnClickListener(new OnActionBarItemClickListener(mPresenter, this));
+        mActivity.getEditCategoryImageButton().setOnClickListener(new OnActionBarItemClickListener(mPresenter, this));
     }
 
-    private void defineFilterIcon(){
-        BaseActivity activity = ((BaseActivity) getActivity());
-        activity.showFilterBtn(true);
-        ImageButton filterImageButton = activity.getFilterBtn();
-        filterImageButton.setOnClickListener(new OnFilterByFavoriteClickListener(filterImageButton, mPresenter));
-    }
-
-    private void hideFilterIcon(){
-        BaseActivity activity = ((BaseActivity) getActivity());
-        activity.showFilterBtn(true);
+    private void hideActionIcons(){
+        mActivity.showFilterBtn(false);
+        mActivity.showDeleteRecipesBtn(false);
+        mActivity.showEditCategoryBtn(false);
+        mActivity.showUnselectRecipesBtn(false);
     }
 
     private void showFilterIcon(){
-        BaseActivity activity = ((BaseActivity) getActivity());
-        activity.showFilterBtn(true);
+        mActivity.showFilterBtn(true);
+        mActivity.showEditCategoryBtn(true);
     }
 }

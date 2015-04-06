@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.BaseAdapter;
 
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipeListAdapter;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface IRecipesView {
     void showRecipeList(List<Recipe> recipeList);
     Context getContext();
     void openRecipe(Intent recipeData);
-    BaseAdapter getAdepter();
+    IRecipeListAdapter getAdepter();
     void showCategoryEditor();
     void hideCategoryEditor();
     void showReadyButton();
@@ -25,10 +26,14 @@ public interface IRecipesView {
     void openAddRecipeScreen();
     void setupCategoryName(String categoryName);
     void showDeleteAction(boolean isShow);
+    void showEditAction(boolean isShow);
+    void showUnselectAllAction(boolean isShow);
     void onDeleteCategorySuccess();
-    void onDeleteCategoryError();
     void onEditCategorySuccess();
     void onEditCategoryError();
+    String getNewCategoryName();
+    void showDeleteCategoryDialog();
+    void showDeleteRecipesDialog();
 
     LoaderManager getLoaderManagerForPresenter();
 }

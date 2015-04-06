@@ -1,11 +1,14 @@
 package com.mlsdev.serhiy.mycookbook.adapter;
 
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -16,8 +19,10 @@ import com.mlsdev.serhiy.mycookbook.adapter.holder.PositionHolder;
 import com.mlsdev.serhiy.mycookbook.adapter.holder.RecipeViewHolder;
 import com.mlsdev.serhiy.mycookbook.listener.OnRecipeClickListener;
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipeListAdapter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
+import com.mlsdev.serhiy.mycookbook.utils.Constants;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -29,22 +34,17 @@ import java.util.Map;
 /**
  * Created by android on 11.03.15.
  */
-public class RecipeListAdapter extends BaseAdapter {
-
+public class RecipeListAdapter extends BaseAdapter implements IRecipeListAdapter {
     private List<Recipe> mRecipeList;
     private IRecipesView mView;
     private IRecipesPresenter mPresenter;
     private int mSelectedRecipeCount = 0;
     private int mVisibilityState = View.GONE;
-    private List<RelativeLayout> mCheckboxHolders;
-    private Map<RelativeLayout, Integer> mCheckboxHoldersMap;
 
     public RecipeListAdapter(IRecipesView mView, IRecipesPresenter mPresenter) {
         this.mView = mView;
         this.mPresenter = mPresenter;
         mRecipeList = new ArrayList<>();
-        mCheckboxHolders = new ArrayList<>();
-        mCheckboxHoldersMap = new HashMap<>();
     }
 
     @Override
@@ -66,61 +66,78 @@ public class RecipeListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null){
-            convertView = LayoutInflater.from(mView.getContext()).inflate(R.layout.recipe_list_item, parent, false);
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_recipe_icon);
-            TextView nameTextView = (TextView) convertView.findViewById(R.id.tv_recipe_title);
-            View foreground = convertView.findViewById(R.id.recipe_item_foreground);
-            CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.recipe_item_checkbox);
-            RelativeLayout checkBoxHolder = (RelativeLayout) convertView.findViewById(R.id.recipe_item_checkbox_holder);
-            ImageView favoriteStatus = (ImageView) convertView.findViewById(R.id.iv_favorite_status);
-            RecipeViewHolder viewHolder = new RecipeViewHolder(imageView, nameTextView, foreground, checkBoxHolder, checkBox, favoriteStatus);
-
+            convertView                      = LayoutInflater.from(mView.getContext()).inflate(R.layout.recipe_list_item, parent, false);
+            ImageView imageView              = (ImageView) convertView.findViewById(R.id.iv_recipe_icon);
+            TextView nameTextView            = (TextView) convertView.findViewById(R.id.tv_recipe_title);
+            View foreground                  = convertView.findViewById(R.id.recipe_item_foreground);
+            ImageView favoriteStatus         = (ImageView) convertView.findViewById(R.id.iv_favorite_status);
+            ImageButton selectForDeletingBtn = (ImageButton) convertView.findViewById(R.id.ib_select_for_deleting);
+            ProgressBar progressBar          = (ProgressBar) convertView.findViewById(R.id.pb_recipe_list_item);
+            RecipeViewHolder viewHolder      = new RecipeViewHolder(imageView, nameTextView, foreground, favoriteStatus,
+                                                                    selectForDeletingBtn, progressBar);
             foreground.setTag(new PositionHolder(position));
             foreground.setOnClickListener(new OnRecipeClickListener(mPresenter));
-            foreground.setOnLongClickListener(new OnLongPressedListener(checkBoxHolder, checkBox));
-            checkBoxHolder.setOnClickListener(new OnCheckBoxHolderClickListener(checkBox));
-            checkBoxHolder.setVisibility(mVisibilityState);
+            foreground.setOnLongClickListener(new OnLongPressedListener());
             convertView.setTag(viewHolder);
-
-            if (mCheckboxHolders.size() < mRecipeList.size()) {
-                mCheckboxHolders.add(checkBoxHolder);
-                mCheckboxHoldersMap.put(checkBoxHolder, position);
-            }
+            selectForDeletingBtn.setTag(position);
+            selectForDeletingBtn.setOnClickListener(new OnSelectRecipeClickListener());
         }
 
         RecipeViewHolder viewHolder = (RecipeViewHolder) convertView.getTag();
-        ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.pb_recipe_list_item);
-
-        if (!mRecipeList.get(position).getImageUri().equals("")) {
-
-            Uri imageUri = Uri.parse("content://media" + mRecipeList.get(position).getImageUri());
-
-            Picasso.with(mView.getContext())
-                    .load(imageUri)
-                    .resize(750, 400)
-                    .centerCrop().
-                    into(viewHolder.getIconImageView(), new CallBackImageLoader(progressBar, viewHolder.getIconImageView()));
-        } else {
-            viewHolder.getIconImageView().setImageResource(R.mipmap.no_image);
-            progressBar.setVisibility(View.GONE);
-        }
+        ((PositionHolder) viewHolder.getForeground().getTag()).setmPosition(position);
 
         viewHolder.getNameTextView().setText(mRecipeList.get(position).getTitle());
+        viewHolder.getSelectForDeleteBtn().setVisibility(mVisibilityState);
+        viewHolder.getSelectForDeleteBtn().setTag(position);
+        viewHolder.getSelectForDeleteBtn().setSelected(mRecipeList.get(position).getIsChecked());
 
-        if (mRecipeList.get(position).getIsFavorite())
-            viewHolder.getFavoriteStatus().setVisibility(View.VISIBLE);
-        else
-            viewHolder.getFavoriteStatus().setVisibility(View.GONE);
+        setUpImage(mRecipeList.get(position), viewHolder.getIconImageView(), viewHolder.getProgressBar());
+        setUpFavoriteStatusIcon(mRecipeList.get(position), viewHolder.getFavoriteStatus());
 
+        TransitionDrawable transitionDrawable = (TransitionDrawable)  viewHolder.getSelectForDeleteBtn().getDrawable();
+
+        if (mRecipeList.get(position).getIsChecked()) {
+            transitionDrawable.startTransition(0);
+        } else {
+            transitionDrawable.resetTransition();
+        }
         return convertView;
     }
 
+    @Override
     public void setData(List<Recipe> recipeList) {
-        mRecipeList.clear();
-        mCheckboxHolders.clear();
-        mCheckboxHoldersMap.clear();
-        mRecipeList.addAll(recipeList);
+        if (mRecipeList.size() != recipeList.size()){
+            mRecipeList.clear();
+            mRecipeList.addAll(recipeList);
+            mSelectedRecipeCount = 0;
+            mVisibilityState = View.GONE;
+            mView.showDeleteAction(false);
+            mView.showEditAction(true);
+            mView.showUnselectAllAction(false);
+        } else {
+            for (int i = 0; i < mRecipeList.size(); i++){
+                mRecipeList.get(i).setIsFavorite(recipeList.get(i).getIsFavorite());
+            }
+
+            if (mSelectedRecipeCount > 0){
+                mView.showDeleteAction(true);
+                mView.showEditAction(false);
+                mView.showUnselectAllAction(true);
+            }
+        }
+
         this.notifyDataSetChanged();
+    }
+
+    @Override
+    public Recipe getRecipe(int position) {
+        return (Recipe) getItem(position);
+    }
+
+    @Override
+    public void unselectAllRecipes() {
+        mSelectedRecipeCount = 0;
+        checkSelectedCount();
     }
 
     /**
@@ -152,91 +169,92 @@ public class RecipeListAdapter extends BaseAdapter {
      * OnLongClickListener
      * */
     private class OnLongPressedListener implements View.OnLongClickListener{
-
-        public RelativeLayout checkBoxHolder;
-        public CheckBox checkBox;
-
-        private OnLongPressedListener(RelativeLayout checkBoxHolder, CheckBox checkBox) {
-            this.checkBoxHolder = checkBoxHolder;
-            this.checkBox = checkBox;
-        }
-
         @Override
         public boolean onLongClick(View v) {
-            checkBoxHolder.setVisibility(View.VISIBLE);
-            checkBox.setChecked(true);
-            increaseCheckedItems();
-            updateTopViews();
+            int position = ((PositionHolder)v.getTag()).getmPosition();
+            mVisibilityState = View.VISIBLE;
+            mRecipeList.get(position).setIsChecked(true);
+            mSelectedRecipeCount++;
+            checkSelectedCount();
+            mView.showEditAction(false);
+            mView.showUnselectAllAction(true);
+            notifyDataSetChanged();
             return true;
         }
     }
 
-    private class OnCheckBoxHolderClickListener implements View.OnClickListener{
-        public CheckBox checkBox;
-
-        private OnCheckBoxHolderClickListener(CheckBox checkBox) {
-            this.checkBox = checkBox;
-        }
-
-        @Override
-        public void onClick(View v) {
-            checkBox.setPressed(true);
-            checkBox.setChecked(!checkBox.isChecked());
-
-            if (!checkBox.isChecked()){
-                decreaseCheckedItems();
-            } else {
-                increaseCheckedItems();
-            }
-
-            if (mSelectedRecipeCount == 0){
-                hideCheckboxes();
-            }
-        }
-    }
-
-    private void increaseCheckedItems(){
-        mSelectedRecipeCount++;
-    }
-
-    private void decreaseCheckedItems(){
-        mSelectedRecipeCount--;
-    }
-
-    private void updateTopViews(){
-        for (Map.Entry<RelativeLayout, Integer> entry : mCheckboxHoldersMap.entrySet()){
-            entry.getKey().setVisibility(View.VISIBLE);
-        }
-
-        mView.showDeleteAction(true);
-    }
-
-    private void hideCheckboxes(){
-        for (Map.Entry<RelativeLayout, Integer> entry : mCheckboxHoldersMap.entrySet()){
-            entry.getKey().setVisibility(View.GONE);
-        }
-
-        mView.showDeleteAction(false);
-    }
-
-    public List<Integer> getSelectedRecipeIds(){
-        List<Integer> recipeListForDelete = new ArrayList<>();
-
-        for (Map.Entry<RelativeLayout, Integer> entry : mCheckboxHoldersMap.entrySet()){
-            CheckBox checkBox = (CheckBox) entry.getKey().findViewById(R.id.recipe_item_checkbox);
-
-            if (checkBox.isChecked()){
-                Recipe recipe = (Recipe) getItem(entry.getValue());
-                recipeListForDelete.add(recipe.get_id());
-            }
-        }
-
-        return recipeListForDelete;
-    }
-
     @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
+    public List<Integer> getSelectedRecipeIds(){
+        List<Integer> recipeIdListForDelete = new ArrayList<>();
 
+        for (Recipe recipe : mRecipeList){
+            if (recipe.getIsChecked()){
+                recipeIdListForDelete.add(recipe.get_id());
+            }
+        }
+
+        mSelectedRecipeCount = 0;
+        checkSelectedCount();
+        return recipeIdListForDelete;
+    }
+
+    /*
+    * OnSelectRecipeClickListener
+    * */
+    private class OnSelectRecipeClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            ImageButton imageButton = (ImageButton) view;
+            TransitionDrawable transitionDrawable = (TransitionDrawable) imageButton.getDrawable();
+            int position = (int) view.getTag();
+            mRecipeList.get(position).setIsChecked(!mRecipeList.get(position).getIsChecked());
+
+            if (mRecipeList.get(position).getIsChecked()) {
+                mSelectedRecipeCount++;
+                transitionDrawable.startTransition(100);
+            } else {
+                mSelectedRecipeCount--;
+                transitionDrawable.reverseTransition(100);
+            }
+
+            checkSelectedCount();
+        }
+    }
+
+    private void checkSelectedCount(){
+        Log.e(Constants.LOG_TAG, "mVisibilityState = " + mSelectedRecipeCount);
+
+        if (mSelectedRecipeCount > 0){
+            mView.showDeleteAction(true);
+        } else {
+            mView.showDeleteAction(false);
+            mView.showEditAction(true);
+            mView.showUnselectAllAction(false);
+            mVisibilityState = View.GONE;
+            notifyDataSetInvalidated();
+        }
+    }
+
+    private void setUpImage(Recipe recipe, ImageView image, ProgressBar progressBar){
+        if (!recipe.getImageUri().equals("")) {
+
+            Uri imageUri = Uri.parse("content://media" + recipe.getImageUri());
+
+            Picasso.with(mView.getContext())
+                    .load(imageUri)
+                    .resize(750, 400)
+                    .centerCrop().
+                    into(image, new CallBackImageLoader(progressBar, image));
+        } else {
+            image.setImageResource(R.mipmap.no_image);
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private void setUpFavoriteStatusIcon(Recipe recipe, ImageView favoriteStatusImg){
+        if (recipe.getIsFavorite())
+            favoriteStatusImg.setVisibility(View.VISIBLE);
+        else
+            favoriteStatusImg.setVisibility(View.GONE);
     }
 }

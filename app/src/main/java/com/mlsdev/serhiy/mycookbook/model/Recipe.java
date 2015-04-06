@@ -13,6 +13,7 @@ public class Recipe {
     private String mInstructions = null;
     private int mCategoryId      = 0;
     private boolean mIsFavorite  = false;
+    private boolean mIsChecked   = false;
     
     public Recipe() {
     }
@@ -60,6 +61,10 @@ public class Recipe {
         mIsFavorite = aIsFavorite;
     }
 
+    public void setIsChecked(boolean mIsChecked) {
+        this.mIsChecked = mIsChecked;
+    }
+
     public int getCategoryId() {
         return mCategoryId;
     }
@@ -90,5 +95,9 @@ public class Recipe {
 
     public boolean getIsFavorite(){
         return mIsFavorite;
+    }
+
+    public boolean getIsChecked() {
+        return mIsChecked;
     }
 }

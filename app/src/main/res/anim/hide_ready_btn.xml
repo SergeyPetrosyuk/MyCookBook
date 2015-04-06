@@ -4,14 +4,14 @@
     android:fillAfter="true">
 
     <rotate
-        android:duration="400"
+        android:duration="300"
         android:fromDegrees="0"
         android:pivotX="50%"
         android:pivotY="50%"
         android:toDegrees="720"/>
 
     <scale
-        android:duration="400"
+        android:duration="300"
         android:fromXScale="1.0"
         android:fromYScale="1.0"
         android:pivotX="50%"

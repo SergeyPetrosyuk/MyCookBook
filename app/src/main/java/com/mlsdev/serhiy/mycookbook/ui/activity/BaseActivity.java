@@ -31,6 +31,9 @@ public abstract class BaseActivity extends ActionBarActivity {
     private String mCurrentTitle;
     private boolean mIsMoreThanOneFragment = false;
     private ImageButton mFilterImageButton;
+    private ImageButton mUnselectAllImageButton;
+    private ImageButton mDeleteRecipesImageButton;
+    private ImageButton mEditCategoryImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,9 @@ public abstract class BaseActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             mFilterImageButton = (ImageButton) mToolbar.findViewById(R.id.iv_filter_by_favorites);
+            mUnselectAllImageButton = (ImageButton) mToolbar.findViewById(R.id.ib_unselect_all);
+            mDeleteRecipesImageButton = (ImageButton) mToolbar.findViewById(R.id.ib_delete_recipes);
+            mEditCategoryImageButton = (ImageButton) mToolbar.findViewById(R.id.ib_edit_category);
         }
 
         mCurrentTitle = getTitle().toString();
@@ -157,11 +163,32 @@ public abstract class BaseActivity extends ActionBarActivity {
         return mFilterImageButton;
     }
 
+    public ImageButton getEditCategoryImageButton() {
+        return mEditCategoryImageButton;
+    }
+
+    public ImageButton getDeleteRecipesImageButton() {
+        return mDeleteRecipesImageButton;
+    }
+
+    public ImageButton getUnselectAllImageButton() {
+        return mUnselectAllImageButton;
+    }
+
     public void showFilterBtn(boolean isShow){
-        if (isShow)
-            mFilterImageButton.setVisibility(View.VISIBLE);
-        else
-            mFilterImageButton.setVisibility(View.GONE);
+        mFilterImageButton.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    public void showEditCategoryBtn(boolean isShow){
+        mEditCategoryImageButton.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    public void showDeleteRecipesBtn(boolean isShow){
+        mDeleteRecipesImageButton.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    public void showUnselectRecipesBtn(boolean isShow){
+        mUnselectAllImageButton.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
     public Toolbar getToolBar() {

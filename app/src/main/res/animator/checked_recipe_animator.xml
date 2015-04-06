@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <objectAnimator
+        android:propertyName="rotation"
+        android:pivotX="20"
+        android:pivotY="20"
+        android:valueType="floatType"
+        android:valueFrom="0.0f"
+        android:valueTo="360.0f"
+        android:duration="1000"/>
+
+    <objectAnimator
+        android:propertyName="scale"
+        android:valueType="floatType"
+        android:valueFrom="0.0f"
+        android:valueTo="40.0f"
+        android:duration="1000"/>
+
+</set>

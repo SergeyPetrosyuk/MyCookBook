@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 
-import com.mlsdev.serhiy.mycookbook.adapter.RecipeListAdapter;
 import com.mlsdev.serhiy.mycookbook.async.tasc.loader.LoadRecipeListTaskLoader;
 import com.mlsdev.serhiy.mycookbook.asynk_task.DeleteRecipesTask;
 import com.mlsdev.serhiy.mycookbook.asynk_task.LoadCategoryNameTask;
-import com.mlsdev.serhiy.mycookbook.asynk_task.LoadRecipeListTask;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.interactor.CategoryEditeOrDeleteInteractor;
 import com.mlsdev.serhiy.mycookbook.model.Recipe;
@@ -21,6 +19,7 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnDeleteRecipeListen
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnEditDeleteListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnLoadCategoryListener;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnRecipeListLoadedListener;
+import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipeListAdapter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
 import com.mlsdev.serhiy.mycookbook.ui.activity.RecipeActivity;
@@ -57,19 +56,8 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
 
     @Override
     public void openRecipe(int position) {
-        RecipeListAdapter adapter = (RecipeListAdapter) mView.getAdepter();
-        Recipe recipe = (Recipe) adapter.getItem(position);
-
-//        Bundle data = new Bundle();
-
-//        data.putInt(RecipeEntry.COLUMN_ID, recipe.get_id());
-//        data.putInt(RecipeEntry.COLUMN_CATEGORY_ID, recipe.getCategoryId());
-//        data.putString(CategoryEntry.COLUMN_NAME, recipe.getCategoryName());
-//        data.putString(RecipeEntry.COLUMN_TITLE, recipe.getTitle());
-//        data.putString(RecipeEntry.COLUMN_IMAGE_URI, recipe.getImageUri());
-//        data.putString(RecipeEntry.COLUMN_INGREDIENTS, recipe.getIngredients());
-//        data.putString(RecipeEntry.COLUMN_INSTRUCTIONS, recipe.getInstructions());
-//        data.putBoolean(RecipeEntry.COLUMN_IS_FAVORITE, recipe.getIsFavorite());
+        IRecipeListAdapter adapter = mView.getAdepter();
+        Recipe recipe =adapter.getRecipe(position);
 
         Intent intent = new Intent(getContext(), RecipeActivity.class);
         intent.putExtra(RecipeEntry.COLUMN_ID, recipe.get_id());
@@ -100,8 +88,8 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     }
 
     @Override
-    public void editCategory(int categoryId, String newTitle) {
-        mInteractor.editCategory(categoryId, newTitle);
+    public void editCategory(String newTitle) {
+        mInteractor.editCategory(getCategoryId(), newTitle);
     }
 
     @Override
@@ -127,7 +115,7 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
 
     @Override
     public void deleteRecipes() {
-        RecipeListAdapter adapter = (RecipeListAdapter) mView.getAdepter();
+        IRecipeListAdapter adapter = mView.getAdepter();
         new DeleteRecipesTask(this, this).deleteRecipe(adapter.getSelectedRecipeIds());
     }
 
@@ -154,6 +142,11 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     @Override
     public void viewOnResumeState() {
         mView.getLoaderManagerForPresenter().restartLoader(sRecipeLoaderId, getArgsForLoader(), this);
+    }
+
+    @Override
+    public void viewOnDestroyState() {
+        mView.getLoaderManagerForPresenter().destroyLoader(sRecipeLoaderId);
     }
 
     @Override
