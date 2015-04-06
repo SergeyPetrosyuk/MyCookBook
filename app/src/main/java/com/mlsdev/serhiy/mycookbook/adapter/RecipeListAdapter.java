@@ -111,22 +111,14 @@ public class RecipeListAdapter extends BaseAdapter implements IRecipeListAdapter
             mRecipeList.addAll(recipeList);
             mSelectedRecipeCount = 0;
             mVisibilityState = View.GONE;
-            mView.showDeleteAction(false);
-            mView.showEditAction(true);
-            mView.showUnselectAllAction(false);
         } else {
             for (int i = 0; i < mRecipeList.size(); i++){
                 mRecipeList.get(i).setIsFavorite(recipeList.get(i).getIsFavorite());
             }
-
-            if (mSelectedRecipeCount > 0){
-                mView.showDeleteAction(true);
-                mView.showEditAction(false);
-                mView.showUnselectAllAction(true);
-            }
         }
 
         this.notifyDataSetChanged();
+        checkSelectedCount();
     }
 
     @Override
@@ -137,6 +129,10 @@ public class RecipeListAdapter extends BaseAdapter implements IRecipeListAdapter
     @Override
     public void unselectAllRecipes() {
         mSelectedRecipeCount = 0;
+        for (Recipe recipe : mRecipeList){
+            recipe.setIsChecked(false);
+        }
+        
         checkSelectedCount();
     }
 
@@ -226,6 +222,8 @@ public class RecipeListAdapter extends BaseAdapter implements IRecipeListAdapter
 
         if (mSelectedRecipeCount > 0){
             mView.showDeleteAction(true);
+            mView.showEditAction(false);
+            mView.showUnselectAllAction(true);
         } else {
             mView.showDeleteAction(false);
             mView.showEditAction(true);

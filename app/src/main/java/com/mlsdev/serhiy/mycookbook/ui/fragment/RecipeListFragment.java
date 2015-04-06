@@ -287,6 +287,5 @@ public class RecipeListFragment extends Fragment implements IRecipesView {
 
     private void showFilterIcon(){
         mActivity.showFilterBtn(true);
-        mActivity.showEditCategoryBtn(true);
     }
 }

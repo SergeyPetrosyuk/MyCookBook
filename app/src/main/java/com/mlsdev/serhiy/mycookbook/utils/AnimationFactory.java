@@ -26,4 +26,12 @@ public class AnimationFactory {
     public static Animation getMakeEditTextLongerAnim(Context mContext){
         return AnimationUtils.loadAnimation(mContext, R.anim.scale_edit_text_to_bigger_size);
     }
+
+    public static Animation getShowActionBarItem(Context mContext){
+        return AnimationUtils.loadAnimation(mContext, R.anim.show_actionbar_icon);
+    }
+
+    public static Animation getHideActionBarItem(Context mContext){
+        return AnimationUtils.loadAnimation(mContext, R.anim.hide_actionbar_icon);
+    }
 }

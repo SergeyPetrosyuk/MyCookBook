@@ -1,5 +1,8 @@
 package com.mlsdev.serhiy.mycookbook.ui.activity;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -12,10 +15,12 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.mlsdev.serhiy.mycookbook.R;
+import com.mlsdev.serhiy.mycookbook.utils.AnimationFactory;
 import com.mlsdev.serhiy.mycookbook.utils.TypefaceSpan;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -194,4 +199,5 @@ public abstract class BaseActivity extends ActionBarActivity {
     public Toolbar getToolBar() {
         return mToolbar;
     }
+
 }
