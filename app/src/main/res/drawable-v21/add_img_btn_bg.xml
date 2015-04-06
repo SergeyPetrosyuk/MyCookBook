@@ -3,7 +3,7 @@
     android:color="@color/add_btn_pressed">
 
     <item android:id="@android:id/mask"
-        android:drawable="@mipmap/add_image_button_pressed" />
+        android:drawable="@drawable/circle_mask" />
 
-    <item android:drawable="@mipmap/add_image_button" />
+    <item android:drawable="@drawable/add_image_button_normal" />
 </ripple>

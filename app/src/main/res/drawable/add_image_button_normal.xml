@@ -4,14 +4,15 @@
     <item>
         <shape android:shape="oval">
             <solid android:color="@color/add_btn" />
-            <stroke
-                android:width="1dp"
-                android:color="@color/add_btn" />
+            <padding android:bottom="5dp"
+                android:top="5dp"
+                android:right="5dp"
+                android:left="5dp"/>
         </shape>
     </item>
 
     <item>
-        <bitmap android:src="@mipmap/icon_checked_action" />
+        <bitmap android:src="@mipmap/ic_new_picture" />
     </item>
 
 </layer-list>
