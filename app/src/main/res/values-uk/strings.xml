@@ -17,12 +17,15 @@
     <string name="fount_problem">Знайшли помилку?</string>
     <string name="make_photo">Зробити фото</string>
     <string name="choose_in_gallery">Вибрати в галереї</string>
+    <string name="g_to_mg">Грами в міліграми</string>
 
     <!--Hint texts-->
     <string name="note_title_hint">назва</string>
     <string name="note_category_hint">категорія</string>
     <string name="note_ingredients_hint">інгредієнти</string>
     <string name="note_instructions_hint">інструкції</string>
+    <string name="pressure_g">г</string>
+    <string name="pressure_mg">мг</string>
 
     <!--Errors-->
     <string name="add_category_error">Помилка! Спробуйде ще раз</string>

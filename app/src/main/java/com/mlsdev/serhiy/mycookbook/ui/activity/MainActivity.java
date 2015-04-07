@@ -10,10 +10,11 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setActionBarTitle(getTitle().toString());
-        
+
         initLeftDrawerNav();
+
         if (savedInstanceState == null){
+            setActionBarTitle(getTitle().toString());
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_holder_main_activity, new CategoriesFragment())
                     .commit();
