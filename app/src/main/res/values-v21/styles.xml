@@ -14,19 +14,23 @@
         <item name="color">?attr/colorControlNormal</item>
     </style>
 
-    <style name="ButtonAdd" parent="Widget.AppCompat.ActionButton">
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_height">50dp</item>
+    <style name="ButtonAdd" parent="base_add_button">
         <item name="android:background">@drawable/add_btn_bg</item>
         <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:layout_marginRight">20dp</item>
         <item name="android:text">+</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">25sp</item>
-        <item name="android:elevation">5dp</item>
-        <item name="android:translationZ">5dp</item>
+    </style>
+
+    <style name="base_add_button" parent="Widget.AppCompat.ActionButton">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:translationZ">2dp</item>
+        <item name="android:stateListAnimator">@null</item>
     </style>
 </resources>

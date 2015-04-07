@@ -35,13 +35,20 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/divider_light_grey</item>
     </style>
-    
-    <style name="ButtonAdd" parent="Widget.AppCompat.ActionButton">
+
+    <style name="base_add_button" parent="Widget.AppCompat.ActionButton">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="add_image_button" parent="base_add_button">
+        <item name="android:background">@drawable/add_img_btn_bg</item>
+    </style>
+
+    <style name="ButtonAdd" parent="base_add_button">
         <item name="android:background">@drawable/add_btn_bg</item>
         <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:layout_marginRight">20dp</item>
         <item name="android:text">+</item>

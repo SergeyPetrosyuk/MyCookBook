@@ -34,12 +34,9 @@
 
             <Button
                 android:id="@+id/btn_add_image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                style="@style/add_image_button"
                 android:layout_alignBottom="@+id/button_and_pb_holder"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="25dp"
-                android:background="@drawable/add_img_btn_bg"/>
+                android:layout_marginRight="25dp" />
 
             <EditText
                 android:id="@+id/et_recipe_title"
