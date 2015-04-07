@@ -46,6 +46,7 @@ import com.mlsdev.serhiy.mycookbook.ui.activity.RecipeActivity;
 import com.mlsdev.serhiy.mycookbook.utils.AnimationFactory;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
 import com.mlsdev.serhiy.mycookbook.utils.DialogHelper;
+import com.mlsdev.serhiy.mycookbook.utils.PrefManager;
 
 import java.util.List;
 
@@ -70,14 +71,22 @@ public class RecipeListFragment extends Fragment implements IRecipesView {
     private BaseActivity mActivity;
     private DialogHelper mDialogHelper;
 
+    public RecipeListFragment() {
+        sFragmentState = sOnCreateState;
+        mPresenter = new RecipesPresenter(this);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setRetainInstance(true);
-        sFragmentState = sOnCreateState;
         mActivity = ((BaseActivity) getActivity());
 
-        mPresenter = new RecipesPresenter(this);
         mPresenter.setCategoryData(getArguments());
         mPresenter.setupCategoryName();
         mDialogHelper = new DialogHelper(getActivity(), mPresenter);
@@ -86,7 +95,9 @@ public class RecipeListFragment extends Fragment implements IRecipesView {
         findViews(view);
         initViews();
 
-        mPresenter.viewOnCreateState();
+        if (savedInstanceState == null){
+            mPresenter.viewOnCreateState();
+        }
 
         defineActionBarIcons();
         return view;

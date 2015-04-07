@@ -1,5 +1,6 @@
 package com.mlsdev.serhiy.mycookbook.adapter;
 
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.util.Log;
@@ -7,11 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mlsdev.serhiy.mycookbook.R;
@@ -23,6 +22,7 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipeListAdapter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
+import com.mlsdev.serhiy.mycookbook.utils.PrefManager;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -40,11 +40,13 @@ public class RecipeListAdapter extends BaseAdapter implements IRecipeListAdapter
     private IRecipesPresenter mPresenter;
     private int mSelectedRecipeCount = 0;
     private int mVisibilityState = View.GONE;
+    private Map<Integer, Drawable> mDrawableMap;
 
     public RecipeListAdapter(IRecipesView mView, IRecipesPresenter mPresenter) {
         this.mView = mView;
         this.mPresenter = mPresenter;
         mRecipeList = new ArrayList<>();
+        mDrawableMap = new HashMap<>();
     }
 
     @Override
@@ -91,7 +93,7 @@ public class RecipeListAdapter extends BaseAdapter implements IRecipeListAdapter
         viewHolder.getSelectForDeleteBtn().setTag(position);
         viewHolder.getSelectForDeleteBtn().setSelected(mRecipeList.get(position).getIsChecked());
 
-        setUpImage(mRecipeList.get(position), viewHolder.getIconImageView(), viewHolder.getProgressBar());
+        setUpImage(mRecipeList.get(position), viewHolder.getIconImageView(), viewHolder.getProgressBar(), position);
         setUpFavoriteStatusIcon(mRecipeList.get(position), viewHolder.getFavoriteStatus());
 
         TransitionDrawable transitionDrawable = (TransitionDrawable)  viewHolder.getSelectForDeleteBtn().getDrawable();
@@ -106,18 +108,31 @@ public class RecipeListAdapter extends BaseAdapter implements IRecipeListAdapter
 
     @Override
     public void setData(List<Recipe> recipeList) {
-        if (mRecipeList.size() != recipeList.size()){
-            mRecipeList.clear();
-            mRecipeList.addAll(recipeList);
-            mSelectedRecipeCount = 0;
-            mVisibilityState = View.GONE;
-        } else {
-            for (int i = 0; i < mRecipeList.size(); i++){
-                mRecipeList.get(i).setIsFavorite(recipeList.get(i).getIsFavorite());
+        if (getRecipeListState()) {
+
+            if (PrefManager.getRecipeImageState(mView.getContext())){
+                mDrawableMap.clear();
             }
+
+            if (mRecipeList.size() != recipeList.size()){
+                mRecipeList.clear();
+                mDrawableMap.clear();
+                mRecipeList.addAll(recipeList);
+                mSelectedRecipeCount = 0;
+                mVisibilityState = View.GONE;
+            } else {
+                for (int i = 0; i < mRecipeList.size(); i++){
+                    mRecipeList.get(i).setIsFavorite(recipeList.get(i).getIsFavorite());
+                    mRecipeList.get(i).setImageUri(recipeList.get(i).getImageUri());
+                }
+            }
+
+            this.notifyDataSetChanged();
+
+            PrefManager.setRecipeListStateChanged(mView.getContext(), false);
+            PrefManager.setRecipeImageStateChanged(mView.getContext(), false);
         }
 
-        this.notifyDataSetChanged();
         checkSelectedCount();
     }
 
@@ -143,14 +158,17 @@ public class RecipeListAdapter extends BaseAdapter implements IRecipeListAdapter
 
         ProgressBar progressBar;
         ImageView imageView;
+        Integer position;
 
-        private CallBackImageLoader(ProgressBar progressBar, ImageView imageView) {
+        private CallBackImageLoader(ProgressBar progressBar, ImageView imageView, Integer position) {
             this.progressBar = progressBar;
             this.imageView = imageView;
+            this.position = position;
         }
 
         @Override
         public void onSuccess() {
+            mDrawableMap.put(position, imageView.getDrawable());
             progressBar.setVisibility(View.GONE);
         }
 
@@ -233,7 +251,18 @@ public class RecipeListAdapter extends BaseAdapter implements IRecipeListAdapter
         }
     }
 
-    private void setUpImage(Recipe recipe, ImageView image, ProgressBar progressBar){
+    private void setUpImage(Recipe recipe, ImageView image, ProgressBar progressBar, int position){
+
+        if (mDrawableMap.containsKey(position)){
+            if (image.getDrawable() == null) {
+                Drawable drawable = mDrawableMap.get(position);
+                image.setImageDrawable(drawable);
+                progressBar.setVisibility(View.GONE);
+            }
+
+            return;
+        }
+
         if (!recipe.getImageUri().equals("")) {
 
             Uri imageUri = Uri.parse("content://media" + recipe.getImageUri());
@@ -242,11 +271,14 @@ public class RecipeListAdapter extends BaseAdapter implements IRecipeListAdapter
                     .load(imageUri)
                     .resize(750, 400)
                     .centerCrop().
-                    into(image, new CallBackImageLoader(progressBar, image));
+                    into(image, new CallBackImageLoader(progressBar, image, position));
+
         } else {
             image.setImageResource(R.mipmap.no_image);
+            mDrawableMap.put(position, image.getDrawable());
             progressBar.setVisibility(View.GONE);
         }
+
     }
 
     private void setUpFavoriteStatusIcon(Recipe recipe, ImageView favoriteStatusImg){
@@ -255,4 +287,9 @@ public class RecipeListAdapter extends BaseAdapter implements IRecipeListAdapter
         else
             favoriteStatusImg.setVisibility(View.GONE);
     }
+
+    private boolean getRecipeListState(){
+        return PrefManager.getRecipeListState(mView.getContext());
+    }
+
 }

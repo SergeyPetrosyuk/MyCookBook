@@ -18,6 +18,7 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.listener.OnDeleteRecipeListen
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipeView;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
+import com.mlsdev.serhiy.mycookbook.utils.PrefManager;
 
 import static com.mlsdev.serhiy.mycookbook.database.DBContract.*;
 
@@ -110,6 +111,7 @@ public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener
     @Override
     public void onSuccess() {
         mView.onRecipeDeleted();
+        setDataChanged();
     }
 
     // Recipe deleting error
@@ -121,6 +123,7 @@ public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener
     @Override
     public void onMoveToFavoritesSuccess(boolean aNewStatus) {
         mView.updateFavoriteStatus(aNewStatus);
+        setDataChanged();
     }
 
     @Override
@@ -148,5 +151,9 @@ public class RecipePresenter implements IRecipePresenter, OnDeleteRecipeListener
     @Override
     public void onLoaderReset(Loader<Recipe> loader) {
 
+    }
+
+    private void setDataChanged(){
+        PrefManager.setRecipeListStateChanged(getContext(), true);
     }
 }

@@ -29,4 +29,5 @@ public interface IAddRecipeView {
     void stopAdding();
     void onRecipeUpdated(Intent updatedRecipeData);
     LoaderManager getLoaderManagerForPresenter();
+    void setActionBarTitle();
 }

@@ -15,6 +15,8 @@ public class Constants {
     public static final String PREF_CATS_DISPLAY_TYPE_KEY = "pref_cats_display_type_key";
     public static final int PREF_CATS_GRID_DISPLAY_TYPE = 1;
     public static final int PREF_CATS_LIST_DISPLAY_TYPE = 2;
+    public static final String PREF_RECIPE_LIST_CHANGED_KEY = "pref_recipe_list_changed_key";
+    public static final String PREF_RECIPE_FAVORITE_CHANGED_KEY = "pref_recipe_list_changed_key";
 
     public static final String EXTRAS_CATEGORY_ID = "extras_category_id";
     public static final String EXTRAS_CATEGORY_NAME = "extras_category_name";

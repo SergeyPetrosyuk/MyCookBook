@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.database.DBContract;
 import com.mlsdev.serhiy.mycookbook.ui.fragment.RecipeFragment;
+import com.mlsdev.serhiy.mycookbook.utils.Constants;
 
 public class RecipeActivity extends BaseActivity {
 
@@ -18,8 +19,7 @@ public class RecipeActivity extends BaseActivity {
 
         intent = getIntent();
         Bundle bundle = intent.getExtras();
-        String recipeTitle = bundle.getString(DBContract.RecipeEntry.COLUMN_TITLE, getString(R.string.app_name));
-        setActionBarTitle(recipeTitle);
+        setActionBarTitle(Constants.EMPTY_STRING);
         Fragment fragment = new RecipeFragment();
 
         if (savedInstanceState != null){

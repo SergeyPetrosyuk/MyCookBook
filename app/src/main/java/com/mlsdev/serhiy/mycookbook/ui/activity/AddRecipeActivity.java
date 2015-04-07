@@ -9,8 +9,6 @@ import com.mlsdev.serhiy.mycookbook.ui.fragment.AddRecipeFragment;
 
 public class AddRecipeActivity extends BaseActivity {
 
-    public static final String LOG_TAG = "CookBook DEBUG";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

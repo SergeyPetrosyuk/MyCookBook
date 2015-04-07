@@ -22,4 +22,30 @@ public class PrefManager{
         editor.putInt(Constants.PREF_CATS_DISPLAY_TYPE_KEY, dispayType).commit();
     }
 
+    public static void setRecipeListStateChanged(Context context, boolean isChanged){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putBoolean(Constants.PREF_RECIPE_LIST_CHANGED_KEY, isChanged).commit();
+    }
+
+    public static boolean getRecipeListState(Context context){
+        boolean isChanged = PreferenceManager
+                .getDefaultSharedPreferences(context)
+                    .getBoolean(Constants.PREF_RECIPE_LIST_CHANGED_KEY, false);
+
+        return isChanged;
+    }
+
+    public static void setRecipeImageStateChanged(Context context, boolean isChanged){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putBoolean(Constants.PREF_RECIPE_FAVORITE_CHANGED_KEY, isChanged).commit();
+    }
+
+    public static boolean getRecipeImageState(Context context){
+        boolean isChanged = PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getBoolean(Constants.PREF_RECIPE_FAVORITE_CHANGED_KEY, false);
+
+        return isChanged;
+    }
+
 }

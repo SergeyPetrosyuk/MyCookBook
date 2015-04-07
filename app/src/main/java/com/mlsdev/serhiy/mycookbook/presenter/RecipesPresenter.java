@@ -24,6 +24,7 @@ import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IRecipesPresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IRecipesView;
 import com.mlsdev.serhiy.mycookbook.ui.activity.RecipeActivity;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
+import com.mlsdev.serhiy.mycookbook.utils.PrefManager;
 
 import java.util.List;
 
@@ -39,13 +40,11 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     private boolean mIsEditorOpened = false;
     private ICategoryEditeOrDeleteInteractor mInteractor;
     private Bundle mCategoryData;
-    private ILoadCategoryNameInteractor mLoadCategoryNameInteractor;
     private boolean mIsOnlyFavorites = false;
     private static final int sRecipeLoaderId = 1;
 
     public RecipesPresenter(IRecipesView mView) {
         this.mView = mView;
-        mLoadCategoryNameInteractor = new LoadCategoryNameTask(this, this);
         mInteractor = new CategoryEditeOrDeleteInteractor(this, this);
     }
 
@@ -110,7 +109,7 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
 
     @Override
     public void setupCategoryName() {
-        mLoadCategoryNameInteractor.loadCatrgoryName(getCategoryId());
+        new LoadCategoryNameTask(this, this).loadCatrgoryName(getCategoryId());
     }
 
     @Override
@@ -136,11 +135,13 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
 
     @Override
     public void viewOnCreateState() {
+        setDataChanged();
         mView.getLoaderManagerForPresenter().initLoader(sRecipeLoaderId, getArgsForLoader(), this);
     }
 
     @Override
     public void viewOnResumeState() {
+        setDataChanged();
         mView.getLoaderManagerForPresenter().restartLoader(sRecipeLoaderId, getArgsForLoader(), this);
     }
 
@@ -197,6 +198,7 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     public void onSuccess() {
         mView.showDeleteAction(false);
         mView.getLoaderManagerForPresenter().restartLoader(sRecipeLoaderId, getArgsForLoader(), this);
+        PrefManager.setRecipeListStateChanged(getContext(), true);
     }
 
     // Delete recipes list onError
@@ -232,4 +234,9 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
         args.putInt(RecipeEntry.COLUMN_CATEGORY_ID, getCategoryId());
         return args;
     }
+
+    private void setDataChanged(){
+        PrefManager.setRecipeListStateChanged(getContext(), true);
+    }
+
 }

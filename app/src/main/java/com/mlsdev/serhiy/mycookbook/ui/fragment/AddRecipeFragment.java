@@ -25,6 +25,7 @@ import com.mlsdev.serhiy.mycookbook.R;
 import com.mlsdev.serhiy.mycookbook.presenter.AddRecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.presenter.IAddRecipePresenter;
 import com.mlsdev.serhiy.mycookbook.ui.abstraction.view.IAddRecipeView;
+import com.mlsdev.serhiy.mycookbook.ui.activity.BaseActivity;
 import com.mlsdev.serhiy.mycookbook.ui.activity.GetImageActivity;
 import com.mlsdev.serhiy.mycookbook.utils.Constants;
 import com.squareup.picasso.Picasso;
@@ -198,6 +199,11 @@ public class AddRecipeFragment extends Fragment implements IAddRecipeView, View.
     @Override
     public LoaderManager getLoaderManagerForPresenter() {
         return getLoaderManager();
+    }
+
+    @Override
+    public void setActionBarTitle() {
+        ((BaseActivity) getActivity()).setActionBarTitle(Constants.EMPTY_STRING);
     }
 
     @Override
