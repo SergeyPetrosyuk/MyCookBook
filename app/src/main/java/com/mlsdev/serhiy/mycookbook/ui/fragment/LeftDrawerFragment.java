@@ -20,8 +20,6 @@ public class LeftDrawerFragment extends Fragment implements View.OnClickListener
 
     private Button mMainBtn;
     private Button mSettingsBtn;
-    private Button mFavoritesBtn;
-//    private Button mCategoriesBtn;
     private Button mRateUsBtn;
     private Button mFoundProblemBtn;
 
@@ -39,8 +37,6 @@ public class LeftDrawerFragment extends Fragment implements View.OnClickListener
     private void findViews(View view){
         mMainBtn        = (Button) view.findViewById(R.id.btn_main);
         mSettingsBtn    = (Button) view.findViewById(R.id.btn_settings);
-        mFavoritesBtn   = (Button) view.findViewById(R.id.btn_favorite);
-//        mCategoriesBtn  = (Button) view.findViewById(R.id.btn_categories);
         mRateUsBtn      = (Button) view.findViewById(R.id.btn_rate_us);
         mFoundProblemBtn= (Button) view.findViewById(R.id.btn_fount_problem);
     }
@@ -48,8 +44,6 @@ public class LeftDrawerFragment extends Fragment implements View.OnClickListener
     private void setupOnClickListeners(){
         mMainBtn.setOnClickListener(this);
         mSettingsBtn.setOnClickListener(this);
-        mFavoritesBtn.setOnClickListener(this);
-//        mCategoriesBtn.setOnClickListener(this);
         mRateUsBtn.setOnClickListener(this);
         mFoundProblemBtn.setOnClickListener(this);
     }
@@ -67,9 +61,6 @@ public class LeftDrawerFragment extends Fragment implements View.OnClickListener
                         .commit();
                 break;
             case R.id.btn_settings:
-
-                break;
-            case R.id.btn_favorite:
 
                 break;
 
