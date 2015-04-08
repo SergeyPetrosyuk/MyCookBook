@@ -29,26 +29,26 @@
                 android:text="@string/main"/>
             </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/btn_settings"
-            style="@style/button_holder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:paddingLeft="20dp">
-            <ImageView
-                android:id="@+id/iv_icon_settings"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@mipmap/icon_settings"
-                android:layout_centerVertical="true"/>
-            <Button
-                style="@style/drawer_menu_btn"
-                android:layout_toRightOf="@id/iv_icon_settings"
-                android:background="@android:color/transparent"
-                android:clickable="false"
-                android:text="@string/settings"/>
-        </RelativeLayout>
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/btn_settings"-->
+            <!--style="@style/button_holder"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:paddingLeft="20dp">-->
+            <!--<ImageView-->
+                <!--android:id="@+id/iv_icon_settings"-->
+                <!--android:layout_width="35dp"-->
+                <!--android:layout_height="35dp"-->
+                <!--android:src="@mipmap/icon_settings"-->
+                <!--android:layout_centerVertical="true"/>-->
+            <!--<Button-->
+                <!--style="@style/drawer_menu_btn"-->
+                <!--android:layout_toRightOf="@id/iv_icon_settings"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:clickable="false"-->
+                <!--android:text="@string/settings"/>-->
+        <!--</RelativeLayout>-->
 
         <RelativeLayout
             android:id="@+id/btn_pressure"

@@ -20,7 +20,7 @@ import com.mlsdev.serhiy.mycookbook.ui.activity.BaseActivity;
 public class LeftDrawerFragment extends Fragment implements View.OnClickListener {
 
     private RelativeLayout mMainBtn;
-    private RelativeLayout mSettingsBtn;
+//    private RelativeLayout mSettingsBtn;
     private RelativeLayout mPressureBtn;
     private Button mRateUsBtn;
     private Button mFoundProblemBtn;
@@ -38,7 +38,7 @@ public class LeftDrawerFragment extends Fragment implements View.OnClickListener
     
     private void findViews(View view){
         mMainBtn        = (RelativeLayout) view.findViewById(R.id.btn_main);
-        mSettingsBtn    = (RelativeLayout) view.findViewById(R.id.btn_settings);
+//        mSettingsBtn    = (RelativeLayout) view.findViewById(R.id.btn_settings);
         mPressureBtn    = (RelativeLayout) view.findViewById(R.id.btn_pressure);
         mRateUsBtn      = (Button) view.findViewById(R.id.btn_rate_us);
         mFoundProblemBtn= (Button) view.findViewById(R.id.btn_fount_problem);
@@ -46,7 +46,7 @@ public class LeftDrawerFragment extends Fragment implements View.OnClickListener
     
     private void setupOnClickListeners(){
         mMainBtn.setOnClickListener(this);
-        mSettingsBtn.setOnClickListener(this);
+//        mSettingsBtn.setOnClickListener(this);
         mRateUsBtn.setOnClickListener(this);
         mPressureBtn.setOnClickListener(this);
         mFoundProblemBtn.setOnClickListener(this);
@@ -64,11 +64,11 @@ public class LeftDrawerFragment extends Fragment implements View.OnClickListener
                 fragmentTransaction.replace(R.id.fragment_holder_main_activity, new CategoriesFragment(), CategoriesFragment.class.getName())
                         .commit();
                 break;
-            case R.id.btn_settings:
-                screenTitle = activity.getString(R.string.action_settings);
-                fragmentTransaction.replace(R.id.fragment_holder_main_activity, new SettingsFragment(), SettingsFragment.class.getName())
-                        .commit();
-                break;
+//            case R.id.btn_settings:
+//                screenTitle = activity.getString(R.string.action_settings);
+//                fragmentTransaction.replace(R.id.fragment_holder_main_activity, new SettingsFragment(), SettingsFragment.class.getName())
+//                        .commit();
+//                break;
             case R.id.btn_pressure:
                 screenTitle = activity.getString(R.string.g_to_mg);
                 fragmentTransaction.replace(R.id.fragment_holder_main_activity, new PressureFragment(), PressureFragment.class.getName())
