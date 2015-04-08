@@ -146,6 +146,11 @@ public class RecipesPresenter implements IRecipesPresenter, OnRecipeListLoadedLi
     }
 
     @Override
+    public boolean getFilterState() {
+        return mIsOnlyFavorites;
+    }
+
+    @Override
     public void viewOnDestroyState() {
         mView.getLoaderManagerForPresenter().destroyLoader(sRecipeLoaderId);
     }

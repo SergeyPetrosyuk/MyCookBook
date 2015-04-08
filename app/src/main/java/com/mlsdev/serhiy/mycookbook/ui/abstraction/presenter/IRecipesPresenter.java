@@ -25,6 +25,6 @@ public interface IRecipesPresenter {
     void setupIsFavorite(boolean newStatus);
     void viewOnCreateState();
     void viewOnResumeState();
-
+    boolean getFilterState();
     void viewOnDestroyState();
 }
